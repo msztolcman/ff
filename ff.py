@@ -75,7 +75,7 @@ for o, a in opts:
     elif o in ('-h', '--help'):
         print('''%s pattern
     [-i|--ignorecase]
-    [-s|--source]
+    *[-s|--source source]
     [-l|--regex-multiline]
     [-d|--regex-dotall]
     [-B|--begin]
