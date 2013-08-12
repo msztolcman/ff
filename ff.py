@@ -11,9 +11,9 @@ from pprint import pprint, pformat
 import getopt
 
 try:
-    opts_short = 'gp:m:s:ildBEhx:'
+    opts_short = 'gp:m:s:ildBEhx:v'
     opts_long  = ('regexp', 'pattern=', 'mode=', 'source=', 'ignorecase', 'regex-multiline', 'regex-dotall',
-                  'begin', 'end', 'prefix', 'help', 'exec')
+                  'begin', 'end', 'prefix', 'help', 'exec', 'invert-match')
     opts, args = getopt.gnu_getopt(sys.argv[1:], opts_short, opts_long)
     del opts_short
     del opts_long
@@ -34,6 +34,7 @@ class Config:
         self.fnmatch_end = False
         self.prefix = False
         self.execute = None
+        self.invert_match = False
 config = Config()
 
 for o, a in opts:
@@ -69,6 +70,8 @@ for o, a in opts:
         config.prefix = True
     elif o in ('-x', '--exec'):
         config.execute = a
+    elif o in ('-v', '--invert-match'):
+        config.invert_match = True
     elif o in ('-h', '--help'):
         print('''%s pattern
     [-i|--ignorecase]
@@ -77,6 +80,7 @@ for o, a in opts:
     [-d|--regex-dotall]
     [-B|--begin]
     [-E|--end]
+    [-v|--invert-match]
     [--prefix=PREFIX]
     pattern
     [source1 .. sourceN]''' % os.path.basename(sys.argv[0]))
@@ -124,7 +128,7 @@ for source in config.source:
     for root, dirs, files in os.walk(source):
         if config.mode in ('dirs', 'all'):
             m = config.pattern.search(os.path.basename(root))
-            if m:
+            if (not config.invert_match and m) or (config.invert_match and not m):
                 prefix = 'd: ' if config.prefix else ''
                 print(prefix, root, sep='')
                 if config.execute:
@@ -133,7 +137,7 @@ for source in config.source:
         if config.mode in ('files', 'all'):
             for file_ in files:
                 m = config.pattern.search(file_)
-                if m:
+                if (not config.invert_match and m) or (config.invert_match and not m):
                     prefix = 'f: ' if config.prefix else ''
                     path = os.path.join(root, file_)
                     print(prefix, path, sep='')
