@@ -16,7 +16,7 @@ from pprint import pprint, pformat
 try:
     opts_short = 'gp:m:s:ildBEhx:v'
     opts_long  = ('regexp', 'pattern=', 'mode=', 'source=', 'ignorecase', 'regex-multiline', 'regex-dotall',
-                  'begin', 'end', 'prefix', 'help', 'exec', 'invert-match')
+                  'begin', 'end', 'prefix', 'help', 'exec', 'invert-match', 'no-display', 'verbose-exec')
     opts, args = getopt.gnu_getopt(sys.argv[1:], opts_short, opts_long)
     del opts_short
     del opts_long
@@ -37,7 +37,9 @@ class Config:
         self.fnmatch_end = False
         self.prefix = False
         self.execute = None
+        self.verbose_exec = False
         self.invert_match = False
+        self.display = True
 config = Config()
 
 for o, a in opts:
@@ -73,8 +75,12 @@ for o, a in opts:
         config.prefix = True
     elif o in ('-x', '--exec'):
         config.execute = a
+    elif  o in ('--verbose-exec'):
+        config.verbose_exec = True
     elif o in ('-v', '--invert-match'):
         config.invert_match = True
+    elif o in ('--no-display'):
+        config.display = False
     elif o in ('-h', '--help'):
         print('''%s pattern
     [-i|--ignorecase]
@@ -133,9 +139,13 @@ for source in config.source:
             m = config.pattern.search(os.path.basename(root))
             if (not config.invert_match and m) or (config.invert_match and not m):
                 prefix = 'd: ' if config.prefix else ''
-                print(prefix, root, sep='')
+                if config.display:
+                    print(prefix, root, sep='')
                 if config.execute:
                     subprocess.call([config.execute, root])
+                    exe = [config.execute, root]
+                    if config.verbose_exec:
+                        print(exe)
 
         if config.mode in ('files', 'all'):
             for file_ in files:
@@ -143,7 +153,11 @@ for source in config.source:
                 if (not config.invert_match and m) or (config.invert_match and not m):
                     prefix = 'f: ' if config.prefix else ''
                     path = os.path.join(root, file_)
-                    print(prefix, path, sep='')
+                    if config.display:
+                        print(prefix, path, sep='')
                     if config.execute:
                         subprocess.call([config.execute, path])
 
+                        exe = [config.execute, path]
+                        if config.verbose_exec:
+                            print(exe)
