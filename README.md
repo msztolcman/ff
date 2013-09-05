@@ -44,6 +44,7 @@ Usage
         [--no-display] - don't display element (useful with --exec argument)
         [--verbose-exec] - show command before execute it
         [--interactive-exec] - ask before execute command on every item
+        [--shell-exec] - execute command from --exec argument in shell (with shell expansion etc)
         [--vcs] - do not skip VCS directories (.git, .svn etc)
         [-h|--help]
         pattern - pattern to search
