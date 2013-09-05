@@ -60,14 +60,14 @@ Usage
         [source1 .. sourceN] - optional source (if missing, use current directory)
 
 Contact
-=======
+-------
 
 If you like or dislike this software, please do not hesitate to tell me about this me via email (marcin@urzenia.net).
 
 If you find bug or have an idea to enhance this tool, please use GitHub's [issues](https://github.com/mysz/ff/issues).
 
 License
-=======
+-------
 
 The MIT License (MIT)
 
