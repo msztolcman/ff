@@ -3,7 +3,7 @@ ff
 
 Easy find files and directories by their names.
 
-If you need to search by file content, use [ack](https://github.com/petdance/ack) or [pss](https://github.com/eliben/pss).
+If you need to search by file content, use [ack](https://github.com/petdance/ack2) or [pss](https://github.com/eliben/pss).
 
 Basic usage
 -----------
