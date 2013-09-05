@@ -197,7 +197,7 @@ def main():
         [--no-display] - don't display element (useful with --exec argument)
         [--verbose-exec] - show command before execute it
         [--interactive-exec] - ask before execute command on every item
-        [--vcs]
+        [--vcs] - do not skip VCS directories (.git, .svn etc)
         [-h|--help]
         pattern - pattern to search
         [source1 .. sourceN] - optional source (if missing, use current directory)''' % os.path.basename(sys.argv[0]))
