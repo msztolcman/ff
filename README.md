@@ -33,6 +33,19 @@ Find all files and directories in /etc that match expression: `*pa*`, and copy t
 
 So powerful...
 
+Installation
+------------
+
+`ff` should work on any platform where [Python](http://python.org) is available, it means Linux, Windows, MacOS X etc. There is no dependencies, plain Python power :) Just copy file to your PATH, for example:
+
+    curl https://raw.github.com/mysz/ff/master/ff.py > /usr/local/bin/ff
+
+or:
+
+    wget https://raw.github.com/mysz/ff/master/ff.py -O /usr/local/bin/ff
+
+Voila!
+
 Usage
 -----
 
