@@ -117,6 +117,9 @@ if config.source is None:
     else:
         config.source = ['.']
 
+for i, src in enumerate(config.source):
+    config.source[i] = os.path.abspath(src)
+
 if config.regexp:
     flags = 0
     if config.ignorecase:
