@@ -35,8 +35,8 @@ Usage
         [-g|--regexp] - treat pattern as regular expression (uses Python regexp engine)
         [-l|--regex-multiline]
         [-d|--regex-dotall]
-        [-B|--begin] - match pattern to begin of item name (ignored in regexp mode)
-        [-E|--end] - match pattern to end of item name (ignored in regexp mode)
+        [-B|--begin] - anchor pattern to begin of item name (ignored in regexp mode)
+        [-E|--end] - anchor pattern to end of item name (ignored in regexp mode)
         [-v|--invert-match]
         [-m|--mode] - one of: 'all' (default), 'dirs', 'files'
         [-x|--exec] - execute some command on every found item. In command, placeholders: {path}, {dirname}, {basename} are replaced with correct value
