@@ -31,7 +31,7 @@ class Config:
         self.display = kw.get('display', True)
         self.help = kw.get('help', False)
 
-def execute_prepare(exe, path, dirname, basename):
+def prepare_execute(exe, path, dirname, basename):
     exe = copy.copy(exe)
     for i, elem in enumerate(exe):
         exe[i] = exe[i].replace('{path}', path)
@@ -143,7 +143,7 @@ def process_item(config, path):
                 prefix = 'd: ' if os.path.isdir(path) else 'f: '
             print(prefix, path, sep='')
         if config.execute:
-            exe = execute_prepare(config.execute, path, os.path.dirname(path), os.path.basename(path))
+            exe = prepare_execute(config.execute, path, os.path.dirname(path), os.path.basename(path))
             if config.verbose_exec:
                 print(' '.join(exe))
             subprocess.call(exe)
