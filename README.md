@@ -30,8 +30,8 @@ Usage
     ff
         [-0|--print0] split results by binary zero instead of new line (useful to work with xargs)
         [-i|--ignorecase]
-        *[-s|--source source] - optional, see: pattern below
-        *[-p|--pattern]
+        *[-s|--source source] - optional, see: source below
+        *[-p|--pattern] - optional, see: pattern below
         [-g|--regexp] - treat pattern as regular expression (uses Python regexp engine)
         [-l|--regex-multiline]
         [-d|--regex-dotall]
