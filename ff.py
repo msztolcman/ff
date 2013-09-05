@@ -60,7 +60,7 @@ def parse_input_args(args):
             cfg.mode = a
         elif o in ('-s', '--source'):
             if not os.path.isdir(a):
-                raise getopt.error('Source %s doesn\'t exists or is not a directory' % a)
+                raise getopt.error('Source "%s" doesn\'t exists or is not a directory' % a)
 
             if cfg.source is None:
                 cfg.source = [a]
