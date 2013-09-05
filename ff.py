@@ -120,12 +120,20 @@ def parse_input_args(args):
 
     return cfg
 
+def _prepare_execute__vars(m):
+    if len(m.group(1)) % 2 == 0:
+        return os.environ.get(m.group(2), '')
+    else:
+        return m.group(0)
+
 def prepare_execute(exe, path, dirname, basename):
     exe = copy.copy(exe)
+    rxp_var = re.compile(r'(\\*)\$([_a-zA-Z0-9]+)')
     for i, elem in enumerate(exe):
         exe[i] = exe[i].replace('{path}', path)
         exe[i] = exe[i].replace('{dirname}', dirname)
         exe[i] = exe[i].replace('{basename}', basename)
+        exe[i] = rxp_var.sub(_prepare_execute__vars, exe[i])
 
     return exe
 
