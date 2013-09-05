@@ -5,10 +5,29 @@ Easy find files and directories by their names.
 
 If you need to search by file content, use [ack](https://github.com/petdance/ack) or [pss](https://github.com/eliben/pss).
 
+Basic usage
+-----------
+
+    ff passwd
+
+Search for all files and folders in current directory and below, which is match to pattern: `*passwd*`.
+
+    ff -B passwd
+
+Search for all files and folders in current directory and below, which is match to pattern: `*passwd`.
+
+    ff -E passwd
+
+Search for all files and folders in current directory and below, which is match to pattern: `passwd*`.
+
+    ff -EB passwd
+
+Search for all files and folders in current directory and below, which is match to pattern: `passwd`.
+
 Usage
 -----
 
-    ff 
+    ff
         [-0|--print0] split results by binary zero instead of new line (useful to work with xargs)
         [-i|--ignorecase]
         *[-s|--source source] - optional, see: pattern below
