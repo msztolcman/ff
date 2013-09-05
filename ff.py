@@ -125,7 +125,7 @@ def parse_input_args(args):
 
     if cfg.shell_exec:
         cfg.execute = [cfg.execute]
-    else:
+    elif cfg.execute:
         cfg.execute = shlex.split(cfg.execute)
 
     return cfg
