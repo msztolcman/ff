@@ -163,7 +163,7 @@ def process_item(cfg, path):
             exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path))
             if cfg.verbose_exec:
                 print(' '.join(exe))
-            if not cfg.interactive_exec or ask('Execute command on %s?' % path, ('y', 'n'), 'n') == 'y':
+            if not cfg.interactive_exec or ask('Execute command on %s?' % path, 'yn', 'n') == 'y':
                 subprocess.call(exe)
 
 def main():
