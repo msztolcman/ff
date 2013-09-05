@@ -62,10 +62,10 @@ def parse_input_args(args):
             if not os.path.isdir(a):
                 raise getopt.error('Source "%s" doesn\'t exists or is not a directory' % a)
 
-            if cfg.source is None:
-                cfg.source = [a]
-            else:
+            try:
                 cfg.source.append(a)
+            except AttributeError:
+                cfg.source = [a]
         elif o in ('-i', '--ignorecase'):
             cfg.ignorecase = True
         elif o in ('-l', '--regex-multiline'):
