@@ -13,6 +13,8 @@ import sys
 
 from pprint import pprint, pformat
 
+__version__ = '0.1'
+
 class Config:
     def __init__(self, **kw):
         self.regexp = False
