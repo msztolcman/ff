@@ -35,6 +35,7 @@ class Config:
         self.delim = "\n";
         self.help = False
         self.vcs = False
+        self.shell_exec = False
 
         for key in kw:
             setattr(self, key, kw[key])
@@ -55,7 +56,7 @@ def parse_input_args(args):
     opts_short = 'gp:m:s:ildBEhx:v0'
     opts_long  = ('regexp', 'pattern=', 'mode=', 'source=', 'ignorecase', 'regex-multiline', 'regex-dotall',
                 'begin', 'end', 'prefix', 'help', 'exec=', 'invert-match', 'print0', 'no-display', 'verbose-exec', 'interactive-exec',
-                 'vcs')
+                 'vcs', 'shell-exec')
     opts, args = getopt.gnu_getopt(args, opts_short, opts_long)
 
     for o, a in opts:
@@ -89,19 +90,21 @@ def parse_input_args(args):
         elif o == '--prefix':
             cfg.prefix = True
         elif o in ('-x', '--exec'):
-            cfg.execute = shlex.split(a)
-        elif  o in ('--verbose-exec'):
+            cfg.execute = a
+        elif  o == '--verbose-exec':
             cfg.verbose_exec = True
         elif o in ('-v', '--invert-match'):
             cfg.invert_match = True
-        elif o in ('--interactive-exec'):
+        elif o == '--interactive-exec':
             cfg.interactive_exec = True
-        elif o in ('--no-display'):
+        elif o == '--no-display':
             cfg.display = False
         elif o in ('-0', '--print0'):
             cfg.delim = chr(0)
-        elif o in ('--vcs'):
+        elif o == '--vcs':
             cfg.vcs = True
+        elif o == '--shell-exec':
+            cfg.shell_exec = True
         elif o in ('-h', '--help'):
             return Config(help=True)
 
@@ -120,6 +123,11 @@ def parse_input_args(args):
     for i, src in enumerate(cfg.source):
         cfg.source[i] = os.path.abspath(src)
 
+    if cfg.shell_exec:
+        cfg.execute = [cfg.execute]
+    else:
+        cfg.execute = shlex.split(cfg.execute)
+
     return cfg
 
 def _prepare_execute__vars(m):
@@ -128,14 +136,15 @@ def _prepare_execute__vars(m):
     else:
         return m.group(0)
 
-def prepare_execute(exe, path, dirname, basename):
+def prepare_execute(exe, path, dirname, basename, expand_vars=True):
     exe = copy.copy(exe)
     rxp_var = re.compile(r'(\\*)\$([_a-zA-Z0-9]+)')
     for i, elem in enumerate(exe):
         exe[i] = exe[i].replace('{path}', path)
         exe[i] = exe[i].replace('{dirname}', dirname)
         exe[i] = exe[i].replace('{basename}', basename)
-        exe[i] = rxp_var.sub(_prepare_execute__vars, exe[i])
+        if expand_vars:
+            exe[i] = rxp_var.sub(_prepare_execute__vars, exe[i])
 
     return exe
 
@@ -176,11 +185,11 @@ def process_item(cfg, path):
                 prefix = 'd: ' if os.path.isdir(path) else 'f: '
             print(prefix, path, sep='', end=cfg.delim)
         if cfg.execute:
-            exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path))
+            exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path), not cfg.shell_exec)
             if cfg.verbose_exec:
                 print(' '.join(exe))
             if not cfg.interactive_exec or ask('Execute command on %s?' % path, 'yn', 'n') == 'y':
-                subprocess.call(exe)
+                subprocess.call(exe, shell=cfg.shell_exec)
 
 def main():
     try:
@@ -207,6 +216,7 @@ def main():
     [--no-display] - don't display element (useful with --exec argument)
     [--verbose-exec] - show command before execute it
     [--interactive-exec] - ask before execute command on every item
+    [--shell-exec] - execute command from --exec argument in shell (with shell expansion etc)
     [--vcs] - do not skip VCS directories (.git, .svn etc)
     [-h|--help]
     pattern - pattern to search
