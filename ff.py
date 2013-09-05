@@ -32,6 +32,7 @@ class Config:
         self.display = True
         self.delim = "\n";
         self.help = False
+        self.vcs = False
 
         for key in kw:
             setattr(self, key, kw[key])
@@ -49,7 +50,8 @@ def parse_input_args(args):
 
     opts_short = 'gp:m:s:ildBEhx:v0'
     opts_long  = ('regexp', 'pattern=', 'mode=', 'source=', 'ignorecase', 'regex-multiline', 'regex-dotall',
-                'begin', 'end', 'prefix', 'help', 'exec=', 'invert-match', 'print0', 'no-display', 'verbose-exec', 'interactive-exec')
+                'begin', 'end', 'prefix', 'help', 'exec=', 'invert-match', 'print0', 'no-display', 'verbose-exec', 'interactive-exec',
+                 'vcs')
     opts, args = getopt.gnu_getopt(args, opts_short, opts_long)
 
     for o, a in opts:
@@ -94,6 +96,8 @@ def parse_input_args(args):
             cfg.display = False
         elif o in ('-0', '--print0'):
             cfg.delim = chr(0)
+        elif o in ('--vcs'):
+            cfg.vcs = True
         elif o in ('-h', '--help'):
             return Config(help=True)
 
@@ -191,6 +195,7 @@ def main():
         [--no-display] - don't display element (useful with --exec argument)
         [--verbose-exec] - show command before execute it
         [--interactive-exec] - ask before execute command on every item
+        [--vcs]
         [-h|--help]
         pattern - pattern to search
         [source1 .. sourceN] - optional source (if missing, use current directory)''' % os.path.basename(sys.argv[0]))
@@ -198,14 +203,19 @@ def main():
 
     config.pattern = prepare_pattern(config)
 
+    rxp_vcs = re.compile('(?:^|/)(?:\.git|\.svn|\.CVS|\.hg|_MTN|CVS|RCS|SCCS|_darcs|_sgbak)(?:$|/)')
+
     for source in config.source:
         for root, dirs, files in os.walk(source):
             if config.mode in ('dirs', 'all'):
-                process_item(config, root)
+                if config.vcs or not rxp_vcs.search(root):
+                    process_item(config, root)
 
             if config.mode in ('files', 'all'):
                 for file_ in files:
-                    process_item(config, os.path.join(root, file_))
+                    path = os.path.join(root, file_)
+                    if config.vcs or not rxp_vcs.search(path):
+                        process_item(config, path)
 
 if __name__ == '__main__':
     main()
