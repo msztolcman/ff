@@ -27,6 +27,7 @@ class Config:
         self.prefix = False
         self.execute = None
         self.verbose_exec = False
+        self.interactive_exec = False
         self.invert_match = False
         self.display = True
         self.help = False
@@ -34,12 +35,20 @@ class Config:
         for key in kw:
             setattr(self, key, kw[key])
 
+def ask(question, replies, default):
+    replies = [ reply.lower() for reply in replies ]
+    question += ' (' + ','.join(reply.upper() if reply == default else reply for reply in replies) + ') '
+    while True:
+        reply = raw_input(question).lower()
+        if reply in replies:
+            return reply
+
 def parse_input_args(args):
     cfg = Config()
 
     opts_short = 'gp:m:s:ildBEhx:v'
     opts_long  = ('regexp', 'pattern=', 'mode=', 'source=', 'ignorecase', 'regex-multiline', 'regex-dotall',
-                'begin', 'end', 'prefix', 'help', 'exec=', 'invert-match', 'no-display', 'verbose-exec')
+                'begin', 'end', 'prefix', 'help', 'exec=', 'invert-match', 'no-display', 'verbose-exec', 'interactive-exec')
     opts, args = getopt.gnu_getopt(args, opts_short, opts_long)
 
     for o, a in opts:
@@ -78,6 +87,8 @@ def parse_input_args(args):
             cfg.verbose_exec = True
         elif o in ('-v', '--invert-match'):
             cfg.invert_match = True
+        elif o in ('--interactive-exec'):
+            cfg.interactive_exec = True
         elif o in ('--no-display'):
             cfg.display = False
         elif o in ('-h', '--help'):
@@ -149,7 +160,8 @@ def process_item(cfg, path):
             exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path))
             if cfg.verbose_exec:
                 print(' '.join(exe))
-            subprocess.call(exe)
+            if not cfg.interactive_exec or ask('Execute command on %s?' % path, ('y', 'n'), 'n') == 'y':
+                subprocess.call(exe)
 
 def main():
     try:
@@ -174,6 +186,7 @@ def main():
         [--prefix=PREFIX] - add prefix 'd: ' (directory) or 'f: ' (file) to every found item
         [--no-display] - don't display element (useful with --exec argument)
         [--verbose-exec] - show command before execute it
+        [--interactive-exec] - ask before execute command on every item
         [-h|--help]
         pattern - pattern to search
         [source1 .. sourceN] - optional source (if missing, use current directory)''' % os.path.basename(sys.argv[0]))
