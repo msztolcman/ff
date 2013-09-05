@@ -137,17 +137,17 @@ def prepare_pattern(cfg):
     pattern = re.compile(pattern, flags)
     return pattern
 
-def process_item(config, path):
-    m = config.pattern.search(os.path.basename(path))
-    if (not config.invert_match and m) or (config.invert_match and not m):
-        if config.display:
+def process_item(cfg, path):
+    m = cfg.pattern.search(os.path.basename(path))
+    if (not cfg.invert_match and m) or (cfg.invert_match and not m):
+        if cfg.display:
             prefix = ''
-            if config.prefix:
+            if cfg.prefix:
                 prefix = 'd: ' if os.path.isdir(path) else 'f: '
             print(prefix, path, sep='')
-        if config.execute:
-            exe = prepare_execute(config.execute, path, os.path.dirname(path), os.path.basename(path))
-            if config.verbose_exec:
+        if cfg.execute:
+            exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path))
+            if cfg.verbose_exec:
                 print(' '.join(exe))
             subprocess.call(exe)
 
