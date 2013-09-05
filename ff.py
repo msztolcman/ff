@@ -42,6 +42,15 @@ class Config:
         self.display = True
 config = Config()
 
+def ff_execute_prepare(exe, path, dirname, basename):
+    exe = copy.copy(exe)
+    for i, elem in enumerate(exe):
+        exe[i] = exe[i].replace('{path}', path)
+        exe[i] = exe[i].replace('{dirname}', dirname)
+        exe[i] = exe[i].replace('{basename}', basename)
+
+    return exe
+
 for o, a in opts:
     if o in ('-g', '--regexp'):
         config.regexp = True
@@ -74,7 +83,7 @@ for o, a in opts:
     elif o == '--prefix':
         config.prefix = True
     elif o in ('-x', '--exec'):
-        config.execute = a
+        config.execute = shlex.split(a)
     elif  o in ('--verbose-exec'):
         config.verbose_exec = True
     elif o in ('-v', '--invert-match'):
@@ -136,28 +145,27 @@ else:
 for source in config.source:
     for root, dirs, files in os.walk(source):
         if config.mode in ('dirs', 'all'):
+            prefix = 'd: ' if config.prefix else ''
             m = config.pattern.search(os.path.basename(root))
             if (not config.invert_match and m) or (config.invert_match and not m):
-                prefix = 'd: ' if config.prefix else ''
                 if config.display:
                     print(prefix, root, sep='')
                 if config.execute:
-                    subprocess.call([config.execute, root])
-                    exe = [config.execute, root]
+                    exe = ff_execute_prepare(config.execute, root, os.path.dirname(root), os.path.basename(root))
                     if config.verbose_exec:
                         print(exe)
+                    subprocess.call(exe)
 
         if config.mode in ('files', 'all'):
+            prefix = 'f: ' if config.prefix else ''
             for file_ in files:
                 m = config.pattern.search(file_)
                 if (not config.invert_match and m) or (config.invert_match and not m):
-                    prefix = 'f: ' if config.prefix else ''
                     path = os.path.join(root, file_)
                     if config.display:
                         print(prefix, path, sep='')
                     if config.execute:
-                        subprocess.call([config.execute, path])
-
-                        exe = [config.execute, path]
+                        exe = ff_execute_prepare(config.execute, path, root, file_)
                         if config.verbose_exec:
                             print(exe)
+                        subprocess.call(exe)
