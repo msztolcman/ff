@@ -93,7 +93,7 @@ def parse_input_args(args):
         elif o in ('--no-display'):
             cfg.display = False
         elif o in ('-0'):
-            cfg.delim = "\0"
+            cfg.delim = chr(0)
         elif o in ('-h', '--help'):
             return Config(help=True)
 
