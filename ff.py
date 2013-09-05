@@ -31,15 +31,6 @@ class Config:
         self.display = kw.get('display', True)
         self.help = kw.get('help', False)
 
-def prepare_execute(exe, path, dirname, basename):
-    exe = copy.copy(exe)
-    for i, elem in enumerate(exe):
-        exe[i] = exe[i].replace('{path}', path)
-        exe[i] = exe[i].replace('{dirname}', dirname)
-        exe[i] = exe[i].replace('{basename}', basename)
-
-    return exe
-
 def parse_input_args(args):
     cfg = Config()
 
@@ -105,6 +96,15 @@ def parse_input_args(args):
         cfg.source[i] = os.path.abspath(src)
 
     return cfg
+
+def prepare_execute(exe, path, dirname, basename):
+    exe = copy.copy(exe)
+    for i, elem in enumerate(exe):
+        exe[i] = exe[i].replace('{path}', path)
+        exe[i] = exe[i].replace('{dirname}', dirname)
+        exe[i] = exe[i].replace('{basename}', basename)
+
+    return exe
 
 def prepare_pattern(cfg):
     pattern = cfg.pattern
