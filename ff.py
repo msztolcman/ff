@@ -161,22 +161,22 @@ def main():
     if config.help:
         print('''%s pattern
         [-i|--ignorecase]
-        *[-s|--source source]
-        [-p|--pattern]
-        [-g|--regexp]
+        *[-s|--source source] - optional, see: pattern below
+        *[-p|--pattern]
+        [-g|--regexp] - treat pattern as regular expression (uses Python regexp engine)
         [-l|--regex-multiline]
         [-d|--regex-dotall]
-        [-B|--begin]
-        [-E|--end]
+        [-B|--begin] - match pattern to begin of item name (ignored in regexp mode)
+        [-E|--end] - match pattern to end of item name (ignored in regexp mode)
         [-v|--invert-match]
-        [-m|--mode]
-        [-x|--exec]
-        [--prefix=PREFIX]
+        [-m|--mode] - one of: 'all' (default), 'dirs', 'files'
+        [-x|--exec] - execute some command on every found item. In command, placeholders: {path}, {dirname}, {basename} are replaced with correct value
+        [--prefix=PREFIX] - add prefix 'd: ' (directory) or 'f: ' (file) to every found item
+        [--no-display] - don't display element (useful with --exec argument)
+        [--verbose-exec] - show command before execute it
         [-h|--help]
-        [--no-display]
-        [--verbose-exec]
-        pattern
-        [source1 .. sourceN]''' % os.path.basename(sys.argv[0]))
+        pattern - pattern to search
+        [source1 .. sourceN] - optional source (if missing, use current directory)''' % os.path.basename(sys.argv[0]))
         sys.exit()
 
     config.pattern = prepare_pattern(config)
