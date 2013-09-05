@@ -49,7 +49,7 @@ def parse_input_args(args):
 
     opts_short = 'gp:m:s:ildBEhx:v0'
     opts_long  = ('regexp', 'pattern=', 'mode=', 'source=', 'ignorecase', 'regex-multiline', 'regex-dotall',
-                'begin', 'end', 'prefix', 'help', 'exec=', 'invert-match', 'no-display', 'verbose-exec', 'interactive-exec')
+                'begin', 'end', 'prefix', 'help', 'exec=', 'invert-match', 'print0', 'no-display', 'verbose-exec', 'interactive-exec')
     opts, args = getopt.gnu_getopt(args, opts_short, opts_long)
 
     for o, a in opts:
@@ -92,7 +92,7 @@ def parse_input_args(args):
             cfg.interactive_exec = True
         elif o in ('--no-display'):
             cfg.display = False
-        elif o in ('-0'):
+        elif o in ('-0', '--print0'):
             cfg.delim = chr(0)
         elif o in ('-h', '--help'):
             return Config(help=True)
@@ -175,7 +175,7 @@ def main():
 
     if config.help:
         print('''%s pattern
-        [-0] split results by binary zero instead of new line (useful to work with xargs)
+        [-0|--print0] split results by binary zero instead of new line (useful to work with xargs)
         [-i|--ignorecase]
         *[-s|--source source] - optional, see: pattern below
         *[-p|--pattern]
