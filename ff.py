@@ -30,6 +30,7 @@ class Config:
         self.interactive_exec = False
         self.invert_match = False
         self.display = True
+        self.delim = "\n";
         self.help = False
 
         for key in kw:
@@ -46,7 +47,7 @@ def ask(question, replies, default):
 def parse_input_args(args):
     cfg = Config()
 
-    opts_short = 'gp:m:s:ildBEhx:v'
+    opts_short = 'gp:m:s:ildBEhx:v0'
     opts_long  = ('regexp', 'pattern=', 'mode=', 'source=', 'ignorecase', 'regex-multiline', 'regex-dotall',
                 'begin', 'end', 'prefix', 'help', 'exec=', 'invert-match', 'no-display', 'verbose-exec', 'interactive-exec')
     opts, args = getopt.gnu_getopt(args, opts_short, opts_long)
@@ -91,6 +92,8 @@ def parse_input_args(args):
             cfg.interactive_exec = True
         elif o in ('--no-display'):
             cfg.display = False
+        elif o in ('-0'):
+            cfg.delim = "\0"
         elif o in ('-h', '--help'):
             return Config(help=True)
 
@@ -155,7 +158,7 @@ def process_item(cfg, path):
             prefix = ''
             if cfg.prefix:
                 prefix = 'd: ' if os.path.isdir(path) else 'f: '
-            print(prefix, path, sep='')
+            print(prefix, path, sep='', end=cfg.delim)
         if cfg.execute:
             exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path))
             if cfg.verbose_exec:
@@ -172,6 +175,7 @@ def main():
 
     if config.help:
         print('''%s pattern
+        [-0] split results by binary zero instead of new line (useful to work with xargs)
         [-i|--ignorecase]
         *[-s|--source source] - optional, see: pattern below
         *[-p|--pattern]
