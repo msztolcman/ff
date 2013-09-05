@@ -13,17 +13,6 @@ import sys
 
 from pprint import pprint, pformat
 
-try:
-    opts_short = 'gp:m:s:ildBEhx:v'
-    opts_long  = ('regexp', 'pattern=', 'mode=', 'source=', 'ignorecase', 'regex-multiline', 'regex-dotall',
-                  'begin', 'end', 'prefix', 'help', 'exec', 'invert-match', 'no-display', 'verbose-exec')
-    opts, args = getopt.gnu_getopt(sys.argv[1:], opts_short, opts_long)
-    del opts_short
-    del opts_long
-except getopt.error as e:
-    print(e)
-    sys.exit(1)
-
 class Config:
     def __init__(self, **kw):
         self.regexp = kw.get('regexp', False)
@@ -41,7 +30,6 @@ class Config:
         self.invert_match = kw.get('invert_match', False)
         self.display = kw.get('display', True)
         self.help = kw.get('help', False)
-config = Config()
 
 def ff_execute_prepare(exe, path, dirname, basename):
     exe = copy.copy(exe)
@@ -52,99 +40,99 @@ def ff_execute_prepare(exe, path, dirname, basename):
 
     return exe
 
-for o, a in opts:
-    if o in ('-g', '--regexp'):
-        config.regexp = True
-    elif o in ('-p', '--pattern'):
-        config.pattern = a
-    elif o in ('-m', '--mode'):
-        if a not in ('files', 'dirs', 'all'):
-            print('Mode must be one of: "files", "dirs", "all".')
-            sys.exit(1)
+def parse_input_args(args):
+    cfg = Config()
 
-        config.mode = a
-    elif o in ('-s', '--source'):
-        if not os.path.isdir(a):
-            print('Source %s doesn\'t exists or is not a directory' % a)
+    opts_short = 'gp:m:s:ildBEhx:v'
+    opts_long  = ('regexp', 'pattern=', 'mode=', 'source=', 'ignorecase', 'regex-multiline', 'regex-dotall',
+                'begin', 'end', 'prefix', 'help', 'exec', 'invert-match', 'no-display', 'verbose-exec')
+    opts, args = getopt.gnu_getopt(args, opts_short, opts_long)
 
-        if config.source is None:
-            config.source = [a]
+    for o, a in opts:
+        if o in ('-g', '--regexp'):
+            cfg.regexp = True
+        elif o in ('-p', '--pattern'):
+            cfg.pattern = a
+        elif o in ('-m', '--mode'):
+            if a not in ('files', 'dirs', 'all'):
+                raise getopt.error('Mode must be one of: "files", "dirs", "all".')
+
+            cfg.mode = a
+        elif o in ('-s', '--source'):
+            if not os.path.isdir(a):
+                raise getopt.error('Source %s doesn\'t exists or is not a directory' % a)
+
+            if cfg.source is None:
+                cfg.source = [a]
+            else:
+                cfg.source.append(a)
+        elif o in ('-i', '--ignorecase'):
+            cfg.ignorecase = True
+        elif o in ('-l', '--regex-multiline'):
+            cfg.regex_multiline = True
+        elif o in ('-d', '--regex-dotall'):
+            cfg.regex_dotall = True
+        elif o in ('-B', '--begin'):
+            cfg.fnmatch_begin = True
+        elif o in ('-E', '--end'):
+            cfg.fnmatch_end = True
+        elif o == '--prefix':
+            cfg.prefix = True
+        elif o in ('-x', '--exec'):
+            cfg.execute = shlex.split(a)
+        elif  o in ('--verbose-exec'):
+            cfg.verbose_exec = True
+        elif o in ('-v', '--invert-match'):
+            cfg.invert_match = True
+        elif o in ('--no-display'):
+            cfg.display = False
+        elif o in ('-h', '--help'):
+            return Config(help=True)
+
+    if cfg.pattern is None:
+        if args:
+            cfg.pattern = args.pop(0)
         else:
-            config.source.append(a)
-    elif o in ('-i', '--ignorecase'):
-        config.ignorecase = True
-    elif o in ('-l', '--regex-multiline'):
-        config.regex_multiline = True
-    elif o in ('-d', '--regex-dotall'):
-        config.regex_dotall = True
-    elif o in ('-B', '--begin'):
-        config.fnmatch_begin = True
-    elif o in ('-E', '--end'):
-        config.fnmatch_end = True
-    elif o == '--prefix':
-        config.prefix = True
-    elif o in ('-x', '--exec'):
-        config.execute = shlex.split(a)
-    elif  o in ('--verbose-exec'):
-        config.verbose_exec = True
-    elif o in ('-v', '--invert-match'):
-        config.invert_match = True
-    elif o in ('--no-display'):
-        config.display = False
-    elif o in ('-h', '--help'):
-        print('''%s pattern
-    [-i|--ignorecase]
-    *[-s|--source source]
-    [-l|--regex-multiline]
-    [-d|--regex-dotall]
-    [-B|--begin]
-    [-E|--end]
-    [-v|--invert-match]
-    [--prefix=PREFIX]
-    pattern
-    [source1 .. sourceN]''' % os.path.basename(sys.argv[0]))
-        sys.exit()
+            raise getopt.error('Pattern is missing')
 
-if config.pattern is None:
-    if args:
-        config.pattern = args.pop(0)
-    else:
-        print('Pattern is missing')
-        sys.exit(1)
+    if cfg.source is None:
+        if args:
+            cfg.source = args
+        else:
+            cfg.source = ['.']
 
-if config.source is None:
-    if args:
-        config.source = args
-    else:
-        config.source = ['.']
+    for i, src in enumerate(cfg.source):
+        cfg.source[i] = os.path.abspath(src)
 
-for i, src in enumerate(config.source):
-    config.source[i] = os.path.abspath(src)
+    return cfg
 
-if config.regexp:
+def prepare_pattern(cfg):
+    pattern = cfg.pattern
     flags = 0
-    if config.ignorecase:
-        flags = flags | re.IGNORECASE
-    if config.regex_dotall:
-        flags = flags | re.DOTALL
-    if config.regex_multiline:
-        flags = flags | re.MULTILINE
-    config.pattern = re.compile(config.pattern, flags)
-else:
-    import fnmatch
 
-    flags = 0
-    if config.ignorecase:
-        flags = flags | re.IGNORECASE
+    if cfg.regexp:
+        if cfg.ignorecase:
+            flags = flags | re.IGNORECASE
+        if cfg.regex_dotall:
+            flags = flags | re.DOTALL
+        if cfg.regex_multiline:
+            flags = flags | re.MULTILINE
+    else:
+        import fnmatch
 
-    config.pattern = fnmatch.translate(config.pattern)
-    if config.fnmatch_begin:
-        config.pattern = '^' + config.pattern
-    if config.fnmatch_end:
-        config.pattern = config.pattern + '$'
+        if cfg.ignorecase:
+            flags = flags | re.IGNORECASE
 
-    config.pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', config.pattern, flags=re.VERBOSE)
-    config.pattern = re.compile(config.pattern, flags)
+        pattern = fnmatch.translate(pattern)
+        if cfg.fnmatch_begin:
+            pattern = '^' + pattern
+        if cfg.fnmatch_end:
+            pattern = pattern + '$'
+
+        pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.VERBOSE)
+
+    pattern = re.compile(pattern, flags)
+    return pattern
 
 def process_item(config, path):
     m = config.pattern.search(os.path.basename(path))
@@ -160,11 +148,37 @@ def process_item(config, path):
                 print(' '.join(exe))
             subprocess.call(exe)
 
-for source in config.source:
-    for root, dirs, files in os.walk(source):
-        if config.mode in ('dirs', 'all'):
-            process_item(config, root)
+def main():
+    try:
+        config = parse_input_args(sys.argv[1:])
+    except getopt.error as e:
+        print(e, file=sys.stderr)
+        sys.exit(1)
 
-        if config.mode in ('files', 'all'):
-            for file_ in files:
-                process_item(config, os.path.join(root, file_))
+    if config.help:
+        print('''%s pattern
+        [-i|--ignorecase]
+        *[-s|--source source]
+        [-l|--regex-multiline]
+        [-d|--regex-dotall]
+        [-B|--begin]
+        [-E|--end]
+        [-v|--invert-match]
+        [--prefix=PREFIX]
+        pattern
+        [source1 .. sourceN]''' % os.path.basename(sys.argv[0]))
+        sys.exit()
+
+    config.pattern = prepare_pattern(config)
+
+    for source in config.source:
+        for root, dirs, files in os.walk(source):
+            if config.mode in ('dirs', 'all'):
+                process_item(config, root)
+
+            if config.mode in ('files', 'all'):
+                for file_ in files:
+                    process_item(config, os.path.join(root, file_))
+
+if __name__ == '__main__':
+    main()
