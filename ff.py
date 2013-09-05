@@ -39,7 +39,7 @@ def parse_input_args(args):
 
     opts_short = 'gp:m:s:ildBEhx:v'
     opts_long  = ('regexp', 'pattern=', 'mode=', 'source=', 'ignorecase', 'regex-multiline', 'regex-dotall',
-                'begin', 'end', 'prefix', 'help', 'exec', 'invert-match', 'no-display', 'verbose-exec')
+                'begin', 'end', 'prefix', 'help', 'exec=', 'invert-match', 'no-display', 'verbose-exec')
     opts, args = getopt.gnu_getopt(args, opts_short, opts_long)
 
     for o, a in opts:
