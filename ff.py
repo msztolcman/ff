@@ -2,13 +2,16 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function, unicode_literals
-import os, os.path
-import sys
-import re
-import subprocess
-from pprint import pprint, pformat
 
+import copy
 import getopt
+import os, os.path
+import re
+import shlex
+import subprocess
+import sys
+
+from pprint import pprint, pformat
 
 try:
     opts_short = 'gp:m:s:ildBEhx:v'
