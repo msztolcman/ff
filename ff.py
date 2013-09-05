@@ -41,7 +41,9 @@ class Config:
 
 def ask(question, replies, default):
     replies = [ reply.lower() for reply in replies ]
-    question += ' (' + ','.join(reply.upper() if reply == default else reply for reply in replies) + ') '
+    choices = ','.join(replies)
+    choices = choices.replace(default.lower(), default.upper())
+    question += ' (' + choices + ') '
     while True:
         reply = raw_input(question).lower()
         if reply in replies:
