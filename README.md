@@ -29,4 +29,3 @@ Usage
         [-h|--help]
         pattern - pattern to search
         [source1 .. sourceN] - optional source (if missing, use current directory)
-
