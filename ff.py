@@ -162,12 +162,19 @@ def main():
         print('''%s pattern
         [-i|--ignorecase]
         *[-s|--source source]
+        [-p|--pattern]
+        [-g|--regexp]
         [-l|--regex-multiline]
         [-d|--regex-dotall]
         [-B|--begin]
         [-E|--end]
         [-v|--invert-match]
+        [-m|--mode]
+        [-x|--exec]
         [--prefix=PREFIX]
+        [-h|--help]
+        [--no-display]
+        [--verbose-exec]
         pattern
         [source1 .. sourceN]''' % os.path.basename(sys.argv[0]))
         sys.exit()
