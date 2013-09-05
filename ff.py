@@ -145,30 +145,25 @@ else:
     config.pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', config.pattern, flags=re.VERBOSE)
     config.pattern = re.compile(config.pattern, flags)
 
+def process_item(config, path):
+    m = config.pattern.search(os.path.basename(path))
+    if (not config.invert_match and m) or (config.invert_match and not m):
+        if config.display:
+            prefix = ''
+            if config.prefix:
+                prefix = 'd: ' if os.path.isdir(path) else 'f: '
+            print(prefix, path, sep='')
+        if config.execute:
+            exe = ff_execute_prepare(config.execute, path, os.path.dirname(path), os.path.basename(path))
+            if config.verbose_exec:
+                print(' '.join(exe))
+            subprocess.call(exe)
+
 for source in config.source:
     for root, dirs, files in os.walk(source):
         if config.mode in ('dirs', 'all'):
-            prefix = 'd: ' if config.prefix else ''
-            m = config.pattern.search(os.path.basename(root))
-            if (not config.invert_match and m) or (config.invert_match and not m):
-                if config.display:
-                    print(prefix, root, sep='')
-                if config.execute:
-                    exe = ff_execute_prepare(config.execute, root, os.path.dirname(root), os.path.basename(root))
-                    if config.verbose_exec:
-                        print(exe)
-                    subprocess.call(exe)
+            process_item(config, root)
 
         if config.mode in ('files', 'all'):
-            prefix = 'f: ' if config.prefix else ''
             for file_ in files:
-                m = config.pattern.search(file_)
-                if (not config.invert_match and m) or (config.invert_match and not m):
-                    path = os.path.join(root, file_)
-                    if config.display:
-                        print(prefix, path, sep='')
-                    if config.execute:
-                        exe = ff_execute_prepare(config.execute, path, root, file_)
-                        if config.verbose_exec:
-                            print(exe)
-                        subprocess.call(exe)
+                process_item(config, os.path.join(root, file_))
