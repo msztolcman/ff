@@ -24,6 +24,14 @@ Search for all files and folders in current directory and below, which is match 
 
 Search for all files and folders in current directory and below, which is match to pattern: `passwd`.
 
+Advanced usage
+--------------
+
+    ./ff.py -p pa -s /etc --shell-exec -x '[ -f "{path}" ] && mkdir -p /tmp{dirname}; cp -r "{path}" "/tmp{path}"'
+
+Find all files and directories in /etc that match expression: `*pa*`, and copy them (with original directories hierarchy!) to /tmp.
+So powerful...
+
 Usage
 -----
 
