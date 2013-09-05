@@ -15,21 +15,24 @@ from pprint import pprint, pformat
 
 class Config:
     def __init__(self, **kw):
-        self.regexp = kw.get('regexp', False)
-        self.pattern = kw.get('pattern', None)
-        self.mode = kw.get('mode', 'all')
-        self.source = kw.get('source', None)
-        self.ignorecase = kw.get('ignorecase', True)
-        self.regex_multiline = kw.get('regex_multiline', False)
-        self.regex_dotall = kw.get('regex_dotall', False)
-        self.fnmatch_begin = kw.get('fnmatch_begin', False)
-        self.fnmatch_end = kw.get('fnmatch_end', False)
-        self.prefix = kw.get('prefix', False)
-        self.execute = kw.get('execute', None)
-        self.verbose_exec = kw.get('verbose_exec', False)
-        self.invert_match = kw.get('invert_match', False)
-        self.display = kw.get('display', True)
-        self.help = kw.get('help', False)
+        self.regexp = False
+        self.pattern = None
+        self.mode = 'all'
+        self.source = None
+        self.ignorecase = True
+        self.regex_multiline = False
+        self.regex_dotall = False
+        self.fnmatch_begin = False
+        self.fnmatch_end = False
+        self.prefix = False
+        self.execute = None
+        self.verbose_exec = False
+        self.invert_match = False
+        self.display = True
+        self.help = False
+
+        for key in kw:
+            setattr(self, key, kw[key])
 
 def parse_input_args(args):
     cfg = Config()
