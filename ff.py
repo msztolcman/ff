@@ -158,11 +158,11 @@ def prepare_pattern(cfg):
 
         pattern = fnmatch.translate(pattern)
         if cfg.fnmatch_begin:
-            pattern = '^' + pattern
-        if cfg.fnmatch_end:
-            pattern = pattern + '$'
+            pattern = r'\A' + pattern
 
-        pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.VERBOSE)
+        if not cfg.fnmatch_end:
+            pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.VERBOSE)
+
 
     pattern = re.compile(pattern, flags)
     return pattern
