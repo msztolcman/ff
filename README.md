@@ -40,7 +40,7 @@ Usage
         [-v|--invert-match]
         [-m|--mode] - one of: 'all' (default), 'dirs', 'files'
         [-x|--exec] - execute some command on every found item. In command, placeholders: {path}, {dirname}, {basename} are replaced with correct value
-        [--prefix=PREFIX] - add prefix 'd: ' (directory) or 'f: ' (file) to every found item
+        [--prefix] - add prefix 'd: ' (directory) or 'f: ' (file) to every found item
         [--no-display] - don't display element (useful with --exec argument)
         [--verbose-exec] - show command before execute it
         [--interactive-exec] - ask before execute command on every item
