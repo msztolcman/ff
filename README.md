@@ -70,6 +70,8 @@ Usage
                           optional, see: pattern above
     -g, --regexp          treat pattern as regular expression (uses Python
                           regexp engine)
+    -f, --fuzz            pattern defines only set and order of characters used
+                          in filename
     -l, --regex-multiline
     -d, --regex-dotall
     -B, --begin           match pattern to begin of item name (ignored in regexp
