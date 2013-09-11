@@ -17,25 +17,25 @@ __version__ = '0.1'
 
 class Config:
     def __init__(self, **kw):
-        self.regexp = False
-        self.pattern = None
-        self.mode = 'all'
-        self.source = None
-        self.ignorecase = True
-        self.regex_multiline = False
-        self.regex_dotall = False
+        self.delim = "\n";
+        self.display = True
+        self.execute = None
         self.fnmatch_begin = False
         self.fnmatch_end = False
-        self.prefix = False
-        self.execute = None
-        self.verbose_exec = False
+        self.help = False
+        self.ignorecase = True
         self.interactive_exec = False
         self.invert_match = False
-        self.display = True
-        self.delim = "\n";
-        self.help = False
-        self.vcs = False
+        self.mode = 'all'
+        self.pattern = None
+        self.prefix = False
+        self.regex_dotall = False
+        self.regex_multiline = False
+        self.regexp = False
         self.shell_exec = False
+        self.source = None
+        self.vcs = False
+        self.verbose_exec = False
 
         for key in kw:
             setattr(self, key, kw[key])
