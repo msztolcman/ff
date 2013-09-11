@@ -40,14 +40,30 @@ class Config:
         for key in kw:
             setattr(self, key, kw[key])
 
-def ask(question, replies, default):
-    replies = [ reply.lower() for reply in replies ]
+def ask(question, replies, default=None):
+    """ Ask question and repeat it, until answer will not be one of 'replies',
+        or nothing (then default value will be used).
+        Question should not contain possible answers, it's built based on
+        'replies'.
+        'replies' is iterable with one letter possible answers.
+        'default' can be empty.
+    """
+    replies = { reply.lower() for reply in replies }
+    if default:
+        default = default.lower()
+        replies.add(default)
+
     choices = ','.join(replies)
-    choices = choices.replace(default.lower(), default.upper())
+    if default:
+        choices = choices.replace(default, default.upper())
+
     question += ' (' + choices + ') '
     while True:
         reply = raw_input(question).lower()
-        if reply in replies:
+        if reply == '':
+            if default:
+                return default
+        elif reply in replies:
             return reply
 
 def parse_input_args(args):
