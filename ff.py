@@ -42,8 +42,7 @@ def ask(question, replies, default=None):
             return reply
 
 def parse_input_args(args):
-    """ Parse input 'args' and fill Config's instance with parsed data.
-        Returns Config instance.
+    """ Parse input 'args' and return parsed.
     """
     p = argparse.ArgumentParser()
 
