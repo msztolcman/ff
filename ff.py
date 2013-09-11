@@ -198,7 +198,6 @@ def prepare_pattern(cfg):
         if not cfg.fnmatch_end:
             pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.VERBOSE)
 
-
     pattern = re.compile(pattern, flags)
     return pattern
 
@@ -206,9 +205,12 @@ def process_item(cfg, path):
     m = cfg.pattern.search(os.path.basename(path))
     if (not cfg.invert_match and m) or (cfg.invert_match and not m):
         if cfg.display:
-            prefix = ''
-            if cfg.prefix:
-                prefix = 'd: ' if os.path.isdir(path) else 'f: '
+            if not cfg.prefix:
+                prefix = ''
+            elif os.path.isdir(path):
+                prefix = 'd: '
+            else:
+                prefix = 'f: '
             print(prefix, path, sep='', end=cfg.delim)
         if cfg.execute:
             exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path), not cfg.shell_exec)
