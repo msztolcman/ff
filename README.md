@@ -62,36 +62,36 @@ Usage
     optional arguments:
     -h, --help            show this help message and exit
     -0, --print0          split results by binary zero instead of new line
-                            (useful to work with xargs)
+                          (useful to work with xargs)
     -i, --ignorecase, --ignore-case
     -s SOURCE, --source SOURCE
-                            optional, see: source above
+                          optional, see: source above
     -p PATTERN, --pattern PATTERN
-                            optional, see: pattern above
+                          optional, see: pattern above
     -g, --regexp          treat pattern as regular expression (uses Python
-                            regexp engine)
+                          regexp engine)
     -l, --regex-multiline
     -d, --regex-dotall
     -B, --begin           match pattern to begin of item name (ignored in regexp
-                            mode)
+                          mode)
     -E, --end             match pattern to end of item name (ignored in regexp
-                            mode)
+                          mode)
     -v, --invert-match
     -m {all,files,dirs}, --mode {all,files,dirs}
     -x EXECUTE, --exec EXECUTE
-                            execute some command on every found item. In command,
-                            placeholders: {path}, {dirname}, {basename} are
-                            replaced with correct value
+                          execute some command on every found item. In command,
+                          placeholders: {path}, {dirname}, {basename} are
+                          replaced with correct value
     --prefix              add prefix "d: " (directory) or "f: " (file) to every
-                            found item
+                          found item
     --no-display          don't display element (useful with --exec argument)
     --verbose-exec        show command before execute it
     --interactive-exec    ask before execute command on every item
     --shell-exec          execute command from --exec argument in shell (with
-                            shell expansion etc)
+                          shell expansion etc)
     --vcs                 do not skip VCS directories (.git, .svn etc)
     -c EXCLUDED_PATHS, --exclude-path EXCLUDED_PATHS
-                            skip given paths from scanning
+                          skip given paths from scanning
 
 Contact
 -------
