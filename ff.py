@@ -150,12 +150,19 @@ def parse_input_args(args):
     return cfg
 
 def _prepare_execute__vars(m):
+    """ Helper method for prepare_execute, used in replacement of regular expression.
+        Returns environment variable if found, and quantity of escape characters ('\')
+        is even.
+    """
     if len(m.group(1)) % 2 == 0:
         return os.environ.get(m.group(2), '')
     else:
         return m.group(0)
 
 def prepare_execute(exe, path, dirname, basename, expand_vars=True):
+    """ Replace keywords and env variables in 'exe' with values.
+    """
+
     exe = copy.copy(exe)
     rxp_var = re.compile(r'(\\*)\$([_a-zA-Z0-9]+)')
     for i, elem in enumerate(exe):
