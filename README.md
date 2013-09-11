@@ -49,28 +49,49 @@ Voila!
 Usage
 -----
 
-    ff
-        [-0|--print0] split results by binary zero instead of new line (useful to work with xargs)
-        [-i|--ignorecase]
-        *[-s|--source source] - optional, see: source below
-        *[-p|--pattern] - optional, see: pattern below
-        [-g|--regexp] - treat pattern as regular expression (uses Python regexp engine)
-        [-l|--regex-multiline]
-        [-d|--regex-dotall]
-        [-B|--begin] - anchor pattern to begin of item name (ignored in regexp mode)
-        [-E|--end] - anchor pattern to end of item name (ignored in regexp mode)
-        [-v|--invert-match]
-        [-m|--mode] - one of: 'all' (default), 'dirs', 'files'
-        [-x|--exec] - execute some command on every found item. In command, placeholders: {path}, {dirname}, {basename} are replaced with correct value
-        [--prefix] - add prefix 'd: ' (directory) or 'f: ' (file) to every found item
-        [--no-display] - don't display element (useful with --exec argument)
-        [--verbose-exec] - show command before execute it
-        [--interactive-exec] - ask before execute command on every item
-        [--shell-exec] - execute command from --exec argument in shell (with shell expansion etc)
-        [--vcs] - do not skip VCS directories (.git, .svn etc)
-        [-h|--help]
-        pattern - pattern to search
-        [source1 .. sourceN] - optional source (if missing, use current directory)
+    usage: ff.py [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-l] [-d] [-B] [-E]
+                [-v] [-m {all,files,dirs}] [-x EXECUTE] [--prefix] [--no-display]
+                [--verbose-exec] [--interactive-exec] [--shell-exec] [--vcs]
+                [-c EXCLUDED_PATHS]
+                [pattern] [sources [sources ...]]
+
+    positional arguments:
+    pattern               pattern to search
+    sources               optional source (if missing, use current directory)
+
+    optional arguments:
+    -h, --help            show this help message and exit
+    -0, --print0          split results by binary zero instead of new line
+                            (useful to work with xargs)
+    -i, --ignorecase, --ignore-case
+    -s SOURCE, --source SOURCE
+                            optional, see: source above
+    -p PATTERN, --pattern PATTERN
+                            optional, see: pattern above
+    -g, --regexp          treat pattern as regular expression (uses Python
+                            regexp engine)
+    -l, --regex-multiline
+    -d, --regex-dotall
+    -B, --begin           match pattern to begin of item name (ignored in regexp
+                            mode)
+    -E, --end             match pattern to end of item name (ignored in regexp
+                            mode)
+    -v, --invert-match
+    -m {all,files,dirs}, --mode {all,files,dirs}
+    -x EXECUTE, --exec EXECUTE
+                            execute some command on every found item. In command,
+                            placeholders: {path}, {dirname}, {basename} are
+                            replaced with correct value
+    --prefix              add prefix "d: " (directory) or "f: " (file) to every
+                            found item
+    --no-display          don't display element (useful with --exec argument)
+    --verbose-exec        show command before execute it
+    --interactive-exec    ask before execute command on every item
+    --shell-exec          execute command from --exec argument in shell (with
+                            shell expansion etc)
+    --vcs                 do not skip VCS directories (.git, .svn etc)
+    -c EXCLUDED_PATHS, --exclude-path EXCLUDED_PATHS
+                            skip given paths from scanning
 
 Contact
 -------
