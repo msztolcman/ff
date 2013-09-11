@@ -51,6 +51,7 @@ def parse_input_args(args):
     p.add_argument('-s', '--source', action='append', type=str, default=[], help='optional, see: source above')
     p.add_argument('-p', '--pattern', type=str, help='optional, see: pattern above')
     p.add_argument('-g', '--regexp', action='store_true', default=False, help='treat pattern as regular expression (uses Python regexp engine)')
+    p.add_argument('-f', '--fuzz', action='store_true', default=False, help='pattern defines only set and order of characters used in filename')
     p.add_argument('-l', '--regex-multiline', action='store_true', default=False, help='')
     p.add_argument('-d', '--regex-dotall', action='store_true', default=False, help='')
     p.add_argument('-B', '--begin', dest='fnmatch_begin', action='store_true', default=False, help='match pattern to begin of item name (ignored in regexp mode)')
@@ -135,14 +136,29 @@ def prepare_pattern(cfg):
     """ Prepare pattern from input args to use.
 
         If work in regex mode, there pattern is only compiled with flags. In normal mode,
-        pattern is converted to regex, and then compiled.
+        pattern is converted to regex, and then compiled. Recognize also fuzz mode.
 
         Returns always compiled regexp, ready to use.
     """
     pattern = cfg.pattern
     flags = 0
 
-    if cfg.regexp:
+    if cfg.fuzz:
+        new_pattern = ''
+        if cfg.fnmatch_begin:
+            new_pattern += '^'
+        for char in pattern:
+            new_pattern += '.*' + re.escape(char)
+        if cfg.fnmatch_end:
+            new_pattern += '$'
+
+        flags = flags | re.DOTALL | re.MULTILINE
+        if cfg.ignorecase:
+            flags = flags | re.IGNORECASE
+
+        pattern = new_pattern
+
+    elif cfg.regexp:
         if cfg.ignorecase:
             flags = flags | re.IGNORECASE
         if cfg.regex_dotall:
