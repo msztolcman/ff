@@ -161,6 +161,10 @@ def _prepare_execute__vars(m):
 
 def prepare_execute(exe, path, dirname, basename, expand_vars=True):
     """ Replace keywords and env variables in 'exe' with values.
+        Recognized keywords:
+        {path} - full file path
+        {dirname} - parent directory for file
+        {basename} - filename without path
     """
 
     exe = copy.copy(exe)
@@ -175,6 +179,13 @@ def prepare_execute(exe, path, dirname, basename, expand_vars=True):
     return exe
 
 def prepare_pattern(cfg):
+    """ Prepare pattern from input args to use.
+
+        If work in regex mode, there pattern is only compiled with flags. In normal mode,
+        pattern is converted to regex, and then compiled.
+
+        Returns always compiled regexp, ready to use.
+    """
     pattern = cfg.pattern
     flags = 0
 
@@ -202,6 +213,8 @@ def prepare_pattern(cfg):
     return pattern
 
 def process_item(cfg, path):
+    """ Test path for matching with pattern, print it if so, and execute command if given.
+    """
     m = cfg.pattern.search(os.path.basename(path))
     if (not cfg.invert_match and m) or (cfg.invert_match and not m):
         if cfg.display:
