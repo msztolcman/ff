@@ -19,6 +19,7 @@ class Config:
     def __init__(self, **kw):
         self.delim = "\n";
         self.display = True
+        self.excluded_paths = []
         self.execute = None
         self.fnmatch_begin = False
         self.fnmatch_end = False
@@ -39,6 +40,13 @@ class Config:
 
         for key in kw:
             setattr(self, key, kw[key])
+
+    def is_path_excluded(self, path):
+        path = path.rstrip('/')
+        for exc in self.excluded_paths:
+            if path == exc or exc + '/' in path:
+                return True
+        return False
 
 def ask(question, replies, default=None):
     """ Ask question and repeat it, until answer will not be one of 'replies',
@@ -72,10 +80,10 @@ def parse_input_args(args):
     """
     cfg = Config()
 
-    opts_short = 'gp:m:s:ildBEhx:v0'
+    opts_short = 'gp:m:s:ildBEhx:v0c:'
     opts_long  = ('regexp', 'pattern=', 'mode=', 'source=', 'ignorecase', 'regex-multiline', 'regex-dotall',
                 'begin', 'end', 'prefix', 'help', 'exec=', 'invert-match', 'print0', 'no-display', 'verbose-exec', 'interactive-exec',
-                 'vcs', 'shell-exec')
+                 'vcs', 'shell-exec', 'exclude-path=')
     opts, args = getopt.gnu_getopt(args, opts_short, opts_long)
 
     for o, a in opts:
@@ -124,6 +132,8 @@ def parse_input_args(args):
             cfg.vcs = True
         elif o == '--shell-exec':
             cfg.shell_exec = True
+        elif o in ('-c', '--exclude-path'):
+            cfg.excluded_paths.append(os.path.abspath(a).rstrip('/'))
         elif o in ('-h', '--help'):
             return Config(help=True)
 
@@ -259,6 +269,7 @@ def main():
     [--interactive-exec] - ask before execute command on every item
     [--shell-exec] - execute command from --exec argument in shell (with shell expansion etc)
     [--vcs] - do not skip VCS directories (.git, .svn etc)
+    [-c|--exclude-path PATH] - skip given paths from scanning
     [-h|--help]
     pattern - pattern to search
     [source1 .. sourceN] - optional source (if missing, use current directory)''' % os.path.basename(sys.argv[0]))
@@ -270,6 +281,9 @@ def main():
 
     for source in config.source:
         for root, dirs, files in os.walk(source):
+            if config.is_path_excluded(root):
+                continue
+
             if config.mode in ('dirs', 'all'):
                 if config.vcs or not rxp_vcs.search(root):
                     process_item(config, root)
@@ -277,6 +291,8 @@ def main():
             if config.mode in ('files', 'all'):
                 for file_ in files:
                     path = os.path.join(root, file_)
+                    if config.is_path_excluded(path):
+                        continue
                     if config.vcs or not rxp_vcs.search(path):
                         process_item(config, path)
 
