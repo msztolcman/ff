@@ -50,9 +50,9 @@ Usage
 -----
 
     usage: ff.py [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-l] [-d] [-B] [-E]
-                [-v] [-m {all,files,dirs}] [-x EXECUTE] [--prefix] [--no-display]
+                [-v] [-m {all,files,dirs}] [-x COMMAND] [--prefix] [--no-display]
                 [--verbose-exec] [--interactive-exec] [--shell-exec] [--vcs]
-                [-c EXCLUDED_PATHS]
+                [-c EXCLUDED_PATH]
                 [pattern] [sources [sources ...]]
 
     positional arguments:
@@ -78,7 +78,7 @@ Usage
                           mode)
     -v, --invert-match
     -m {all,files,dirs}, --mode {all,files,dirs}
-    -x EXECUTE, --exec EXECUTE
+    -x COMMAND, --exec COMMAND
                           execute some command on every found item. In command,
                           placeholders: {path}, {dirname}, {basename} are
                           replaced with correct value
@@ -90,7 +90,7 @@ Usage
     --shell-exec          execute command from --exec argument in shell (with
                           shell expansion etc)
     --vcs                 do not skip VCS directories (.git, .svn etc)
-    -c EXCLUDED_PATHS, --exclude-path EXCLUDED_PATHS
+    -c EXCLUDED_PATH, --exclude-path EXCLUDED_PATH
                           skip given paths from scanning
 
 Contact
