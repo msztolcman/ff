@@ -128,9 +128,9 @@ def parse_input_args(args):
             return Config(help=True)
 
     if cfg.pattern is None:
-        if args:
+        try:
             cfg.pattern = args.pop(0)
-        else:
+        except IndexError:
             raise getopt.error('Pattern is missing')
 
     if cfg.source is None:
