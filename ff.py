@@ -3,50 +3,18 @@
 
 from __future__ import print_function, unicode_literals
 
+import argparse
 import copy
-import getopt
 import os, os.path
 import re
 import shlex
 import subprocess
 import sys
+import types
 
 from pprint import pprint, pformat
 
 __version__ = '0.1'
-
-class Config:
-    def __init__(self, **kw):
-        self.delim = "\n";
-        self.display = True
-        self.excluded_paths = []
-        self.execute = None
-        self.fnmatch_begin = False
-        self.fnmatch_end = False
-        self.help = False
-        self.ignorecase = True
-        self.interactive_exec = False
-        self.invert_match = False
-        self.mode = 'all'
-        self.pattern = None
-        self.prefix = False
-        self.regex_dotall = False
-        self.regex_multiline = False
-        self.regexp = False
-        self.shell_exec = False
-        self.source = None
-        self.vcs = False
-        self.verbose_exec = False
-
-        for key in kw:
-            setattr(self, key, kw[key])
-
-    def is_path_excluded(self, path):
-        path = path.rstrip('/')
-        for exc in self.excluded_paths:
-            if path == exc or exc + '/' in path:
-                return True
-        return False
 
 def ask(question, replies, default=None):
     """ Ask question and repeat it, until answer will not be one of 'replies',
@@ -78,86 +46,63 @@ def parse_input_args(args):
     """ Parse input 'args' and fill Config's instance with parsed data.
         Returns Config instance.
     """
-    cfg = Config()
+    p = argparse.ArgumentParser()
 
-    opts_short = 'gp:m:s:ildBEhx:v0c:'
-    opts_long  = ('regexp', 'pattern=', 'mode=', 'source=', 'ignorecase', 'regex-multiline', 'regex-dotall',
-                'begin', 'end', 'prefix', 'help', 'exec=', 'invert-match', 'print0', 'no-display', 'verbose-exec', 'interactive-exec',
-                 'vcs', 'shell-exec', 'exclude-path=')
-    opts, args = getopt.gnu_getopt(args, opts_short, opts_long)
+    p.add_argument('-0', '--print0', action='store_true', default=False, help='split results by binary zero instead of new line (useful to work with xargs)')
+    p.add_argument('-i', '--ignorecase', '--ignore-case', action='store_true', default=False, help='')
+    p.add_argument('-s', '--source', action='append', type=str, default=[], help='optional, see: source above')
+    p.add_argument('-p', '--pattern', type=str, help='optional, see: pattern above')
+    p.add_argument('-g', '--regexp', action='store_true', default=False, help='treat pattern as regular expression (uses Python regexp engine)')
+    p.add_argument('-l', '--regex-multiline', action='store_true', default=False, help='')
+    p.add_argument('-d', '--regex-dotall', action='store_true', default=False, help='')
+    p.add_argument('-B', '--begin', dest='fnmatch_begin', action='store_true', default=False, help='match pattern to begin of item name (ignored in regexp mode)')
+    p.add_argument('-E', '--end', dest='fnmatch_end', action='store_true', default=False, help='match pattern to end of item name (ignored in regexp mode)')
+    p.add_argument('-v', '--invert-match', action='store_true', default=False, help='')
+    p.add_argument('-m', '--mode', choices=('all', 'files', 'dirs'), default='all', help='')
+    p.add_argument('-x', '--exec', dest='execute', type=str, help='execute some command on every found item. In command, placeholders: {path}, {dirname}, {basename} are replaced with correct value')
+    p.add_argument('--prefix', action='store_true', default=False, help='add prefix "d: " (directory) or "f: " (file) to every found item')
+    p.add_argument('--no-display', dest='display', action='store_false', default=True, help='don\'t display element (useful with --exec argument)')
+    p.add_argument('--verbose-exec', action='store_true', default=False, help='show command before execute it')
+    p.add_argument('--interactive-exec', action='store_true', default=False, help='ask before execute command on every item')
+    p.add_argument('--shell-exec', action='store_true', default=False, help='execute command from --exec argument in shell (with shell expansion etc)')
+    p.add_argument('--vcs', action='store_true', default=False, help='do not skip VCS directories (.git, .svn etc)')
+    p.add_argument('-c', '--exclude-path', dest='excluded_paths', action='append', type=str, default=[], help='skip given paths from scanning')
+    p.add_argument('anon_pattern', metavar='pattern', type=str, nargs='?', help='pattern to search')
+    p.add_argument('anon_sources', metavar='sources', type=str, nargs='*', help='optional source (if missing, use current directory)')
 
-    for o, a in opts:
-        if o in ('-g', '--regexp'):
-            cfg.regexp = True
-        elif o in ('-p', '--pattern'):
-            cfg.pattern = a
-        elif o in ('-m', '--mode'):
-            if a not in ('files', 'dirs', 'all'):
-                raise getopt.error('Mode must be one of: "files", "dirs", "all".')
+    args = p.parse_args()
 
-            cfg.mode = a
-        elif o in ('-s', '--source'):
-            if not os.path.isdir(a):
-                raise getopt.error('Source "%s" doesn\'t exists or is not a directory' % a)
+    if args.pattern is None:
+        args.pattern = args.anon_pattern
+    else:
+        args.anon_sources.insert(0, args.anon_pattern)
 
-            try:
-                cfg.source.append(a)
-            except AttributeError:
-                cfg.source = [a]
-        elif o in ('-i', '--ignorecase'):
-            cfg.ignorecase = True
-        elif o in ('-l', '--regex-multiline'):
-            cfg.regex_multiline = True
-        elif o in ('-d', '--regex-dotall'):
-            cfg.regex_dotall = True
-        elif o in ('-B', '--begin'):
-            cfg.fnmatch_begin = True
-        elif o in ('-E', '--end'):
-            cfg.fnmatch_end = True
-        elif o == '--prefix':
-            cfg.prefix = True
-        elif o in ('-x', '--exec'):
-            cfg.execute = a
-        elif  o == '--verbose-exec':
-            cfg.verbose_exec = True
-        elif o in ('-v', '--invert-match'):
-            cfg.invert_match = True
-        elif o == '--interactive-exec':
-            cfg.interactive_exec = True
-        elif o == '--no-display':
-            cfg.display = False
-        elif o in ('-0', '--print0'):
-            cfg.delim = chr(0)
-        elif o == '--vcs':
-            cfg.vcs = True
-        elif o == '--shell-exec':
-            cfg.shell_exec = True
-        elif o in ('-c', '--exclude-path'):
-            cfg.excluded_paths.append(os.path.abspath(a).rstrip('/'))
-        elif o in ('-h', '--help'):
-            return Config(help=True)
+    if args.pattern is None:
+        raise p.error('argument -p/--pattern is required')
 
-    if cfg.pattern is None:
-        try:
-            cfg.pattern = args.pop(0)
-        except IndexError:
-            raise getopt.error('Pattern is missing')
+    args.source += args.anon_sources;
+    if not args.source:
+        args.source.append('.')
 
-    if cfg.source is None:
-        if args:
-            cfg.source = args
-        else:
-            cfg.source = ['.']
+    for i, src in enumerate(args.source):
+        if not os.path.isdir(src):
+            p.error('Source %s doesn\'t exists or is not a directory' % src)
+        args.source[i] = os.path.abspath(src)
 
-    for i, src in enumerate(cfg.source):
-        cfg.source[i] = os.path.abspath(src)
+    if args.shell_exec:
+        args.execute = [args.execute]
+    elif args.execute:
+        args.execute = shlex.split(args.execute)
 
-    if cfg.shell_exec:
-        cfg.execute = [cfg.execute]
-    elif cfg.execute:
-        cfg.execute = shlex.split(cfg.execute)
+    for i, exc in enumerate(args.excluded_paths):
+        args.excluded_paths[i] = os.path.abspath(exc).rstrip('/')
 
-    return cfg
+    if args.print0:
+        args.delim = chr(0)
+    else:
+        args.delim = "\n"
+
+    return args
 
 def _prepare_execute__vars(m):
     """ Helper method for prepare_execute, used in replacement of regular expression.
@@ -242,38 +187,19 @@ def process_item(cfg, path):
             if not cfg.interactive_exec or ask('Execute command on %s?' % path, 'yn', 'n') == 'y':
                 subprocess.call(exe, shell=cfg.shell_exec)
 
+def is_path_excluded(excluded_paths, path):
+    path = path.rstrip('/')
+    for exc in excluded_paths:
+        if path == exc or exc + '/' in path:
+            return True
+    return False
+
 def main():
     try:
         config = parse_input_args(sys.argv[1:])
-    except getopt.error as e:
+    except argparse.ArgumentError:
         print(e, file=sys.stderr)
         sys.exit(1)
-
-    if config.help:
-        print('''%s
-    [-0|--print0] split results by binary zero instead of new line (useful to work with xargs)
-    [-i|--ignorecase]
-    *[-s|--source source] - optional, see: pattern below
-    *[-p|--pattern]
-    [-g|--regexp] - treat pattern as regular expression (uses Python regexp engine)
-    [-l|--regex-multiline]
-    [-d|--regex-dotall]
-    [-B|--begin] - match pattern to begin of item name (ignored in regexp mode)
-    [-E|--end] - match pattern to end of item name (ignored in regexp mode)
-    [-v|--invert-match]
-    [-m|--mode] - one of: 'all' (default), 'dirs', 'files'
-    [-x|--exec] - execute some command on every found item. In command, placeholders: {path}, {dirname}, {basename} are replaced with correct value
-    [--prefix] - add prefix 'd: ' (directory) or 'f: ' (file) to every found item
-    [--no-display] - don't display element (useful with --exec argument)
-    [--verbose-exec] - show command before execute it
-    [--interactive-exec] - ask before execute command on every item
-    [--shell-exec] - execute command from --exec argument in shell (with shell expansion etc)
-    [--vcs] - do not skip VCS directories (.git, .svn etc)
-    [-c|--exclude-path PATH] - skip given paths from scanning
-    [-h|--help]
-    pattern - pattern to search
-    [source1 .. sourceN] - optional source (if missing, use current directory)''' % os.path.basename(sys.argv[0]))
-        sys.exit()
 
     config.pattern = prepare_pattern(config)
 
@@ -281,7 +207,7 @@ def main():
 
     for source in config.source:
         for root, dirs, files in os.walk(source):
-            if config.is_path_excluded(root):
+            if is_path_excluded(config.excluded_paths, root):
                 continue
 
             if config.mode in ('dirs', 'all'):
@@ -291,7 +217,7 @@ def main():
             if config.mode in ('files', 'all'):
                 for file_ in files:
                     path = os.path.join(root, file_)
-                    if config.is_path_excluded(path):
+                    if is_path_excluded(config.excluded_paths, path):
                         continue
                     if config.vcs or not rxp_vcs.search(path):
                         process_item(config, path)
