@@ -67,6 +67,9 @@ def ask(question, replies, default=None):
             return reply
 
 def parse_input_args(args):
+    """ Parse input 'args' and fill Config's instance with parsed data.
+        Returns Config instance.
+    """
     cfg = Config()
 
     opts_short = 'gp:m:s:ildBEhx:v0'
