@@ -52,11 +52,12 @@ def _parse_input_args__prepare_anon_pattern(args):
     m = rxp_pattern.match(args.pattern)
     if m:
         groups = m.groupdict()
+
         delim_closed = { '}': '{', ']': '[', ')': '(', '>': '<' }
         if groups['delim_open'] in '/!@#%|' and groups['delim_open'] != groups['delim_close']:
-            p.error('Invalid pattern')
+            return 'Invalid pattern'
         elif groups['delim_open'] in '{[(<' and (groups['delim_close'] not in delim_closed or delim_closed[groups['delim_close']] != groups['delim_open']):
-            p.error('Invalid pattern')
+            return 'Invalid pattern'
 
         args.pattern = groups['pattern']
 
@@ -125,7 +126,9 @@ def parse_input_args(args):
     args = p.parse_args()
 
     if args.pattern is None:
-        _parse_input_args__prepare_anon_pattern(args)
+        err = _parse_input_args__prepare_anon_pattern(args)
+        if err:
+            p.error(err)
     else:
         args.anon_sources.insert(0, args.anon_pattern)
 
