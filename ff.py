@@ -41,6 +41,36 @@ def ask(question, replies, default=None):
         elif reply in replies:
             return reply
 
+def _parse_input_args__prepare_anon_pattern(args):
+    args.pattern = args.anon_pattern
+
+    if not args.pattern:
+        return
+
+    rxp_pattern = re.compile(r'^ (?P<mode>[gfp])? (?P<delim_open>[{[(</!@#%|]) (?P<pattern>.*) (?P<delim_close>[}\])>/!@#%|]) (?P<modifier>[imsvr]+)? $', re.VERBOSE)
+    m = rxp_pattern.match(args.pattern)
+    if m:
+        groups = m.groupdict()
+        delim_closed = { '}': '{', ']': '[', ')': '(', '>': '<' }
+        if groups['delim_open'] in '/!@#%|' and groups['delim_open'] != groups['delim_close']:
+            p.error('Invalid pattern')
+        elif groups['delim_open'] in '{[(<' and (groups['delim_close'] not in delim_closed or delim_closed[groups['delim_close']] != groups['delim_open']):
+            p.error('Invalid pattern')
+
+        args.pattern = groups['pattern']
+
+        for mod in (groups['modifier'] or ''):
+            if mod == 'i': args.ignorecase = True
+            elif mod == 'm': args.regex_multiline = True
+            elif mod == 's': args.regex_dotall = True
+            elif mod == 'v': pass
+            elif mod == 'r': args.invert_match = True
+
+        for mod in (groups['mode'] or ''):
+            if mod == 'g': args.regexp = True
+            elif mod == 'p': pass
+            elif mod == 'f': args.fuzzy = True
+
 def parse_input_args(args):
     """ Parse input 'args' and return parsed.
     """
@@ -72,7 +102,7 @@ def parse_input_args(args):
     args = p.parse_args()
 
     if args.pattern is None:
-        args.pattern = args.anon_pattern
+        _parse_input_args__prepare_anon_pattern(args)
     else:
         args.anon_sources.insert(0, args.anon_pattern)
 
