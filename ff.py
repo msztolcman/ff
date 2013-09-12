@@ -109,7 +109,7 @@ def parse_input_args(args):
     p.add_argument('-d', '--regex-dotall', action='store_true', default=False, help='')
     p.add_argument('-B', '--begin', dest='fnmatch_begin', action='store_true', default=False, help='match pattern to begin of item name (ignored in regexp mode)')
     p.add_argument('-E', '--end', dest='fnmatch_end', action='store_true', default=False, help='match pattern to end of item name (ignored in regexp mode)')
-    p.add_argument('-v', '--invert-match', action='store_true', default=False, help='')
+    p.add_argument('-v', '-r', '--invert-match', action='store_true', default=False, help='')
     p.add_argument('-m', '--mode', choices=('all', 'files', 'dirs'), default='all', help='')
     p.add_argument('-x', '--exec', metavar='COMMAND', dest='execute', type=str, help='execute some command on every found item. In command, placeholders: {path}, {dirname}, {basename} are replaced with correct value')
     p.add_argument('--prefix', action='store_true', default=False, help='add prefix "d: " (directory) or "f: " (file) to every found item')
