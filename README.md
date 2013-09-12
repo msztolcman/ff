@@ -57,11 +57,13 @@ Voila!
 Usage
 -----
 
-    usage: ff.py [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-l] [-d] [-B] [-E]
-                [-v] [-m {all,files,dirs}] [-x COMMAND] [--prefix] [--no-display]
-                [--verbose-exec] [--interactive-exec] [--shell-exec] [--vcs]
-                [-c EXCLUDED_PATH]
+    usage: ff.py [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-f] [-l] [-d] [-B]
+                [-E] [-v] [-m {all,files,dirs}] [-x COMMAND] [--prefix]
+                [--no-display] [--verbose-exec] [--interactive-exec]
+                [--shell-exec] [--vcs] [-c EXCLUDED_PATH]
                 [pattern] [sources [sources ...]]
+
+    Easily search and process files by names.
 
     positional arguments:
     pattern               pattern to search
@@ -86,7 +88,7 @@ Usage
                           mode)
     -E, --end             match pattern to end of item name (ignored in regexp
                           mode)
-    -v, --invert-match
+    -v, -r, --invert-match
     -m {all,files,dirs}, --mode {all,files,dirs}
     -x COMMAND, --exec COMMAND
                           execute some command on every found item. In command,
@@ -102,6 +104,24 @@ Usage
     --vcs                 do not skip VCS directories (.git, .svn etc)
     -c EXCLUDED_PATH, --exclude-path EXCLUDED_PATH
                           skip given paths from scanning
+
+    Pattern, provided as positional argument (not with --pattern) can be provided
+    in special form. It allows to more "nerdish" (or "perlish" :) ) way to control
+    `ff` behavior.
+
+    The general pattern for pattern ( ;) ) is:
+    mode/pattern/modifier
+
+    where:
+        mode - is one of 'p' (--pattern), 'g' - (--regexp) or 'f' (--fuzzy)
+        / - is delimiter:
+            * one of: '/', '!', '@', '#', '%', '|', and then start and end
+                delimiter must be the same
+            * one of: '{', '[', '(', '<', and the end delimiter must be the
+                closing one (ex. '}' if start is '{')
+        pattern - any pattern, processed in a way specified with 'mode'
+        modifier - one of: 'i' (--ignore-case), 'm' (--regex-multiline),
+            's' (--regex_dotall), 'v' (not used currently), 'r' (--invert-match)
 
 Contact
 -------
