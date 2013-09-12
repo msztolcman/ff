@@ -63,17 +63,17 @@ def _parse_input_args__prepare_anon_pattern(args):
 
         args.pattern = groups['pattern']
 
-        for mod in (groups['modifier'] or ''):
-            if mod == 'i': args.ignorecase = True
-            elif mod == 'm': args.regex_multiline = True
-            elif mod == 's': args.regex_dotall = True
-            elif mod == 'v': pass
-            elif mod == 'r': args.invert_match = True
+        for item in (groups['modifier'] or ''):
+            if item == 'i': args.ignorecase = True
+            elif item == 'm': args.regex_multiline = True
+            elif item == 's': args.regex_dotall = True
+            elif item == 'v': pass
+            elif item == 'r': args.invert_match = True
 
-        for mod in (groups['mode'] or ''):
-            if mod == 'g': args.regexp = True
-            elif mod == 'p': pass
-            elif mod == 'f': args.fuzzy = True
+        for item in (groups['mode'] or ''):
+            if item == 'g': args.regexp = True
+            elif item == 'p': pass
+            elif item == 'f': args.fuzzy = True
 
 def parse_input_args(args):
     """ Parse input 'args' and return parsed.
