@@ -51,26 +51,26 @@ def _parse_input_args__prepare_anon_pattern(args):
     rxp_pattern = re.compile(r'^ (?P<mode>[gfp])? (?P<delim_open>[{[(</!@#%|]) (?P<pattern>.*) (?P<delim_close>[}\])>/!@#%|]) (?P<modifier>[imsvr]+)? $', re.VERBOSE)
     match = rxp_pattern.match(args.pattern)
     if match:
-        groups = match.groupdict()
+        pattern_parts = match.groupdict()
 
         delim_closed = { '}': '{', ']': '[', ')': '(', '>': '<' }
-        if groups['delim_open'] in '/!@#%|' and groups['delim_open'] != groups['delim_close']:
+        if pattern_parts['delim_open'] in '/!@#%|' and pattern_parts['delim_open'] != pattern_parts['delim_close']:
             return 'Invalid pattern'
-        elif groups['delim_open'] in '{[(<' and \
-                (groups['delim_close'] not in delim_closed or \
-                 delim_closed[groups['delim_close']] != groups['delim_open']):
+        elif pattern_parts['delim_open'] in '{[(<' and \
+                (pattern_parts['delim_close'] not in delim_closed or \
+                 delim_closed[pattern_parts['delim_close']] != pattern_parts['delim_open']):
             return 'Invalid pattern'
 
-        args.pattern = groups['pattern']
+        args.pattern = pattern_parts['pattern']
 
-        for item in (groups['modifier'] or ''):
+        for item in (pattern_parts['modifier'] or ''):
             if item == 'i': args.ignorecase = True
             elif item == 'm': args.regex_multiline = True
             elif item == 's': args.regex_dotall = True
             elif item == 'v': pass
             elif item == 'r': args.invert_match = True
 
-        for item in (groups['mode'] or ''):
+        for item in (pattern_parts['mode'] or ''):
             if item == 'g': args.regexp = True
             elif item == 'p': pass
             elif item == 'f': args.fuzzy = True
