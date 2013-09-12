@@ -10,6 +10,7 @@ import re
 import shlex
 import subprocess
 import sys
+import textwrap
 
 from pprint import pprint, pformat
 
@@ -74,7 +75,29 @@ def _parse_input_args__prepare_anon_pattern(args):
 def parse_input_args(args):
     """ Parse input 'args' and return parsed.
     """
-    p = argparse.ArgumentParser()
+
+    args_description = 'Easily search and process files by names.'
+    args_epilog = textwrap.dedent('''
+        Pattern, provided as positional argument (not with --pattern) can be provided
+        in special form. It allows to more "nerdish" (or "perlish" :) ) way to control
+        `ff` behavior.
+
+        The general pattern for pattern ( ;) ) is:
+        mode/pattern/modifier
+
+        where:
+            mode - is one of 'p' (--pattern), 'g' - (--regexp) or 'f' (--fuzzy)
+            / - is delimiter:
+                * one of: '/', '!', '@', '#', '%', '|', and then start and end
+                    delimiter must be the same
+                * one of: '{', '[', '(', '<', and the end delimiter must be the
+                    closing one (ex. '}' if start is '{')
+            pattern - any pattern, processed in a way specified with 'mode'
+            modifier - one of: 'i' (--ignore-case), 'm' (--regex-multiline),
+                's' (--regex_dotall), 'v' (not used currently), 'r' (--invert-match)
+
+    ''').strip()
+    p = argparse.ArgumentParser(description=args_description, epilog=args_epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
 
     p.add_argument('-0', '--print0', action='store_true', default=False, help='split results by binary zero instead of new line (useful to work with xargs)')
     p.add_argument('-i', '--ignorecase', '--ignore-case', action='store_true', default=False, help='')
