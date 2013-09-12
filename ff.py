@@ -56,7 +56,9 @@ def _parse_input_args__prepare_anon_pattern(args):
         delim_closed = { '}': '{', ']': '[', ')': '(', '>': '<' }
         if groups['delim_open'] in '/!@#%|' and groups['delim_open'] != groups['delim_close']:
             return 'Invalid pattern'
-        elif groups['delim_open'] in '{[(<' and (groups['delim_close'] not in delim_closed or delim_closed[groups['delim_close']] != groups['delim_open']):
+        elif groups['delim_open'] in '{[(<' and \
+                (groups['delim_close'] not in delim_closed or \
+                 delim_closed[groups['delim_close']] != groups['delim_open']):
             return 'Invalid pattern'
 
         args.pattern = groups['pattern']
