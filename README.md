@@ -10,19 +10,27 @@ Basic usage
 
     ff passwd
 
-Search for all files and folders in current directory and below, which is match to pattern: `*passwd*`.
+Search for all files and directories in current directory and below, which is match to pattern: `*passwd*`.
 
     ff -B passwd
 
-Search for all files and folders in current directory and below, which is match to pattern: `*passwd`.
+Search for all files and directories in current directory and below, which is match to pattern: `*passwd`.
 
     ff -E passwd
 
-Search for all files and folders in current directory and below, which is match to pattern: `passwd*`.
+Search for all files and directories in current directory and below, which is match to pattern: `passwd*`.
 
     ff -EB passwd
 
-Search for all files and folders in current directory and below, which is match to pattern: `passwd`.
+Search for all files and directories in current directory and below, which is match to pattern: `passwd`.
+
+    ff f/pwd/
+
+Search for all files and directories in current directory and below, which name contains letters 'p', 'w', 'd', with any other characters between them.
+
+    ff g/^(chk)?passwd/
+
+Search for all files and directories in current directory and below, which name starts from 'chkpasswd' or 'passwd'.
 
 Advanced usage
 --------------
