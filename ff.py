@@ -51,7 +51,7 @@ def parse_input_args(args):
     p.add_argument('-s', '--source', action='append', type=str, default=[], help='optional, see: source above')
     p.add_argument('-p', '--pattern', type=str, help='optional, see: pattern above')
     p.add_argument('-g', '--regexp', action='store_true', default=False, help='treat pattern as regular expression (uses Python regexp engine)')
-    p.add_argument('-f', '--fuzz', action='store_true', default=False, help='pattern defines only set and order of characters used in filename')
+    p.add_argument('-f', '--fuzzy', action='store_true', default=False, help='pattern defines only set and order of characters used in filename')
     p.add_argument('-l', '--regex-multiline', action='store_true', default=False, help='')
     p.add_argument('-d', '--regex-dotall', action='store_true', default=False, help='')
     p.add_argument('-B', '--begin', dest='fnmatch_begin', action='store_true', default=False, help='match pattern to begin of item name (ignored in regexp mode)')
