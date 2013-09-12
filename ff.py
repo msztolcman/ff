@@ -99,6 +99,11 @@ def parse_input_args(args):
             modifier - one of: 'i' (--ignore-case), 'm' (--regex-multiline),
                 's' (--regex_dotall), 'v' (not used currently), 'r' (--invert-match)
 
+        Author:
+            Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
+
+        HomePage:
+            https://github.com/mysz/ff/
     ''').strip()
     p = argparse.ArgumentParser(description=args_description, epilog=args_epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
 
