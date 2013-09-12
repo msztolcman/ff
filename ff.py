@@ -49,9 +49,9 @@ def _parse_input_args__prepare_anon_pattern(args):
         return
 
     rxp_pattern = re.compile(r'^ (?P<mode>[gfp])? (?P<delim_open>[{[(</!@#%|]) (?P<pattern>.*) (?P<delim_close>[}\])>/!@#%|]) (?P<modifier>[imsvr]+)? $', re.VERBOSE)
-    m = rxp_pattern.match(args.pattern)
-    if m:
-        groups = m.groupdict()
+    match = rxp_pattern.match(args.pattern)
+    if match:
+        groups = match.groupdict()
 
         delim_closed = { '}': '{', ']': '[', ')': '(', '>': '<' }
         if groups['delim_open'] in '/!@#%|' and groups['delim_open'] != groups['delim_close']:
