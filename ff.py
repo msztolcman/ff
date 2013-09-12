@@ -189,14 +189,14 @@ def prepare_pattern(cfg):
     """ Prepare pattern from input args to use.
 
         If work in regex mode, there pattern is only compiled with flags. In normal mode,
-        pattern is converted to regex, and then compiled. Recognize also fuzz mode.
+        pattern is converted to regex, and then compiled. Recognize also fuzzy mode.
 
         Returns always compiled regexp, ready to use.
     """
     pattern = cfg.pattern
     flags = 0
 
-    if cfg.fuzz:
+    if cfg.fuzzy:
         new_pattern = ''
         if cfg.fnmatch_begin:
             new_pattern += '^'
