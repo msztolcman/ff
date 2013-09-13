@@ -136,7 +136,7 @@ def parse_input_args(args):
         err = _parse_input_args__prepare_anon_pattern(args)
         if err:
             p.error(err)
-    else:
+    elif args.anon_pattern:
         args.anon_sources.insert(0, args.anon_pattern)
 
     if args.pattern is None:
