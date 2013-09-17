@@ -183,6 +183,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ChangeLog
 ---------
+# v.04
+* added changelog
+* added fuzzy-search mode
+* added 'magic pattern' mode
+* -r argument is now an alias to -v
+* better handling unicode characters in paths
+* handling CTRL-C
+* added modifier: --path-search
 
 # v0.3
 * use argparse instead of getopt to parse options
