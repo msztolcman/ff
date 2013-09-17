@@ -14,7 +14,7 @@ import textwrap
 
 from pprint import pprint, pformat
 
-__version__ = '0.3'
+__version__ = '0.4'
 
 def ask(question, replies, default=None):
     """ Ask question and repeat it, until answer will not be one of 'replies',
