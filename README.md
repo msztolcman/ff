@@ -22,6 +22,15 @@ Search for all files and directories in current directory and below, which is ma
 
     ff -EB passwd
 
+Advanced usage
+--------------
+
+    ./ff.py -p pa -s /etc --shell-exec -x '[ -f "{path}" ] && mkdir -p /tmp{dirname}; cp -r "{path}" "/tmp{path}"'
+
+Find all files and directories in /etc that match expression: `*pa*`, and copy them (with original directories hierarchy!) to /tmp.
+
+So powerful...
+
 Magic pattern
 -------------
 
@@ -50,15 +59,6 @@ Search for all files and directories in current directory and below, which name 
     ff g/^(chk)?passwd/
 
 Search for all files and directories in current directory and below, which name starts from 'chkpasswd' or 'passwd'.
-
-Advanced usage
---------------
-
-    ./ff.py -p pa -s /etc --shell-exec -x '[ -f "{path}" ] && mkdir -p /tmp{dirname}; cp -r "{path}" "/tmp{path}"'
-
-Find all files and directories in /etc that match expression: `*pa*`, and copy them (with original directories hierarchy!) to /tmp.
-
-So powerful...
 
 Installation
 ------------
