@@ -260,21 +260,30 @@ def process_item(cfg, path):
     """ Test path for matching with pattern, print it if so, and execute command if given.
     """
     m = cfg.pattern.search(os.path.basename(path))
-    if (not cfg.invert_match and m) or (cfg.invert_match and not m):
-        if cfg.display:
-            if not cfg.prefix:
-                prefix = ''
-            elif os.path.isdir(path):
-                prefix = 'd: '
-            else:
-                prefix = 'f: '
-            print(prefix, path, sep='', end=cfg.delim)
-        if cfg.execute:
-            exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path), not cfg.shell_exec)
-            if cfg.verbose_exec:
-                print(' '.join(exe))
-            if not cfg.interactive_exec or ask('Execute command on %s?' % path, 'yn', 'n') == 'y':
-                subprocess.call(exe, shell=cfg.shell_exec)
+    to_show = False
+    if not cfg.invert_match and m:
+        to_show = True
+    elif cfg.invert_match and not m:
+        to_show = True
+
+    if not to_show:
+        return
+
+    if cfg.display:
+        if not cfg.prefix:
+            prefix = ''
+        elif os.path.isdir(path):
+            prefix = 'd: '
+        else:
+            prefix = 'f: '
+        print(prefix, path, sep='', end=cfg.delim)
+
+    if cfg.execute:
+        exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path), not cfg.shell_exec)
+        if cfg.verbose_exec:
+            print(' '.join(exe))
+        if not cfg.interactive_exec or ask('Execute command on %s?' % path, 'yn', 'n') == 'y':
+            subprocess.call(exe, shell=cfg.shell_exec)
 
 def is_path_excluded(excluded_paths, path):
     path = path.rstrip('/')
