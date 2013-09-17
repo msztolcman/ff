@@ -57,8 +57,8 @@ Voila!
 Usage
 -----
 
-    usage: ff.py [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-f] [-l] [-d] [-B]
-                [-E] [-v] [-m {all,files,dirs}] [-x COMMAND] [--prefix]
+    usage: ff.py [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-f] [-q] [-l] [-d]
+                [-B] [-E] [-v] [-m {all,files,dirs}] [-x COMMAND] [--prefix]
                 [--no-display] [--verbose-exec] [--interactive-exec]
                 [--shell-exec] [--vcs] [-c EXCLUDED_PATH]
                 [pattern] [sources [sources ...]]
@@ -82,6 +82,7 @@ Usage
                           regexp engine)
     -f, --fuzzy           pattern defines only set and order of characters used
                           in filename
+    -q, --path-search     search in full path, instead of bare name of item
     -l, --regex-multiline
     -d, --regex-dotall
     -B, --begin           match pattern to begin of item name (ignored in regexp
@@ -106,10 +107,10 @@ Usage
                           skip given paths from scanning
 
     Pattern, provided as positional argument (not with --pattern) can be provided
-    in special form. It allows to more "nerdish" (or "perlish" :) ) way to control
-    `ff` behavior.
+    in special form (called: magic pattern). It allows to more "nerdish"
+    (or "perlish" :) ) way to control `ff` behavior.
 
-    The general pattern for pattern ( ;) ) is:
+    The general pattern for magic pattern is:
     mode/pattern/modifier
 
     where:
@@ -122,6 +123,13 @@ Usage
         pattern - any pattern, processed in a way specified with 'mode'
         modifier - one of: 'i' (--ignore-case), 'm' (--regex-multiline),
             's' (--regex_dotall), 'v' (not used currently), 'r' (--invert-match)
+            'q' (--path-search)
+
+    Author:
+        Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
+
+    HomePage:
+        https://github.com/mysz/ff/
 
 Contact
 -------
