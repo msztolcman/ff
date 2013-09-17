@@ -48,7 +48,15 @@ def _parse_input_args__prepare_anon_pattern(args):
     if not args.pattern:
         return
 
-    rxp_pattern = re.compile(r'^ (?P<mode>[gfp])? (?P<delim_open>[{[(</!@#%|]) (?P<pattern>.*) (?P<delim_close>[}\])>/!@#%|]) (?P<modifier>[imsvr]+)? $', re.VERBOSE)
+    rxp_pattern = re.compile(r'''
+        ^
+        (?P<mode>[a-z0-9])?
+        (?P<delim_open>[{[(</!@#%|])
+        (?P<pattern>.*)
+        (?P<delim_close>[}\])>/!@#%|])
+        (?P<modifier>[a-z0-9]+)?
+        $
+    ''', re.VERBOSE)
     match = rxp_pattern.match(args.pattern)
     if match:
         pattern_parts = match.groupdict()
@@ -69,11 +77,15 @@ def _parse_input_args__prepare_anon_pattern(args):
             elif item == 's': args.regex_dotall = True
             elif item == 'v': pass
             elif item == 'r': args.invert_match = True
+            else:
+                return 'Unknown modifier in pattern: %s. Allowed modifiers: i, m, s, v, r,' % item
 
         for item in (pattern_parts['mode'] or ''):
             if item == 'g': args.regexp = True
             elif item == 'p': pass
             elif item == 'f': args.fuzzy = True
+            else:
+                return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
 
 def parse_input_args(args):
     """ Parse input 'args' and return parsed.
