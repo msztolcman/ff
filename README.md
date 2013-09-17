@@ -22,6 +22,25 @@ Search for all files and directories in current directory and below, which is ma
 
     ff -EB passwd
 
+Magic pattern
+-------------
+
+It's form of pattern known good for Perl or AWK lovers :)
+
+If patterns is in general form:
+
+    mode/pattern/modifier
+
+(decribed more in full usage below), then it is parsed and used in a little other manner.
+
+Instead of arguments `--regexp` or `--fuzzy`, you can pass it in `mode` part of pattern.
+Next there is delimiter, which usually is `/` (backslash), but there can be more characters,
+described in Usage section.
+
+After that is a pattern, next delimiter again, and then modifiers (again, modifiers are described in Usage section).
+
+Some examples:
+
 Search for all files and directories in current directory and below, which is match to pattern: `passwd`.
 
     ff f/pwd/
