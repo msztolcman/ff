@@ -50,11 +50,11 @@ def _parse_input_args__prepare_anon_pattern(args):
 
     rxp_pattern = re.compile(r'''
         ^
-        (?P<mode>[a-z0-9])?
-        (?P<delim_open>[{[(</!@#%|])
-        (?P<pattern>.*)
-        (?P<delim_close>[}\])>/!@#%|])
-        (?P<modifier>[a-z0-9]+)?
+        (?P<mode>           [a-z0-9]        )?
+        (?P<delim_open>     [{[(</!@#%|]    )
+        (?P<pattern>        .*              )
+        (?P<delim_close>    [}\])>/!@#%|]   )
+        (?P<modifier>       [a-z0-9]+       )?
         $
     ''', re.VERBOSE)
     match = rxp_pattern.match(args.pattern)
