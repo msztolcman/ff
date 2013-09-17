@@ -95,10 +95,10 @@ def parse_input_args(args):
     args_description = 'Easily search and process files by names.'
     args_epilog = textwrap.dedent('''
         Pattern, provided as positional argument (not with --pattern) can be provided
-        in special form. It allows to more "nerdish" (or "perlish" :) ) way to control
-        `ff` behavior.
+        in special form (called: magic pattern). It allows to more "nerdish"
+        (or "perlish" :) ) way to control `ff` behavior.
 
-        The general pattern for pattern ( ;) ) is:
+        The general pattern for magic pattern is:
         mode/pattern/modifier
 
         where:
