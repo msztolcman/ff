@@ -294,35 +294,38 @@ def main():
 
     rxp_vcs = re.compile('(?:^|/)(?:\.git|\.svn|\.CVS|\.hg|_MTN|CVS|RCS|SCCS|_darcs|_sgbak)(?:$|/)')
 
-    for source in config.source:
-        for root, dirs, files in os.walk(source):
-            try:
-                root = root.decode('utf-8')
-            except UnicodeDecodeError as e:
-                print(root, ': ', e, sep='', file=sys.stderr)
-                continue
+    try:
+        for source in config.source:
+            for root, dirs, files in os.walk(source):
+                try:
+                    root = root.decode('utf-8')
+                except UnicodeDecodeError as e:
+                    print(root, ': ', e, sep='', file=sys.stderr)
+                    continue
 
-            if is_path_excluded(config.excluded_paths, root):
-                continue
+                if is_path_excluded(config.excluded_paths, root):
+                    continue
 
-            if config.mode in ('dirs', 'all'):
-                if config.vcs or not rxp_vcs.search(root):
-                    process_item(config, root)
+                if config.mode in ('dirs', 'all'):
+                    if config.vcs or not rxp_vcs.search(root):
+                        process_item(config, root)
 
-            if config.mode in ('files', 'all'):
-                for file_ in files:
-                    try:
-                        file_ = file_.decode('utf-8')
-                    except UnicodeDecodeError as e:
-                        ## do not change to os.path.join, will break if are some strange characters in file_
-                        print(root, os.sep, file_, ': ', e, sep='', file=sys.stderr)
-                        continue
+                if config.mode in ('files', 'all'):
+                    for file_ in files:
+                        try:
+                            file_ = file_.decode('utf-8')
+                        except UnicodeDecodeError as e:
+                            ## do not change to os.path.join, will break if are some strange characters in file_
+                            print(root, os.sep, file_, ': ', e, sep='', file=sys.stderr)
+                            continue
 
-                    path = os.path.join(root, file_)
-                    if is_path_excluded(config.excluded_paths, path):
-                        continue
-                    if config.vcs or not rxp_vcs.search(path):
-                        process_item(config, path)
+                        path = os.path.join(root, file_)
+                        if is_path_excluded(config.excluded_paths, path):
+                            continue
+                        if config.vcs or not rxp_vcs.search(path):
+                            process_item(config, path)
+    except KeyboardInterrupt:
+        print('Interrupted by CTRL-C, aborting', file=sys.stderr)
 
 if __name__ == '__main__':
     main()
