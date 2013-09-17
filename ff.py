@@ -77,6 +77,7 @@ def _parse_input_args__prepare_anon_pattern(args):
             elif item == 's': args.regex_dotall = True
             elif item == 'v': pass
             elif item == 'r': args.invert_match = True
+            elif item == 'q': args.path_search = True
             else:
                 return 'Unknown modifier in pattern: %s. Allowed modifiers: i, m, s, v, r,' % item
 
@@ -110,6 +111,7 @@ def parse_input_args(args):
             pattern - any pattern, processed in a way specified with 'mode'
             modifier - one of: 'i' (--ignore-case), 'm' (--regex-multiline),
                 's' (--regex_dotall), 'v' (not used currently), 'r' (--invert-match)
+                'q' (--path-search)
 
         Author:
             Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
@@ -125,6 +127,7 @@ def parse_input_args(args):
     p.add_argument('-p', '--pattern', type=str, help='optional, see: pattern above')
     p.add_argument('-g', '--regexp', action='store_true', default=False, help='treat pattern as regular expression (uses Python regexp engine)')
     p.add_argument('-f', '--fuzzy', action='store_true', default=False, help='pattern defines only set and order of characters used in filename')
+    p.add_argument('-q', '--path-search', action='store_true', default=False, help='search in full path, instead of bare name of item')
     p.add_argument('-l', '--regex-multiline', action='store_true', default=False, help='')
     p.add_argument('-d', '--regex-dotall', action='store_true', default=False, help='')
     p.add_argument('-B', '--begin', dest='fnmatch_begin', action='store_true', default=False, help='match pattern to begin of item name (ignored in regexp mode)')
