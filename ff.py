@@ -262,7 +262,11 @@ def prepare_pattern(cfg):
 def process_item(cfg, path):
     """ Test path for matching with pattern, print it if so, and execute command if given.
     """
-    m = cfg.pattern.search(os.path.basename(path))
+    if cfg.path_search:
+        m = cfg.pattern.search(path)
+    else:
+        m = cfg.pattern.search(os.path.basename(path))
+
     to_show = False
     if not cfg.invert_match and m:
         to_show = True
