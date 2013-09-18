@@ -1,0 +1,277 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>ff by mysz</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">ff</h1>
+        <p class="header">Easily search and process files.</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/mysz/ff/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/mysz/ff/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/mysz/ff">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/mysz">mysz</a></p>
+
+
+      </header>
+      <section>
+        <h1>
+<a name="ff" class="anchor" href="#ff"><span class="octicon octicon-link"></span></a>ff</h1>
+
+<p>Easy find files and directories by their names.</p>
+
+<p>If you need to search by file content, use <a href="https://github.com/petdance/ack2">ack</a> or <a href="https://github.com/eliben/pss">pss</a>.</p>
+
+<h2>
+<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic usage</h2>
+
+<pre><code>ff passwd
+</code></pre>
+
+<p>Search for all files and directories in current directory and below, which is match to pattern: <code>*passwd*</code>.</p>
+
+<pre><code>ff -B passwd
+</code></pre>
+
+<p>Search for all files and directories in current directory and below, which is match to pattern: <code>*passwd</code>.</p>
+
+<pre><code>ff -E passwd
+</code></pre>
+
+<p>Search for all files and directories in current directory and below, which is match to pattern: <code>passwd*</code>.</p>
+
+<pre><code>ff -EB passwd
+</code></pre>
+
+<h2>
+<a name="advanced-usage" class="anchor" href="#advanced-usage"><span class="octicon octicon-link"></span></a>Advanced usage</h2>
+
+<pre><code>./ff.py -p pa -s /etc --shell-exec -x '[ -f "{path}" ] &amp;&amp; mkdir -p /tmp{dirname}; cp -r "{path}" "/tmp{path}"'
+</code></pre>
+
+<p>Find all files and directories in /etc that match expression: <code>*pa*</code>, and copy them (with original directories hierarchy!) to /tmp.</p>
+
+<p>So powerful...</p>
+
+<h2>
+<a name="magic-pattern" class="anchor" href="#magic-pattern"><span class="octicon octicon-link"></span></a>Magic pattern</h2>
+
+<p>It's form of pattern known good for Perl or AWK lovers :)</p>
+
+<p>If patterns is in general form:</p>
+
+<pre><code>mode/pattern/modifier
+</code></pre>
+
+<p>(decribed more in full usage below), then it is parsed and used in a little other manner.</p>
+
+<p>Instead of arguments <code>--regexp</code> or <code>--fuzzy</code>, you can pass it in <code>mode</code> part of pattern.
+Next there is delimiter, which usually is <code>/</code> (backslash), but there can be more characters,
+described in Usage section.</p>
+
+<p>After that is a pattern, next delimiter again, and then modifiers (again, modifiers are described in Usage section).</p>
+
+<p>Some examples:</p>
+
+<p>Search for all files and directories in current directory and below, which is match to pattern: <code>passwd</code>.</p>
+
+<pre><code>ff f/pwd/
+</code></pre>
+
+<p>Search for all files and directories in current directory and below, which name contains letters 'p', 'w', 'd', with any other characters between them.</p>
+
+<pre><code>ff g/^(chk)?passwd/
+</code></pre>
+
+<p>Search for all files and directories in current directory and below, which name starts from 'chkpasswd' or 'passwd'.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p><code>ff</code> should work on any platform where <a href="http://python.org">Python</a> is available, it means Linux, Windows, MacOS X etc. There is no dependencies, plain Python power :) Just copy file to your PATH, for example:</p>
+
+<pre><code>curl https://raw.github.com/mysz/ff/master/ff.py &gt; /usr/local/bin/ff
+</code></pre>
+
+<p>or:</p>
+
+<pre><code>wget https://raw.github.com/mysz/ff/master/ff.py -O /usr/local/bin/ff
+</code></pre>
+
+<p>Voila!</p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<pre><code>usage: ff.py [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-f] [-q] [-l] [-d]
+            [-B] [-E] [-v] [-m {all,files,dirs}] [-x COMMAND] [--prefix]
+            [--no-display] [--verbose-exec] [--interactive-exec]
+            [--shell-exec] [--vcs] [-c EXCLUDED_PATH]
+            [pattern] [sources [sources ...]]
+
+Easily search and process files by names.
+
+positional arguments:
+pattern               pattern to search
+sources               optional source (if missing, use current directory)
+
+optional arguments:
+-h, --help            show this help message and exit
+-0, --print0          split results by binary zero instead of new line
+                      (useful to work with xargs)
+-i, --ignorecase, --ignore-case
+-s SOURCE, --source SOURCE
+                      optional, see: source above
+-p PATTERN, --pattern PATTERN
+                      optional, see: pattern above
+-g, --regexp          treat pattern as regular expression (uses Python
+                      regexp engine)
+-f, --fuzzy           pattern defines only set and order of characters used
+                      in filename
+-q, --path-search     search in full path, instead of bare name of item
+-l, --regex-multiline
+-d, --regex-dotall
+-B, --begin           match pattern to begin of item name (ignored in regexp
+                      mode)
+-E, --end             match pattern to end of item name (ignored in regexp
+                      mode)
+-v, -r, --invert-match
+-m {all,files,dirs}, --mode {all,files,dirs}
+-x COMMAND, --exec COMMAND
+                      execute some command on every found item. In command,
+                      placeholders: {path}, {dirname}, {basename} are
+                      replaced with correct value
+--prefix              add prefix "d: " (directory) or "f: " (file) to every
+                      found item
+--no-display          don't display element (useful with --exec argument)
+--verbose-exec        show command before execute it
+--interactive-exec    ask before execute command on every item
+--shell-exec          execute command from --exec argument in shell (with
+                      shell expansion etc)
+--vcs                 do not skip VCS directories (.git, .svn etc)
+-c EXCLUDED_PATH, --exclude-path EXCLUDED_PATH
+                      skip given paths from scanning
+
+Pattern, provided as positional argument (not with --pattern) can be provided
+in special form (called: magic pattern). It allows to more "nerdish"
+(or "perlish" :) ) way to control `ff` behavior.
+
+The general pattern for magic pattern is:
+mode/pattern/modifier
+
+where:
+    mode - is one of 'p' (--pattern), 'g' - (--regexp) or 'f' (--fuzzy)
+    / - is delimiter:
+        * one of: '/', '!', '@', '#', '%', '|', and then start and end
+            delimiter must be the same
+        * one of: '{', '[', '(', '&lt;', and the end delimiter must be the
+            closing one (ex. '}' if start is '{')
+    pattern - any pattern, processed in a way specified with 'mode'
+    modifier - one of: 'i' (--ignore-case), 'm' (--regex-multiline),
+        's' (--regex_dotall), 'v' (not used currently), 'r' (--invert-match)
+        'q' (--path-search)
+
+Author:
+    Marcin Sztolcman &lt;marcin@urzenia.net&gt; // http://urzenia.net
+
+HomePage:
+    https://github.com/mysz/ff/
+</code></pre>
+
+<h2>
+<a name="contact" class="anchor" href="#contact"><span class="octicon octicon-link"></span></a>Contact</h2>
+
+<p>If you like or dislike this software, please do not hesitate to tell me about this me via email (<a href="mailto:marcin@urzenia.net">marcin@urzenia.net</a>).</p>
+
+<p>If you find bug or have an idea to enhance this tool, please use GitHub's <a href="https://github.com/mysz/ff/issues">issues</a>.</p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>The MIT License (MIT)</p>
+
+<p>Copyright (c) 2013 Marcin Sztolcman</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+
+<h2>
+<a name="changelog" class="anchor" href="#changelog"><span class="octicon octicon-link"></span></a>ChangeLog</h2>
+
+<h1>
+<a name="v04" class="anchor" href="#v04"><span class="octicon octicon-link"></span></a>v.04</h1>
+
+<ul>
+<li>added changelog</li>
+<li>added fuzzy-search mode</li>
+<li>added 'magic pattern' mode</li>
+<li>-r argument is now an alias to -v</li>
+<li>better handling unicode characters in paths</li>
+<li>handling CTRL-C</li>
+<li>added modifier: --path-search</li>
+</ul><h1>
+<a name="v03" class="anchor" href="#v03"><span class="octicon octicon-link"></span></a>v0.3</h1>
+
+<ul>
+<li>use argparse instead of getopt to parse options</li>
+<li>allow to exclude path from search</li>
+<li>improved help and documentation</li>
+</ul><h1>
+<a name="v02" class="anchor" href="#v02"><span class="octicon octicon-link"></span></a>v0.2</h1>
+
+<ul>
+<li>added option 'shell-exec' - allow to exec programs with shell expansion</li>
+<li>exec: add shell variables expansion</li>
+<li>by default, skip VCS directories</li>
+<li>added option 'print0' - delimit entries with binary 0, as for xargs</li>
+<li>added options 'interactive-exec' - ask before every exec</li>
+<li>much more powerfull exec engine</li>
+<li>added option 'no-display' - do not display results (useful with --exec)</li>
+<li>added option 'verbose-exec' - show executed command</li>
+<li>added option 'invert-match' - like in grep</li>
+<li>improved help and documentation</li>
+<li>cleanups in code</li>
+</ul><h1>
+<a name="v01" class="anchor" href="#v01"><span class="octicon octicon-link"></span></a>v0.1</h1>
+
+<ul>
+<li>initial version</li>
+</ul>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
