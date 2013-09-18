@@ -36,8 +36,8 @@ def _action(value, name, path):
         test = _tests['=']
         size = value
 
-    if size[-1] in 'bkmg':
-        size = int(size[:-1]) * _multi[size[-1]]
+    if size[-1] in 'bkmgBKMG':
+        size = int(size[:-1]) * _multi[size[-1].lower()]
     else:
         size = int(size)
 
