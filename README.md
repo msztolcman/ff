@@ -1,7 +1,7 @@
 ff
 ==
 
-Easy find files and directories by their names.
+Easily search and process files by names.
 
 If you need to search by file content, use [ack](https://github.com/petdance/ack2) or [pss](https://github.com/eliben/pss).
 
