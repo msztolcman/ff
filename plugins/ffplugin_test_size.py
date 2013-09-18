@@ -29,7 +29,7 @@ def _action(value, name, path):
     if not value:
         raise PluginError('missing size')
 
-    if value[0] in ('<', '>'):
+    if value[0] in ('<', '>', '='):
         test = _tests[value[0]]
         size = value[1:]
     else:
