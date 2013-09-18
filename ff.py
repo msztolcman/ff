@@ -94,7 +94,7 @@ def parse_input_args(args):
     """ Parse input 'args' and return parsed.
     """
 
-    args_description = 'Easily search and process files by names.'
+    args_description = 'Easily search and process files.'
     args_epilog = textwrap.dedent('''
         Pattern, provided as positional argument (not with --pattern) can be provided
         in special form (called: magic pattern). It allows to more "nerdish"

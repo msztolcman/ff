@@ -1,7 +1,7 @@
 ff
 ==
 
-Easy find files and directories by their names.
+Easily search and process files.
 
 If you need to search by file content, use [ack](https://github.com/petdance/ack2) or [pss](https://github.com/eliben/pss).
 
@@ -82,7 +82,7 @@ Usage
                 [--shell-exec] [--vcs] [-c EXCLUDED_PATH]
                 [pattern] [sources [sources ...]]
 
-    Easily search and process files by names.
+    Easily search and process files.
 
     positional arguments:
     pattern               pattern to search
