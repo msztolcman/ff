@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function, unicode_literals
+
 import os.path
+import textwrap
 
 from error import PluginError
 
@@ -55,3 +57,21 @@ def action(value, name, path):
         import sys
         e = sys.exc_info()[1]
         raise PluginError(e.message)
+
+help = '''Filter files by their size. Size must be given as argument, and must follow pattern:
+
+    operator size multiplier
+
+(without spaces).
+
+Operator (can be omitted) is one of:
+
+    > - file size must be bigger then argument
+    < - file size must be lower then argument
+    = - must be exactly as argument
+
+Multiplier (can be omitted) is one of:
+    b - do not multiply
+    k - multiply size with 1024
+    m - multiply size with 1024 * 1024
+    g - multiply size with 1024 * 1024 * 1024'''.strip()
