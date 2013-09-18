@@ -147,7 +147,7 @@ def parse_input_args(args):
                 's' (`--regex-dotall`), 'v' (not used currently), 'r' (`--invert-match`)
                 'q' (`--path-search`)
 
-        There is also abibility to extend capabilities of `ff` by plugins. Plugins are
+        There is also ability to extend capabilities of `ff` by plugins. Plugins are
         run with switch `--test` and then plugin name with optional plugin argument:
 
             --test plugin_name:plugin_arg
