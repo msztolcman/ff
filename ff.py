@@ -96,24 +96,25 @@ def parse_input_args(args):
 
     args_description = 'Easily search and process files.'
     args_epilog = textwrap.dedent('''
-        Pattern, provided as positional argument (not with --pattern) can be provided
+        Pattern, provided as positional argument (not with `--pattern`) can be provided
         in special form (called: magic pattern). It allows to more "nerdish"
         (or "perlish" :) ) way to control `ff` behavior.
 
         The general pattern for magic pattern is:
-        mode/pattern/modifier
+
+            mode/pattern/modifier
 
         where:
-            mode - is one of 'p' (--pattern), 'g' - (--regexp) or 'f' (--fuzzy)
-            / - is delimiter:
+            `mode` - is one of 'p' (`--pattern`), 'g' - (`--regexp`) or 'f' (`--fuzzy`)
+            `/` - is delimiter:
                 * one of: '/', '!', '@', '#', '%', '|', and then start and end
                     delimiter must be the same
                 * one of: '{', '[', '(', '<', and the end delimiter must be the
                     closing one (ex. '}' if start is '{')
-            pattern - any pattern, processed in a way specified with 'mode'
-            modifier - one of: 'i' (--ignore-case), 'm' (--regex-multiline),
-                's' (--regex_dotall), 'v' (not used currently), 'r' (--invert-match)
-                'q' (--path-search)
+            `pattern` - any pattern, processed in a way specified with `mode`
+            `modifier` - one of: 'i' (`--ignore-case`), 'm' (`--regex-multiline`),
+                's' (`--regex-dotall`), 'v' (not used currently), 'r' (`--invert-match`)
+                'q' (`--path-search`)
 
         There is also abibility to extend capabilities of `ff` by plugins. Plugins are
         run with switch `--test` and then plugin name with optional plugin argument:
@@ -122,7 +123,7 @@ def parse_input_args(args):
 
         There can be used more then one plugin at once.
 
-        Author:
+        Authors:
             Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
 
         HomePage:
