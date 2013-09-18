@@ -187,7 +187,7 @@ def parse_input_args(args):
     p.add_argument('-t', '--test', dest='tests', action='append', default=[], help='additional tests, available by plugins  (see annotations below)')
     p.add_argument('--plugins-path', type=str, help='additional path where to search plugins (see annotations below)')
     p.add_argument('--version', action='version', version="%s %s\n%s" % (os.path.basename(sys.argv[0]), __version__, args_description))
-    p.add_argument('--help-plugins', nargs='?', action='append',default=[], help='display help for installed plugins')
+    p.add_argument('--help-plugins', metavar='PLUGIN_NAME', nargs='?', action='append',default=[], help='display help for installed plugins')
     p.add_argument('anon_pattern', metavar='pattern', type=str, nargs='?', help='pattern to search')
     p.add_argument('anon_sources', metavar='sources', type=str, nargs='*', help='optional source (if missing, use current directory)')
 
