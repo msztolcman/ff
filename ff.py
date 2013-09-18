@@ -312,6 +312,17 @@ def process_item(cfg, path):
     if not to_show:
         return
 
+    if cfg.tests:
+        for test in cfg.tests:
+            try:
+                to_show = test['action'](value=test['value'], name=test['name'], path=path)
+            except PluginError as e:
+                print('Plugin "%s" error: %s' % (test['name'], e), file=sys.stderr)
+                sys.exit(1)
+            else:
+                if not to_show:
+                    return
+
     if cfg.display:
         if not cfg.prefix:
             prefix = ''
