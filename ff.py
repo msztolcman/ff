@@ -115,16 +115,12 @@ def parse_input_args(args):
                 's' (--regex_dotall), 'v' (not used currently), 'r' (--invert-match)
                 'q' (--path-search)
 
-        There is also abibility to extend capabilities of ff by plugins. Plugins are
-        python scripts with defined function: `action`. When search for files, this
-        function is executed with arguments: `value` (argument passed to test), `name`
-        (name of test) and `path` (path to file). If this test returns False, then
-        given file will not be presented in results.
+        There is also abibility to extend capabilities of `ff` by plugins. Plugins are
+        run with switch `--test` and then plugin name with optional plugin argument:
+
+            --test plugin_name:plugin_arg
 
         There can be used more then one plugin at once.
-
-        There can be passed an argument to test. Argument must be given in form:
-        --test test_name:test_argument
 
         Author:
             Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
