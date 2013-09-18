@@ -283,7 +283,7 @@ def process_item(cfg, path):
             prefix = 'd: '
         else:
             prefix = 'f: '
-        print(prefix, path, sep='', end=cfg.delim)
+        print(prefix, path.encode(sys.stdout.encoding or 'utf-8'), sep='', end=cfg.delim)
 
     if cfg.execute:
         exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path), not cfg.shell_exec)
