@@ -14,6 +14,8 @@ import textwrap
 
 from pprint import pprint, pformat
 
+from error import PluginError
+
 __version__ = '0.4'
 
 def ask(question, replies, default=None):
@@ -113,12 +115,24 @@ def parse_input_args(args):
                 's' (--regex_dotall), 'v' (not used currently), 'r' (--invert-match)
                 'q' (--path-search)
 
+        There is also abibility to extend capabilities of ff by plugins. Plugins are
+        python scripts with defined function: `action`. When search for files, this
+        function is executed with arguments: `value` (argument passed to test), `name`
+        (name of test) and `path` (path to file). If this test returns False, then
+        given file will not be presented in results.
+
+        There can be used more then one plugin at once.
+
+        There can be passed an argument to test. Argument must be given in form:
+        --test test_name:test_argument
+
         Author:
             Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
 
         HomePage:
             https://github.com/mysz/ff/
     ''').strip()
+
     p = argparse.ArgumentParser(description=args_description, epilog=args_epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
 
     p.add_argument('-0', '--print0', action='store_true', default=False, help='split results by binary zero instead of new line (useful to work with xargs)')
@@ -142,10 +156,32 @@ def parse_input_args(args):
     p.add_argument('--shell-exec', action='store_true', default=False, help='execute command from --exec argument in shell (with shell expansion etc)')
     p.add_argument('--vcs', action='store_true', default=False, help='do not skip VCS directories (.git, .svn etc)')
     p.add_argument('-c', '--exclude-path', metavar='EXCLUDED_PATH', dest='excluded_paths', action='append', type=str, default=[], help='skip given paths from scanning')
+    p.add_argument('-t', '--test', dest='tests', action='append', default=[], help='additional tests, available by plugins  (see annotations below)')
+    p.add_argument('--plugins-path', type=str, help='additional path where to search plugins (see annotations below)')
+    p.add_argument('--version', action='version', version="%s %s\n%s" % (os.path.basename(sys.argv[0]), __version__, args_description))
     p.add_argument('anon_pattern', metavar='pattern', type=str, nargs='?', help='pattern to search')
     p.add_argument('anon_sources', metavar='sources', type=str, nargs='*', help='optional source (if missing, use current directory)')
 
     args = p.parse_args()
+
+    sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'plugins'))
+    sys.path.append(os.path.expanduser('~/.ff_plugins'))
+    if args.plugins_path:
+        sys.path.append(os.path.expanduser(args.plugins_path))
+
+    for i, plugin in enumerate(args.tests):
+        if ':' in plugin:
+            plugin_name, plugin_value = plugin.split(':', 1)
+        else:
+            plugin_name, plugin_value = plugin, None
+
+        try:
+            _module = __import__('ffplugin_' + plugin_name, {}, {}, [], -1)
+            args.tests[i] = {'name': plugin_name, 'value': plugin_value, 'action': _module.action}
+        except ImportError:
+            p.error('Unknown plugin: %s' % plugin_name)
+        except AttributeError:
+            p.error('Broken plugin: %s' % plugin_name)
 
     if args.pattern is None:
         err = _parse_input_args__prepare_anon_pattern(args)
