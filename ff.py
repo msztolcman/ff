@@ -5,6 +5,7 @@ from __future__ import print_function, unicode_literals
 
 import argparse
 import copy
+import glob
 import os, os.path
 import re
 import shlex
@@ -89,6 +90,36 @@ def _parse_input_args__prepare_anon_pattern(args):
             elif item == 'f': args.fuzzy = True
             else:
                 return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
+def _parse_input_args__help_plugins(modules, paths):
+    mode = 'all'
+    for module in modules:
+        if module is not None:
+            mode = 'selected'
+            break
+
+    if mode == 'all':
+        modules = []
+        for path in paths:
+            for file_ in glob.glob(os.path.join(path, 'ffplugin_test_*.py')):
+                module_name = os.path.basename(file_)[14:-3]
+                modules.append(module_name)
+
+    divider = ''
+    for module in modules:
+        print(divider, end='')
+
+        if not divider:
+            divider = "\n\n"
+
+        if module is None:
+            continue
+        _module = __import__('ffplugin_test_' + module, {}, {}, [], -1)
+
+        module_descr = getattr(_module, 'help', '')
+        if callable(module_descr):
+            module_descr = module_descr(module['name'])
+
+        print("ff plugin: %s\n\n%s".strip() % (module, module_descr))
 
 def parse_input_args(args):
     """ Parse input 'args' and return parsed.
@@ -156,15 +187,24 @@ def parse_input_args(args):
     p.add_argument('-t', '--test', dest='tests', action='append', default=[], help='additional tests, available by plugins  (see annotations below)')
     p.add_argument('--plugins-path', type=str, help='additional path where to search plugins (see annotations below)')
     p.add_argument('--version', action='version', version="%s %s\n%s" % (os.path.basename(sys.argv[0]), __version__, args_description))
+    p.add_argument('--help-plugins', nargs='?', action='append',default=[], help='display help for installed plugins')
     p.add_argument('anon_pattern', metavar='pattern', type=str, nargs='?', help='pattern to search')
     p.add_argument('anon_sources', metavar='sources', type=str, nargs='*', help='optional source (if missing, use current directory)')
 
     args = p.parse_args()
 
-    sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'plugins'))
-    sys.path.append(os.path.expanduser('~/.ff_plugins'))
+    plugins_paths = [
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), 'plugins'),
+        os.path.expanduser('~/.ff_plugins')
+    ]
     if args.plugins_path:
-        sys.path.append(os.path.expanduser(args.plugins_path))
+        plugins_paths.append(os.path.expanduser(args.plugins_path))
+
+    sys.path.extend(plugins_paths)
+
+    if args.help_plugins:
+        _parse_input_args__help_plugins(args.help_plugins, plugins_paths)
+        sys.exit()
 
     for i, plugin in enumerate(args.tests):
         if ':' in plugin:
