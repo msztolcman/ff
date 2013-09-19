@@ -48,7 +48,7 @@ def _action(value, name, path):
         _cache[path] = test(os.stat(path).st_size, size)
         return _cache[path]
 
-def action(value, name, path):
+def plugin_action(value, name, path):
     try:
         return _action(value, name, path)
     except PluginError:
@@ -58,7 +58,8 @@ def action(value, name, path):
         e = sys.exc_info()[1]
         raise PluginError(e.message)
 
-help = '''Filter files by their size. Size must be given as argument, and must follow pattern:
+plugin_descr = 'Filter files by their size.'
+plugin_help = '''Size must be given as argument, and must follow pattern:
 
     operator size multiplier
 
