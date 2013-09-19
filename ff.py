@@ -45,7 +45,7 @@ class FFPlugin(dict):
 
             Returns imported module.
         '''
-        _mod = __import__('_'.join(['ffplugin', type_, name]), {}, {}, [], -1)
+        _mod = __import__('_'.join(['ffplugin', type_, name]), {}, {}, [], 0)
         ## monkey patch - plugin doesn't need to import PluginError
         _mod.PluginError = PluginError
 
