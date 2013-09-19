@@ -24,6 +24,8 @@ class FFPluginError(Exception):
 
 class FFPlugin(dict):
     def __init__(self, name, type_, **kw):
+        super(FFPlugin, self).__init__()
+
         self.name = self['name'] = name
         self.type = self['type'] = type_
         self.action = self['action'] = kw.get('action', None)
@@ -77,6 +79,8 @@ class FFPlugins(list):
     ])
 
     def __init__(self, paths=None):
+        super(FFPlugins, self).__init__()
+
         if paths is not None:
             self.__class__.paths.update(paths)
 
