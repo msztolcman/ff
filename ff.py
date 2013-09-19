@@ -20,6 +20,9 @@ from error import PluginError
 
 __version__ = '0.4'
 
+class PluginError(Exception):
+    pass
+
 class FFPlugin(dict):
     def __init__(self, name, type_, **kw):
         self.name = self['name'] = name
@@ -44,7 +47,11 @@ class FFPlugin(dict):
 
             Returns imported module.
         '''
-        return __import__('_'.join(['ffplugin', type_, name]), {}, {}, [], -1)
+        _mod = __import__('_'.join(['ffplugin', type_, name]), {}, {}, [], -1)
+        ## monkey patch - plugin doesn't need to import PluginError
+        _mod.PluginError = PluginError
+
+        return _mod
 
     def load(self):
         _module = self._import(self.type, self.name)
