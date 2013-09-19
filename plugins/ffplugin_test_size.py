@@ -60,20 +60,10 @@ def plugin_action(name, argument, path):
         raise PluginError(e.message)
 
 plugin_descr = 'Filter files by their size.'
-plugin_help = '''Size must be given as argument, and must follow pattern:
+plugin_help = '''Size must be given as argument, and must follow pattern (without spaces):
 
     operator size multiplier
 
-(without spaces).
-
-Operator (can be omitted) is one of:
-
-    > - file size must be bigger then argument
-    < - file size must be lower then argument
-    = - must be exactly as argument
-
-Multiplier (can be omitted) is one of:
-    b - do not multiply
-    k - multiply size with 1024
-    m - multiply size with 1024 * 1024
-    g - multiply size with 1024 * 1024 * 1024'''.strip()
+Operator (can be omitted) is one of: >, <, = (default)
+Multiplier (can be omitted) is one of: b (default), k (multiply by 1024),
+m (multiply by 1024*1024) or g (multiply by 1024*1024*1024)'''.strip()
