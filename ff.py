@@ -6,6 +6,7 @@ from __future__ import print_function, unicode_literals
 import argparse
 import copy
 import glob
+import itertools
 import os, os.path
 import re
 import shlex
@@ -90,36 +91,66 @@ def _parse_input_args__prepare_anon_pattern(args):
             elif item == 'f': args.fuzzy = True
             else:
                 return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
-def _parse_input_args__help_plugins(modules, paths):
-    mode = 'all'
-    for module in modules:
-        if module is not None:
-            mode = 'selected'
-            break
+def _import_plugin(type_, name):
+    ''' Imports plugins module.
 
-    if mode == 'all':
-        modules = []
-        for path in paths:
-            for file_ in glob.glob(os.path.join(path, 'ffplugin_test_*.py')):
-                module_name = os.path.basename(file_)[14:-3]
-                modules.append(module_name)
+        Plugin's name is created from three parts:
+        fixed prefix: 'ffplugin'
+        plugin type (just 'test' right now)
+        plugin name
 
+        joined with underscore.
+
+        Returns imported module.
+    '''
+    return __import__('_'.join(['ffplugin', type_, name]), {}, {}, [], -1)
+
+def _parse_input_args__plugins__list(type_, plugins, paths):
+    result = {}
+    prefix_len = len('ffplugin_') + len(type_) + 1
+    for path in paths:
+        for file_ in glob.glob(os.path.join(path, '_'.join(['ffplugin', type_, '*.py']))):
+            plugin_name = os.path.basename(file_)[prefix_len:-3]
+            ## paths order describe priority of plugins too (first found are most important)
+            if plugin_name in result:
+                continue
+
+            _module = _import_plugin(type_, plugin_name)
+            plugin_descr = getattr(_module, 'plugin_descr', '')
+            if callable(plugin_descr):
+                plugin_descr = plugin_descr(plugin_name)
+            result[plugin_name] = { 'name': plugin_name, 'descr': plugin_descr, 'help': '' }
+
+    order = result.keys()
+    order.sort()
+    return [ result[plugin_name] for plugin_name in order ]
+
+def _parse_input_args__plugins__help(type_, plugins, paths):
+    result = []
+    for plugin_name in set(plugins):
+        try:
+            _module = _import_plugin(type_, plugin_name)
+        except ImportError:
+            raise ImportError(plugin_name)
+
+        plugin_descr = getattr(_module, 'plugin_descr', '')
+        plugin_help = getattr(_module, 'plugin_help', '')
+        if callable(plugin_descr):
+            plugin_descr = plugin_descr(plugin_name)
+        if callable(plugin_help):
+            plugin_help = plugin_help(plugin_name)
+
+        result.append({ 'name': plugin_name, 'descr': plugin_descr, 'help': plugin_help })
+
+    return result
+
+def print_help_data(help):
     divider = ''
-    for module in modules:
-        print(divider, end='')
-
-        if not divider:
-            divider = "\n\n"
-
-        if module is None:
-            continue
-        _module = __import__('ffplugin_test_' + module, {}, {}, [], -1)
-
-        module_descr = getattr(_module, 'help', '')
-        if callable(module_descr):
-            module_descr = module_descr(module['name'])
-
-        print("ff plugin: %s\n\n%s".strip() % (module, module_descr))
+    for data in help:
+        text = 'ff plugin: ' + data['name'] + (' - ' + textwrap.fill(data['descr']) if data['descr'] else '') + "\n"
+        if data['help']:
+            text += "\n" + data['help'] + "\n\n"
+        print(text, end='')
 
 def parse_input_args(args):
     """ Parse input 'args' and return parsed.
@@ -187,7 +218,7 @@ def parse_input_args(args):
     p.add_argument('-t', '--test', dest='tests', action='append', default=[], help='additional tests, available by plugins  (see annotations below)')
     p.add_argument('--plugins-path', type=str, help='additional path where to search plugins (see annotations below)')
     p.add_argument('--version', action='version', version="%s %s\n%s" % (os.path.basename(sys.argv[0]), __version__, args_description))
-    p.add_argument('--help-plugins', metavar='PLUGIN_NAME', nargs='?', action='append',default=[], help='display help for installed plugins')
+    p.add_argument('--help-test-plugins', metavar='TEST_NAME', nargs='?', action='append',default=[], help='display help for installed test plugins')
     p.add_argument('anon_pattern', metavar='pattern', type=str, nargs='?', help='pattern to search')
     p.add_argument('anon_sources', metavar='sources', type=str, nargs='*', help='optional source (if missing, use current directory)')
 
@@ -202,8 +233,20 @@ def parse_input_args(args):
 
     sys.path.extend(plugins_paths)
 
-    if args.help_plugins:
-        _parse_input_args__help_plugins(args.help_plugins, plugins_paths)
+    if args.help_test_plugins:
+        ## None means: show me list of plugins
+        if None in args.help_test_plugins:
+            help_data = _parse_input_args__plugins__list('test', None, plugins_paths)
+        else:
+            ## plugins names can be separated with comma
+            args.help_test_plugins = itertools.chain(*[ data.split(',') for data in args.help_test_plugins])
+            try:
+                help_data = _parse_input_args__plugins__help('test', args.help_test_plugins, plugins_paths)
+            except ImportError as e:
+                print('Unknown plugin: %s' % e.message, file=sys.stderr)
+                sys.exit(1)
+
+        print_help_data(help_data)
         sys.exit()
 
     for i, plugin in enumerate(args.tests):
