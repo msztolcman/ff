@@ -14,7 +14,7 @@ import subprocess
 import sys
 import textwrap
 
-from pprint import pprint, pformat
+from pprint import pprint, pformat # pylint: disable-msg=unused-import
 
 __version__ = '0.5'
 
@@ -141,7 +141,7 @@ def ask(question, replies, default=None):
         elif reply in replies:
             return reply
 
-def _parse_input_args__prepare_anon_pattern(args):
+def _parse_input_args__prepare_anon_pattern(args):  # pylint: disable-msg=invalid-name
     args.pattern = args.anon_pattern
 
     if not args.pattern:
@@ -172,6 +172,7 @@ def _parse_input_args__prepare_anon_pattern(args):
         args.pattern = pattern_parts['pattern']
 
         for item in (pattern_parts['modifier'] or ''):
+            # pylint: disable-msg=multiple-statements
             if item == 'i': args.ignorecase = True
             elif item == 'm': args.regex_multiline = True
             elif item == 's': args.regex_dotall = True
@@ -182,6 +183,7 @@ def _parse_input_args__prepare_anon_pattern(args):
                 return 'Unknown modifier in pattern: %s. Allowed modifiers: i, m, s, v, r,' % item
 
         for item in (pattern_parts['mode'] or ''):
+            # pylint: disable-msg=multiple-statements
             if item == 'g': args.regexp = True
             elif item == 'p': pass
             elif item == 'f': args.fuzzy = True
