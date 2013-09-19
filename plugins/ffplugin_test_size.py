@@ -23,7 +23,7 @@ _multi = {
 
 _cache = {}
 
-def _action(value, name, path):
+def _action(name, value, path):
     global _tests, _multi, _cache
 
     if not value:
@@ -48,9 +48,9 @@ def _action(value, name, path):
         _cache[path] = test(os.stat(path).st_size, size)
         return _cache[path]
 
-def plugin_action(value, name, path):
+def plugin_action(name, value, path):
     try:
-        return _action(value, name, path)
+        return _action(name, value, path)
     except PluginError:
         raise
     except:

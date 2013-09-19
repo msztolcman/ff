@@ -66,7 +66,7 @@ class FFPlugin(dict):
         self['action'] = self.action
 
     def run(self, path):
-        return self.action(self.value, self.name, path)
+        return self.action(self.name, self.value, path)
 
 
 class FFPlugins(OrderedDict):
