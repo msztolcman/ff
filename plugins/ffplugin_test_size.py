@@ -45,11 +45,9 @@ def _action(name, argument, path):
         size = int(size)
 
     path = os.path.realpath(path)
-    try:
-        return _cache[path]
-    except KeyError:
-        _cache[path] = test(os.stat(path).st_size, size)
-        return _cache[path]
+    if path not in _cache:
+        _cache[path] = os.path.getsize(path)
+    return test(_cache[path], size)
 
 def plugin_action(name, argument, path):
     try:
