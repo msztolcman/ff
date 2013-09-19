@@ -529,7 +529,7 @@ def main():
 
     try:
         for source in config.source:
-            for root, dirs, files in os.walk(source):
+            for root, _, files in os.walk(source):
                 try:
                     root = root.decode('utf-8')
                 except UnicodeDecodeError as ex:
