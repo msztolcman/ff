@@ -525,7 +525,7 @@ def main():
 
     config.pattern = prepare_pattern(config)
 
-    rxp_vcs = re.compile('(?:^|/)(?:\.git|\.svn|\.CVS|\.hg|_MTN|CVS|RCS|SCCS|_darcs|_sgbak)(?:$|/)')
+    rxp_vcs = re.compile(r'(?:^|/)(?:\.git|\.svn|\.CVS|\.hg|_MTN|CVS|RCS|SCCS|_darcs|_sgbak)(?:$|/)')
 
     try:
         for source in config.source:
