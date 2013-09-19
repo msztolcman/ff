@@ -16,8 +16,6 @@ import textwrap
 
 from pprint import pprint, pformat
 
-from error import PluginError
-
 __version__ = '0.4'
 
 class PluginError(Exception):
