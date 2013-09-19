@@ -519,8 +519,8 @@ def is_path_excluded(excluded_paths, path):
 def main():
     try:
         config = parse_input_args(sys.argv[1:])
-    except argparse.ArgumentError:
-        print(e, file=sys.stderr)
+    except argparse.ArgumentError as ex:
+        print(ex, file=sys.stderr)
         sys.exit(1)
 
     config.pattern = prepare_pattern(config)
