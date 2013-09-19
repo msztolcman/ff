@@ -61,7 +61,7 @@ class FFPlugin(dict):
             self.descr = self.descr(self.name)
         self.help = getattr(_module, 'plugin_help', '')
         if callable(self.help):
-            self.help = self.help(plugin_name)
+            self.help = self.help(self.name)
         self.action = _module.plugin_action
 
         self['descr'] = self.descr
