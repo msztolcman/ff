@@ -359,7 +359,7 @@ def parse_input_args(args):
         raise p.error('argument -p/--pattern is required')
 
     ## prepare sources
-    args.source += args.anon_sources;
+    args.source += args.anon_sources
     if not args.source:
         args.source.append('.')
 
