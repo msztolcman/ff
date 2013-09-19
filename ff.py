@@ -256,7 +256,7 @@ def parse_input_args(args):
             plugin_name, plugin_value = plugin, None
 
         try:
-            _module = __import__('ffplugin_test_' + plugin_name, {}, {}, [], -1)
+            _module = _import_plugin('test', plugin_name)
             args.tests[i] = {'name': plugin_name, 'value': plugin_value, 'action': _module.plugin_action}
         except ImportError:
             p.error('Unknown plugin: %s' % plugin_name)
