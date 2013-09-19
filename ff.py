@@ -65,8 +65,8 @@ class FFPlugin(dict):
         self['help'] = self.help
         self['action'] = self.action
 
-    def run(self, value=None):
-        return self.action(value)
+    def run(self, path):
+        return self.action(self.value, self.name, path)
 
 
 class FFPlugins(OrderedDict):
@@ -448,7 +448,7 @@ def process_item(cfg, path):
     if cfg.tests:
         for test in cfg.tests.values():
             try:
-                to_show = test.action(value=test.value, name=test.name, path=path)
+                to_show = test.run(path)
             except PluginError as e:
                 print('Plugin "%s" error: %s' % (test.name, e), file=sys.stderr)
                 sys.exit(1)
