@@ -14,11 +14,106 @@ import subprocess
 import sys
 import textwrap
 
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ordereddict import OrderedDict
+
 from pprint import pprint, pformat
 
 from error import PluginError
 
 __version__ = '0.4'
+
+class FFPlugin(dict):
+    def __init__(self, name, type_, **kw):
+        self.name = self['name'] = name
+        self.type = self['type'] = type_
+        self.action = self['action'] = kw.get('action', None)
+        self.descr = self['descr'] = kw.get('descr', '')
+        self.help = self['help'] = kw.get('help', '')
+        self.value = self['value'] = kw.get('value', None)
+
+        self.load()
+
+    @staticmethod
+    def _import(type_, name):
+        ''' Imports plugins module.
+
+            Plugin's name is created from three parts:
+            fixed prefix: 'ffplugin'
+            plugin type (just 'test' right now)
+            plugin name
+
+            joined with underscore.
+
+            Returns imported module.
+        '''
+        return __import__('_'.join(['ffplugin', type_, name]), {}, {}, [], -1)
+
+    def load(self):
+        _module = self._import(self.type, self.name)
+        self.descr = getattr(_module, 'plugin_descr', '')
+        if callable(self.descr):
+            self.descr = self.descr(self.name)
+        self.help = getattr(_module, 'plugin_help', '')
+        if callable(self.help):
+            self.help = self.help(plugin_name)
+        self.action = _module.plugin_action
+
+        self['descr'] = self.descr
+        self['help'] = self.help
+        self['action'] = self.action
+
+    def run(self, value=None):
+        return self.action(value)
+
+
+class FFPlugins(OrderedDict):
+    paths = set([
+        os.path.expanduser('~/.ff/plugins'),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), 'plugins')
+    ])
+
+    def __init__(self, paths=None):
+        super(FFPlugins, self).__init__()
+        if paths is not None:
+            self.__class__.paths.update(paths)
+
+    @classmethod
+    def find_all(cls, type_, paths=None):
+        if paths is not None:
+            cls.paths.update(paths)
+
+        result = {}
+        prefix_len = len('ffplugin_') + len(type_) + 1
+        for path in cls.paths:
+            if not os.path.isdir(path):
+                continue
+
+            for file_ in glob.glob(os.path.join(path, '_'.join(['ffplugin', type_, '*.py']))):
+                plugin_name = os.path.basename(file_)[prefix_len:-3]
+                ## paths order describe priority of plugins too (first found are most important)
+                if plugin_name in result:
+                    continue
+                result[plugin_name] = True
+
+        order = result.keys()
+        order.sort()
+
+        return cls.find(order, type_=type_)
+
+    @classmethod
+    def find(cls, names, type_, paths=None):
+        if paths is not None:
+            cls.paths.update(paths)
+
+        plugins = cls()
+        for plugin_name in names:
+            plugins[plugin_name] = FFPlugin(plugin_name, type_)
+
+        return plugins
+
 
 def ask(question, replies, default=None):
     """ Ask question and repeat it, until answer will not be one of 'replies',
@@ -92,87 +187,12 @@ def _parse_input_args__prepare_anon_pattern(args):
             else:
                 return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
 
-def _import_plugin(type_, name):
-    ''' Imports plugins module.
-
-        Plugin's name is created from three parts:
-        fixed prefix: 'ffplugin'
-        plugin type (just 'test' right now)
-        plugin name
-
-        joined with underscore.
-
-        Returns imported module.
-    '''
-    return __import__('_'.join(['ffplugin', type_, name]), {}, {}, [], -1)
-
-def _parse_input_args__plugins__list(type_, plugins, paths):
-    ''' Search for all available ff plugins.
-
-        type_ - type of plugin to search (currently only 'test' plugins are available)
-        plugins - ignored
-        paths - paths where plugins can bo stored
-
-        Returns list of dictionares:
-            name - name of plugin
-            descr - short description about plugin (plugin_descr item from plugin module)
-            help - always empty
-    '''
-    result = {}
-    prefix_len = len('ffplugin_') + len(type_) + 1
-    for path in paths:
-        for file_ in glob.glob(os.path.join(path, '_'.join(['ffplugin', type_, '*.py']))):
-            plugin_name = os.path.basename(file_)[prefix_len:-3]
-            ## paths order describe priority of plugins too (first found are most important)
-            if plugin_name in result:
-                continue
-
-            _module = _import_plugin(type_, plugin_name)
-            plugin_descr = getattr(_module, 'plugin_descr', '')
-            if callable(plugin_descr):
-                plugin_descr = plugin_descr(plugin_name)
-            result[plugin_name] = { 'name': plugin_name, 'descr': plugin_descr, 'help': '' }
-
-    order = result.keys()
-    order.sort()
-    return [ result[plugin_name] for plugin_name in order ]
-
-def _parse_input_args__plugins__help(type_, plugins, paths):
-    ''' Find info about requested plugins.
-
-        type_ - type of plugin to search (currently only 'test' plugins are available)
-        plugins - plugins names to search
-        paths - paths where plugins can bo stored
-
-        Returns list of dictionares:
-            name - name of plugin
-            descr - short description about plugin (plugin_descr item from plugin module)
-            help - verbose help about plugin (plugin_help item from plugin module)
-    '''
-    result = []
-    for plugin_name in set(plugins):
-        try:
-            _module = _import_plugin(type_, plugin_name)
-        except ImportError:
-            raise ImportError(plugin_name)
-
-        plugin_descr = getattr(_module, 'plugin_descr', '')
-        plugin_help = getattr(_module, 'plugin_help', '')
-        if callable(plugin_descr):
-            plugin_descr = plugin_descr(plugin_name)
-        if callable(plugin_help):
-            plugin_help = plugin_help(plugin_name)
-
-        result.append({ 'name': plugin_name, 'descr': plugin_descr, 'help': plugin_help })
-
-    return result
-
-def print_help_data(help):
+def print_help_data(help, mode):
     divider = ''
-    for data in help:
-        text = 'ff plugin: ' + data['name'] + (' - ' + textwrap.fill(data['descr']) if data['descr'] else '') + "\n"
-        if data['help']:
-            text += "\n" + data['help'] + "\n\n"
+    for data in help.values():
+        text = 'ff plugin: ' + data.name + (' - ' + textwrap.fill(data.descr) if data.descr else '') + "\n"
+        if mode == 'full' and data.help:
+            text += "\n" + data.help + "\n\n"
         print(text, end='')
 
 def parse_input_args(args):
@@ -261,33 +281,36 @@ def parse_input_args(args):
     if args.help_test_plugins:
         ## None means: show me list of plugins
         if None in args.help_test_plugins:
-            help_data = _parse_input_args__plugins__list('test', None, plugins_paths)
+            mode = 'list'
+            help_data = FFPlugins.find_all('test', plugins_paths)
         else:
+            mode = 'full'
             ## plugins names can be separated with comma
             args.help_test_plugins = itertools.chain(*[ data.split(',') for data in args.help_test_plugins])
             try:
-                help_data = _parse_input_args__plugins__help('test', args.help_test_plugins, plugins_paths)
+                help_data = FFPlugins.find(args.help_test_plugins, 'test', plugins_paths)
             except ImportError as e:
                 print('Unknown plugin: %s' % e.message, file=sys.stderr)
                 sys.exit(1)
 
-        print_help_data(help_data)
+        print_help_data(help_data, mode)
         sys.exit()
 
     ## find all requested test plugins
-    for i, plugin in enumerate(args.tests):
+    plugins = FFPlugins(paths=plugins_paths)
+    for plugin in args.tests:
         if ':' in plugin:
             plugin_name, plugin_value = plugin.split(':', 1)
         else:
             plugin_name, plugin_value = plugin, None
 
         try:
-            _module = _import_plugin('test', plugin_name)
-            args.tests[i] = {'name': plugin_name, 'value': plugin_value, 'action': _module.plugin_action}
+            plugins[plugin_name] = FFPlugin(plugin_name, 'test', value=plugin_value)
         except ImportError:
             p.error('Unknown plugin: %s' % plugin_name)
         except AttributeError:
             p.error('Broken plugin: %s' % plugin_name)
+    args.tests = plugins
 
     ## prepare pattern
     if args.pattern is None:
@@ -423,11 +446,11 @@ def process_item(cfg, path):
         return
 
     if cfg.tests:
-        for test in cfg.tests:
+        for test in cfg.tests.values():
             try:
-                to_show = test['action'](value=test['value'], name=test['name'], path=path)
+                to_show = test.action(value=test.value, name=test.name, path=path)
             except PluginError as e:
-                print('Plugin "%s" error: %s' % (test['name'], e), file=sys.stderr)
+                print('Plugin "%s" error: %s' % (test.name, e), file=sys.stderr)
                 sys.exit(1)
             else:
                 if not to_show:
