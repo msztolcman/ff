@@ -26,18 +26,18 @@ _multi = {
 
 _cache = {}
 
-def _action(name, value, path):
+def _action(name, argument, path):
     global _tests, _multi, _cache
 
-    if not value:
+    if not argument:
         raise PluginError('missing size')
 
-    if value[0] in ('<', '>', '='):
-        test = _tests[value[0]]
-        size = value[1:]
+    if argument[0] in ('<', '>', '='):
+        test = _tests[argument[0]]
+        size = argument[1:]
     else:
         test = _tests['=']
-        size = value
+        size = argument
 
     if size[-1] in 'bkmgBKMG':
         size = int(size[:-1]) * _multi[size[-1].lower()]
@@ -51,9 +51,9 @@ def _action(name, value, path):
         _cache[path] = test(os.stat(path).st_size, size)
         return _cache[path]
 
-def plugin_action(name, value, path):
+def plugin_action(name, argument, path):
     try:
-        return _action(name, value, path)
+        return _action(name, argument, path)
     except PluginError:
         raise
     except:

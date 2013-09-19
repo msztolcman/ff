@@ -32,7 +32,7 @@ class FFPlugin(dict):
         self.action = self['action'] = kw.get('action', None)
         self.descr = self['descr'] = kw.get('descr', '')
         self.help = self['help'] = kw.get('help', '')
-        self.value = self['value'] = kw.get('value', None)
+        self.argument = self['argument'] = kw.get('argument', None)
 
         self.load()
 
@@ -66,7 +66,7 @@ class FFPlugin(dict):
         self['action'] = self.action
 
     def run(self, path):
-        return self.action(self.name, self.value, path)
+        return self.action(self.name, self.argument, path)
 
 
 class FFPlugins(OrderedDict):
@@ -300,12 +300,12 @@ def parse_input_args(args):
     plugins = FFPlugins(paths=plugins_paths)
     for plugin in args.tests:
         if ':' in plugin:
-            plugin_name, plugin_value = plugin.split(':', 1)
+            plugin_name, plugin_argument = plugin.split(':', 1)
         else:
-            plugin_name, plugin_value = plugin, None
+            plugin_name, plugin_argument = plugin, None
 
         try:
-            plugins[plugin_name] = FFPlugin(plugin_name, 'test', value=plugin_value)
+            plugins[plugin_name] = FFPlugin(plugin_name, 'test', argument=plugin_argument)
         except ImportError:
             p.error('Unknown plugin: %s' % plugin_name)
         except AttributeError:
