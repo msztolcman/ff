@@ -3,7 +3,7 @@ ff
 
 Easily search and process files.
 
-If you need to search by file content, use [ack](https://github.com/petdance/ack2) or [pss](https://github.com/eliben/pss).
+It's not designed for search by file content. If you need this, see [ack](https://github.com/petdance/ack2) or [pss](https://github.com/eliben/pss).
 
 Basic usage
 -----------
@@ -29,7 +29,7 @@ Advanced usage
 
 Find all files and directories in /etc that match expression: `*pa*`, and copy them (with original directories hierarchy!) to /tmp.
 
-So powerful...
+So powerful!
 
 Magic pattern
 -------------
