@@ -98,7 +98,7 @@ class FFPlugins(list):
                     continue
                 result[plugin_name] = True
 
-        order = result.keys()
+        order = list(result.keys())
         order.sort()
 
         return cls.find(order, type_=type_)
