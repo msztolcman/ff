@@ -5,6 +5,7 @@ from __future__ import print_function, unicode_literals
 
 import argparse
 import copy
+import collections
 import glob
 import itertools
 import os, os.path
@@ -48,7 +49,7 @@ class FFPlugin(dict):
 
             Returns imported module.
         '''
-        _mod = __import__('_'.join(['ffplugin', type_, name]), {}, {}, [], -1)
+        _mod = __import__('_'.join(['ffplugin', type_, name]), {}, {}, [], 0)
         ## monkey patch - plugin doesn't need to import FFPluginError
         _mod.FFPluginError = FFPluginError
 
@@ -57,10 +58,10 @@ class FFPlugin(dict):
     def load(self):
         _module = self._import(self.type, self.name)
         self.descr = getattr(_module, 'plugin_descr', '')
-        if callable(self.descr):
+        if isinstance(self.descr, collections.Callable):
             self.descr = self.descr(self.name)
         self.help = getattr(_module, 'plugin_help', '')
-        if callable(self.help):
+        if isinstance(self.help, collections.Callable):
             self.help = self.help(self.name)
         self.action = _module.plugin_action
 
@@ -102,7 +103,7 @@ class FFPlugins(list):
                     continue
                 result[plugin_name] = True
 
-        order = result.keys()
+        order = list(result.keys())
         order.sort()
 
         return cls.find(order, type_=type_)
@@ -138,7 +139,13 @@ def ask(question, replies, default=None):
 
     question += ' (' + choices + ') '
     while True:
-        reply = raw_input(question).lower()
+        try:
+            raw_input
+        except NameError:
+            reply = input(question).lower()
+        else:
+            reply = raw_input(question).lower()
+
         if reply == '':
             if default:
                 return default
