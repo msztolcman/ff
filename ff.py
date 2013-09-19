@@ -156,6 +156,7 @@ def _parse_input_args__prepare_anon_pattern(args):
         $
     ''', re.VERBOSE)
     match = rxp_pattern.match(args.pattern)
+
     if match:
         pattern_parts = match.groupdict()
 
