@@ -91,6 +91,7 @@ def _parse_input_args__prepare_anon_pattern(args):
             elif item == 'f': args.fuzzy = True
             else:
                 return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
+
 def _import_plugin(type_, name):
     ''' Imports plugins module.
 
@@ -106,6 +107,17 @@ def _import_plugin(type_, name):
     return __import__('_'.join(['ffplugin', type_, name]), {}, {}, [], -1)
 
 def _parse_input_args__plugins__list(type_, plugins, paths):
+    ''' Search for all available ff plugins.
+
+        type_ - type of plugin to search (currently only 'test' plugins are available)
+        plugins - ignored
+        paths - paths where plugins can bo stored
+
+        Returns list of dictionares:
+            name - name of plugin
+            descr - short description about plugin (plugin_descr item from plugin module)
+            help - always empty
+    '''
     result = {}
     prefix_len = len('ffplugin_') + len(type_) + 1
     for path in paths:
@@ -126,6 +138,17 @@ def _parse_input_args__plugins__list(type_, plugins, paths):
     return [ result[plugin_name] for plugin_name in order ]
 
 def _parse_input_args__plugins__help(type_, plugins, paths):
+    ''' Find info about requested plugins.
+
+        type_ - type of plugin to search (currently only 'test' plugins are available)
+        plugins - plugins names to search
+        paths - paths where plugins can bo stored
+
+        Returns list of dictionares:
+            name - name of plugin
+            descr - short description about plugin (plugin_descr item from plugin module)
+            help - verbose help about plugin (plugin_help item from plugin module)
+    '''
     result = []
     for plugin_name in set(plugins):
         try:
