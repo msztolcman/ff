@@ -406,11 +406,13 @@ def prepare_execute(exe, path, dirname, basename, expand_vars=True):
     exe = copy.copy(exe)
     rxp_var = re.compile(r'(\\*)\$([_a-zA-Z0-9]+)')
     for i, elem in enumerate(exe):
-        exe[i] = exe[i].replace('{path}', path)
-        exe[i] = exe[i].replace('{dirname}', dirname)
-        exe[i] = exe[i].replace('{basename}', basename)
+        elem = elem.replace('{path}', path)
+        elem = elem.replace('{dirname}', dirname)
+        elem = elem.replace('{basename}', basename)
         if expand_vars:
-            exe[i] = rxp_var.sub(_prepare_execute__vars, exe[i])
+            elem = rxp_var.sub(_prepare_execute__vars, elem)
+
+        exe[i] = elem
 
     return exe
 
