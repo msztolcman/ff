@@ -79,7 +79,9 @@ Usage
     usage: ff.py [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-f] [-q] [-l] [-d]
                 [-B] [-E] [-v] [-m {all,files,dirs}] [-x COMMAND] [--prefix]
                 [--no-display] [--verbose-exec] [--interactive-exec]
-                [--shell-exec] [--vcs] [-c EXCLUDED_PATH]
+                [--shell-exec] [--vcs] [-c EXCLUDED_PATH] [-t TESTS]
+                [--plugins-path PLUGINS_PATH] [--version]
+                [--help-test-plugins [TEST_NAME]]
                 [pattern] [sources [sources ...]]
 
     Easily search and process files.
@@ -124,27 +126,44 @@ Usage
     --vcs                 do not skip VCS directories (.git, .svn etc)
     -c EXCLUDED_PATH, --exclude-path EXCLUDED_PATH
                           skip given paths from scanning
+    -t TESTS, --test TESTS
+                          additional tests, available by plugins (see
+                          annotations below or --help-test-plugins)
+    --plugins-path PLUGINS_PATH
+                          additional path where to search plugins (see
+                          annotations below)
+    --version             show program's version number and exit
+    --help-test-plugins [TEST_NAME]
+                          display help for installed test plugins
 
-    Pattern, provided as positional argument (not with --pattern) can be provided
+    Pattern, provided as positional argument (not with `--pattern`) can be provided
     in special form (called: magic pattern). It allows to more "nerdish"
     (or "perlish" :) ) way to control `ff` behavior.
 
     The general pattern for magic pattern is:
-    mode/pattern/modifier
+
+        mode/pattern/modifier
 
     where:
-        mode - is one of 'p' (--pattern), 'g' - (--regexp) or 'f' (--fuzzy)
-        / - is delimiter:
+        `mode` - is one of 'p' (`--pattern`), 'g' - (`--regexp`) or 'f' (`--fuzzy`)
+        `/` - is delimiter:
             * one of: '/', '!', '@', '#', '%', '|', and then start and end
                 delimiter must be the same
             * one of: '{', '[', '(', '<', and the end delimiter must be the
                 closing one (ex. '}' if start is '{')
-        pattern - any pattern, processed in a way specified with 'mode'
-        modifier - one of: 'i' (--ignore-case), 'm' (--regex-multiline),
-            's' (--regex_dotall), 'v' (not used currently), 'r' (--invert-match)
-            'q' (--path-search)
+        `pattern` - any pattern, processed in a way specified with `mode`
+        `modifier` - one of: 'i' (`--ignore-case`), 'm' (`--regex-multiline`),
+            's' (`--regex-dotall`), 'v' (not used currently), 'r' (`--invert-match`)
+            'q' (`--path-search`)
 
-    Author:
+    There is also ability to extend capabilities of `ff` by plugins. Plugins are
+    run with switch `--test` and then plugin name with optional plugin argument:
+
+        --test plugin_name:plugin_arg
+
+    There can be used more then one plugin at once.
+
+    Authors:
         Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
 
     HomePage:
