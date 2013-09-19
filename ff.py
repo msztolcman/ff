@@ -241,37 +241,65 @@ def parse_input_args(args):
             https://github.com/mysz/ff/
     ''').strip()
 
-    p = argparse.ArgumentParser(description=args_description, epilog=args_epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p = argparse.ArgumentParser(description=args_description, epilog=args_epilog,       # pylint: disable-msg=invalid-name
+                                formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    p.add_argument('-0', '--print0', action='store_true', default=False, help='split results by binary zero instead of new line (useful to work with xargs)')
-    p.add_argument('-i', '--ignorecase', '--ignore-case', action='store_true', default=False, help='')
-    p.add_argument('-s', '--source', action='append', type=str, default=[], help='optional, see: source above')
-    p.add_argument('-p', '--pattern', type=str, help='optional, see: pattern above')
-    p.add_argument('-g', '--regexp', action='store_true', default=False, help='treat pattern as regular expression (uses Python regexp engine)')
-    p.add_argument('-f', '--fuzzy', action='store_true', default=False, help='pattern defines only set and order of characters used in filename')
-    p.add_argument('-q', '--path-search', action='store_true', default=False, help='search in full path, instead of bare name of item')
-    p.add_argument('-l', '--regex-multiline', action='store_true', default=False, help='')
-    p.add_argument('-d', '--regex-dotall', action='store_true', default=False, help='')
-    p.add_argument('-B', '--begin', dest='fnmatch_begin', action='store_true', default=False, help='match pattern to begin of item name (ignored in regexp mode)')
-    p.add_argument('-E', '--end', dest='fnmatch_end', action='store_true', default=False, help='match pattern to end of item name (ignored in regexp mode)')
-    p.add_argument('-v', '-r', '--invert-match', action='store_true', default=False, help='')
-    p.add_argument('-m', '--mode', choices=('all', 'files', 'dirs'), default='all', help='')
-    p.add_argument('-x', '--exec', metavar='COMMAND', dest='execute', type=str, help='execute some command on every found item. In command, placeholders: {path}, {dirname}, {basename} are replaced with correct value')
-    p.add_argument('--prefix', action='store_true', default=False, help='add prefix "d: " (directory) or "f: " (file) to every found item')
-    p.add_argument('--no-display', dest='display', action='store_false', default=True, help='don\'t display element (useful with --exec argument)')
-    p.add_argument('--verbose-exec', action='store_true', default=False, help='show command before execute it')
-    p.add_argument('--interactive-exec', action='store_true', default=False, help='ask before execute command on every item')
-    p.add_argument('--shell-exec', action='store_true', default=False, help='execute command from --exec argument in shell (with shell expansion etc)')
+    p.add_argument('-0', '--print0', action='store_true', default=False,
+                   help='split results by binary zero instead of new line (useful to work with xargs)')
+    p.add_argument('-i', '--ignorecase', '--ignore-case', action='store_true', default=False,
+                   help='')
+    p.add_argument('-s', '--source', action='append', type=str, default=[],
+                   help='optional, see: source above')
+    p.add_argument('-p', '--pattern', type=str,
+                   help='optional, see: pattern above')
+    p.add_argument('-g', '--regexp', action='store_true', default=False,
+                   help='treat pattern as regular expression (uses Python regexp engine)')
+    p.add_argument('-f', '--fuzzy', action='store_true', default=False,
+                   help='pattern defines only set and order of characters used in filename')
+    p.add_argument('-q', '--path-search', action='store_true', default=False,
+                   help='search in full path, instead of bare name of item')
+    p.add_argument('-l', '--regex-multiline', action='store_true', default=False,
+                   help='')
+    p.add_argument('-d', '--regex-dotall', action='store_true', default=False,
+                   help='')
+    p.add_argument('-B', '--begin', dest='fnmatch_begin', action='store_true', default=False,
+                   help='match pattern to begin of item name (ignored in regexp mode)')
+    p.add_argument('-E', '--end', dest='fnmatch_end', action='store_true', default=False,
+                   help='match pattern to end of item name (ignored in regexp mode)')
+    p.add_argument('-v', '-r', '--invert-match', action='store_true', default=False,
+                   help='')
+    p.add_argument('-m', '--mode', choices=('all', 'files', 'dirs'), default='all',
+                   help='')
+    p.add_argument('-x', '--exec', metavar='COMMAND', dest='execute', type=str,
+                   help='execute some command on every found item. In command, placeholders: {path}, '
+                   '{dirname}, {basename} are replaced with correct value')
+    p.add_argument('--prefix', action='store_true', default=False,
+                   help='add prefix "d: " (directory) or "f: " (file) to every found item')
+    p.add_argument('--no-display', dest='display', action='store_false', default=True,
+                   help='don\'t display element (useful with --exec argument)')
+    p.add_argument('--verbose-exec', action='store_true', default=False,
+                   help='show command before execute it')
+    p.add_argument('--interactive-exec', action='store_true', default=False,
+                   help='ask before execute command on every item')
+    p.add_argument('--shell-exec', action='store_true', default=False,
+                   help='execute command from --exec argument in shell (with shell expansion etc)')
     p.add_argument('--vcs', action='store_true', default=False, help='do not skip VCS directories (.git, .svn etc)')
-    p.add_argument('-c', '--exclude-path', metavar='EXCLUDED_PATH', dest='excluded_paths', action='append', type=str, default=[], help='skip given paths from scanning')
-    p.add_argument('-t', '--test', dest='tests', action='append', default=[], help='additional tests, available by plugins (see annotations below or --help-test-plugins)')
-    p.add_argument('--plugins-path', type=str, help='additional path where to search plugins (see annotations below)')
+    p.add_argument('-c', '--exclude-path', metavar='EXCLUDED_PATH', dest='excluded_paths', action='append', type=str, default=[],
+                   help='skip given paths from scanning')
+    p.add_argument('-t', '--test', dest='tests', action='append', default=[],
+                   help='additional tests, available by plugins (see annotations below or --help-test-plugins)')
+    p.add_argument('--plugins-path', type=str,
+                   help='additional path where to search plugins (see annotations below)')
     p.add_argument('--version', action='version', version="%s %s\n%s" % (os.path.basename(sys.argv[0]), __version__, args_description))
-    p.add_argument('--help-test-plugins', metavar='TEST_NAME', nargs='?', action='append',default=[], help='display help for installed test plugins')
-    p.add_argument('anon_pattern', metavar='pattern', type=str, nargs='?', help='pattern to search')
-    p.add_argument('anon_sources', metavar='sources', type=str, nargs='*', help='optional source (if missing, use current directory)')
+    p.add_argument('--help-test-plugins', metavar='TEST_NAME', nargs='?', action='append', default=[],
+                   help='display help for installed test plugins')
+    p.add_argument('anon_pattern', metavar='pattern', type=str, nargs='?',
+                   help='pattern to search')
+    p.add_argument('anon_sources', metavar='sources', type=str, nargs='*',
+                   help='optional source (if missing, use current directory)')
 
     args = p.parse_args()
+    del args_description, args_epilog
 
     ## where to search plugins
     plugins_paths = [
