@@ -134,7 +134,13 @@ def ask(question, replies, default=None):
 
     question += ' (' + choices + ') '
     while True:
-        reply = raw_input(question).lower()
+        try:
+            raw_input
+        except NameError:
+            reply = input(question).lower()
+        else:
+            reply = raw_input(question).lower()
+
         if reply == '':
             if default:
                 return default
