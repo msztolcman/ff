@@ -225,7 +225,7 @@ def parse_input_args(args):
     args = p.parse_args()
 
     plugins_paths = [
-        os.path.expanduser('~/.ff_plugins'),
+        os.path.expanduser('~/.ff/plugins'),
         os.path.join(os.path.dirname(os.path.abspath(__file__)), 'plugins')
     ]
     if args.plugins_path:
