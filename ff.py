@@ -5,6 +5,7 @@ from __future__ import print_function, unicode_literals
 
 import argparse
 import copy
+import collections
 import glob
 import itertools
 import os, os.path
@@ -54,10 +55,10 @@ class FFPlugin(dict):
     def load(self):
         _module = self._import(self.type, self.name)
         self.descr = getattr(_module, 'plugin_descr', '')
-        if callable(self.descr):
+        if isinstance(self.descr, collections.Callable):
             self.descr = self.descr(self.name)
         self.help = getattr(_module, 'plugin_help', '')
-        if callable(self.help):
+        if isinstance(self.help, collections.Callable):
             self.help = self.help(plugin_name)
         self.action = _module.plugin_action
 
