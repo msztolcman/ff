@@ -8,10 +8,13 @@ import textwrap
 
 from error import PluginError
 
+def _test_greater(a, b): return a > b
+def _test_lesser(a, b): return a < b
+def _test_equal(a, b): return a == b
 _tests = {
-    '>': lambda a, b: a > b,
-    '<': lambda a, b: a < b,
-    '=': lambda a, b: a == b,
+    '>': _test_greater,
+    '<': _test_lesser,
+    '=': _test_equal
 }
 
 _multi = {
