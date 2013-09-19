@@ -18,7 +18,7 @@ from pprint import pprint, pformat
 
 __version__ = '0.4'
 
-class PluginError(Exception):
+class FFPluginError(Exception):
     pass
 
 class FFPlugin(dict):
@@ -46,8 +46,8 @@ class FFPlugin(dict):
             Returns imported module.
         '''
         _mod = __import__('_'.join(['ffplugin', type_, name]), {}, {}, [], -1)
-        ## monkey patch - plugin doesn't need to import PluginError
-        _mod.PluginError = PluginError
+        ## monkey patch - plugin doesn't need to import FFPluginError
+        _mod.FFPluginError = FFPluginError
 
         return _mod
 
@@ -448,7 +448,7 @@ def process_item(cfg, path):
         for test in cfg.tests:
             try:
                 to_show = test.run(path)
-            except PluginError as e:
+            except FFPluginError as e:
                 print('Plugin "%s" error: %s' % (test.name, e), file=sys.stderr)
                 sys.exit(1)
             else:
