@@ -7,11 +7,11 @@ import os.path
 import textwrap
 
 def _test_greater(a, b): return a > b
-def _test_lesser(a, b): return a < b
+def _test_less(a, b): return a < b
 def _test_equal(a, b): return a == b
 _tests = {
     '>': _test_greater,
-    '<': _test_lesser,
+    '<': _test_less,
     '=': _test_equal
 }
 
