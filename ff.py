@@ -215,7 +215,7 @@ def parse_input_args(args):
     p.add_argument('--shell-exec', action='store_true', default=False, help='execute command from --exec argument in shell (with shell expansion etc)')
     p.add_argument('--vcs', action='store_true', default=False, help='do not skip VCS directories (.git, .svn etc)')
     p.add_argument('-c', '--exclude-path', metavar='EXCLUDED_PATH', dest='excluded_paths', action='append', type=str, default=[], help='skip given paths from scanning')
-    p.add_argument('-t', '--test', dest='tests', action='append', default=[], help='additional tests, available by plugins  (see annotations below)')
+    p.add_argument('-t', '--test', dest='tests', action='append', default=[], help='additional tests, available by plugins (see annotations below or --help-test-plugins)')
     p.add_argument('--plugins-path', type=str, help='additional path where to search plugins (see annotations below)')
     p.add_argument('--version', action='version', version="%s %s\n%s" % (os.path.basename(sys.argv[0]), __version__, args_description))
     p.add_argument('--help-test-plugins', metavar='TEST_NAME', nargs='?', action='append',default=[], help='display help for installed test plugins')
