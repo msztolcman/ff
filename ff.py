@@ -224,6 +224,7 @@ def parse_input_args(args):
 
     args = p.parse_args()
 
+    ## where to search plugins
     plugins_paths = [
         os.path.expanduser('~/.ff/plugins'),
         os.path.join(os.path.dirname(os.path.abspath(__file__)), 'plugins')
@@ -233,6 +234,7 @@ def parse_input_args(args):
 
     sys.path.extend(plugins_paths)
 
+    ## show info about test plugins
     if args.help_test_plugins:
         ## None means: show me list of plugins
         if None in args.help_test_plugins:
@@ -249,6 +251,7 @@ def parse_input_args(args):
         print_help_data(help_data)
         sys.exit()
 
+    ## find all requested test plugins
     for i, plugin in enumerate(args.tests):
         if ':' in plugin:
             plugin_name, plugin_value = plugin.split(':', 1)
@@ -263,6 +266,7 @@ def parse_input_args(args):
         except AttributeError:
             p.error('Broken plugin: %s' % plugin_name)
 
+    ## prepare pattern
     if args.pattern is None:
         err = _parse_input_args__prepare_anon_pattern(args)
         if err:
@@ -273,6 +277,7 @@ def parse_input_args(args):
     if args.pattern is None:
         raise p.error('argument -p/--pattern is required')
 
+    ## prepare sources
     args.source += args.anon_sources;
     if not args.source:
         args.source.append('.')
@@ -282,11 +287,13 @@ def parse_input_args(args):
             p.error('Source %s doesn\'t exists or is not a directory' % src)
         args.source[i] = os.path.abspath(src)
 
+    ## prepare exec
     if args.shell_exec:
         args.execute = [args.execute]
     elif args.execute:
         args.execute = shlex.split(args.execute)
 
+    ## preapre excluded paths
     for i, exc in enumerate(args.excluded_paths):
         args.excluded_paths[i] = os.path.abspath(exc).rstrip('/')
 
