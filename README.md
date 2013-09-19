@@ -183,6 +183,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ChangeLog
 ---------
+# v0.5
+* added --version switch
+* improvements for Python3 (not ready yet)
+* ability to run plugins for tests (with first plugin: size)
+
 # v.04
 * added changelog
 * added fuzzy-search mode
