@@ -14,11 +14,6 @@ import subprocess
 import sys
 import textwrap
 
-try:
-    from collections import OrderedDict
-except ImportError:
-    from ordereddict import OrderedDict
-
 from pprint import pprint, pformat
 
 from error import PluginError
@@ -69,14 +64,13 @@ class FFPlugin(dict):
         return self.action(self.name, self.argument, path)
 
 
-class FFPlugins(OrderedDict):
+class FFPlugins(list):
     paths = set([
         os.path.expanduser('~/.ff/plugins'),
         os.path.join(os.path.dirname(os.path.abspath(__file__)), 'plugins')
     ])
 
     def __init__(self, paths=None):
-        super(FFPlugins, self).__init__()
         if paths is not None:
             self.__class__.paths.update(paths)
 
@@ -110,7 +104,7 @@ class FFPlugins(OrderedDict):
 
         plugins = cls()
         for plugin_name in names:
-            plugins[plugin_name] = FFPlugin(plugin_name, type_)
+            plugins.append(FFPlugin(plugin_name, type_))
 
         return plugins
 
@@ -189,7 +183,7 @@ def _parse_input_args__prepare_anon_pattern(args):
 
 def print_help_data(help, mode):
     divider = ''
-    for data in help.values():
+    for data in help:
         text = 'ff plugin: ' + data.name + (' - ' + textwrap.fill(data.descr) if data.descr else '') + "\n"
         if mode == 'full' and data.help:
             text += "\n" + data.help + "\n\n"
@@ -305,7 +299,7 @@ def parse_input_args(args):
             plugin_name, plugin_argument = plugin, None
 
         try:
-            plugins[plugin_name] = FFPlugin(plugin_name, 'test', argument=plugin_argument)
+            plugins.append(FFPlugin(plugin_name, 'test', argument=plugin_argument))
         except ImportError:
             p.error('Unknown plugin: %s' % plugin_name)
         except AttributeError:
@@ -446,7 +440,7 @@ def process_item(cfg, path):
         return
 
     if cfg.tests:
-        for test in cfg.tests.values():
+        for test in cfg.tests:
             try:
                 to_show = test.run(path)
             except PluginError as e:
