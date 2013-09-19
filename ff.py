@@ -194,9 +194,8 @@ def _parse_input_args__prepare_anon_pattern(args):  # pylint: disable-msg=invali
             else:
                 return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
 
-def print_help_data(help, mode):
-    divider = ''
-    for data in help:
+def print_help_data(help_, mode):
+    for data in help_:
         text = 'ff plugin: ' + data.name + (' - ' + textwrap.fill(data.descr) if data.descr else '') + "\n"
         if mode == 'full' and data.help:
             text += "\n" + data.help + "\n\n"
