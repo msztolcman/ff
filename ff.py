@@ -16,7 +16,7 @@ import textwrap
 
 from pprint import pprint, pformat
 
-__version__ = '0.4'
+__version__ = '0.5'
 
 class FFPluginError(Exception):
     pass
