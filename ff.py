@@ -21,6 +21,7 @@ __version__ = '0.5'
 class FFPluginError(Exception):
     pass
 
+
 class FFPlugin(dict):
     def __init__(self, name, type_, **kw):
         self.name = self['name'] = name
