@@ -323,8 +323,8 @@ def parse_input_args(args):
             args.help_test_plugins = itertools.chain(*[ data.split(',') for data in args.help_test_plugins])
             try:
                 help_data = FFPlugins.find(args.help_test_plugins, 'test', plugins_paths)
-            except ImportError as e:
-                print('Unknown plugin: %s' % e.message, file=sys.stderr)
+            except ImportError as ex:
+                print('Unknown plugin: %s' % ex.message, file=sys.stderr)
                 sys.exit(1)
 
         print_help_data(help_data, mode)
@@ -384,15 +384,15 @@ def parse_input_args(args):
 
     return args
 
-def _prepare_execute__vars(m):
+def _prepare_execute__vars(match):
     """ Helper method for prepare_execute, used in replacement of regular expression.
         Returns environment variable if found, and quantity of escape characters ('\')
         is even.
     """
-    if len(m.group(1)) % 2 == 0:
-        return os.environ.get(m.group(2), '')
+    if len(match.group(1)) % 2 == 0:
+        return os.environ.get(match.group(2), '')
     else:
-        return m.group(0)
+        return match.group(0)
 
 def prepare_execute(exe, path, dirname, basename, expand_vars=True):
     """ Replace keywords and env variables in 'exe' with values.
@@ -466,14 +466,14 @@ def process_item(cfg, path):
     """ Test path for matching with pattern, print it if so, and execute command if given.
     """
     if cfg.path_search:
-        m = cfg.pattern.search(path)
+        is_name_match = cfg.pattern.search(path)
     else:
-        m = cfg.pattern.search(os.path.basename(path))
+        is_name_match = cfg.pattern.search(os.path.basename(path))
 
     to_show = False
-    if not cfg.invert_match and m:
+    if not cfg.invert_match and is_name_match:
         to_show = True
-    elif cfg.invert_match and not m:
+    elif cfg.invert_match and not is_name_match:
         to_show = True
 
     if not to_show:
@@ -483,8 +483,8 @@ def process_item(cfg, path):
         for test in cfg.tests:
             try:
                 to_show = test.run(path)
-            except FFPluginError as e:
-                print('Plugin "%s" error: %s' % (test.name, e), file=sys.stderr)
+            except FFPluginError as ex:
+                print('Plugin "%s" error: %s' % (test.name, ex), file=sys.stderr)
                 sys.exit(1)
             else:
                 if not to_show:
@@ -529,8 +529,8 @@ def main():
             for root, dirs, files in os.walk(source):
                 try:
                     root = root.decode('utf-8')
-                except UnicodeDecodeError as e:
-                    print(root, ': ', e, sep='', file=sys.stderr)
+                except UnicodeDecodeError as ex:
+                    print(root, ': ', ex, sep='', file=sys.stderr)
                     continue
 
                 if is_path_excluded(config.excluded_paths, root):
@@ -544,9 +544,9 @@ def main():
                     for file_ in files:
                         try:
                             file_ = file_.decode('utf-8')
-                        except UnicodeDecodeError as e:
+                        except UnicodeDecodeError as ex:
                             ## do not change to os.path.join, will break if are some strange characters in file_
-                            print(root, os.sep, file_, ': ', e, sep='', file=sys.stderr)
+                            print(root, os.sep, file_, ': ', ex, sep='', file=sys.stderr)
                             continue
 
                         path = os.path.join(root, file_)
