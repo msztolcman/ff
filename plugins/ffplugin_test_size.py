@@ -7,7 +7,6 @@
 from __future__ import print_function, unicode_literals
 
 import os.path
-import textwrap
 
 def _test_greater(arg1, arg2):
     """ Test for being greater then.
