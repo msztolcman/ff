@@ -1,14 +1,29 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+""" Plugin script for `ff` (https://github.com/mysz/ff).
+"""
+
 from __future__ import print_function, unicode_literals
 
 import os.path
 import textwrap
 
-def _test_greater(a, b): return a > b
-def _test_less(a, b): return a < b
-def _test_equal(a, b): return a == b
+def _test_greater(a, b):
+    """ Test for being greater then.
+    """
+    return a > b
+
+def _test_less(a, b):
+    """ Test for being less then.
+    """
+    return a < b
+
+def _test_equal(a, b):
+    """ Test for being equal.
+    """
+    return a == b
+
 _tests = {
     '>': _test_greater,
     '<': _test_less,
@@ -25,6 +40,12 @@ _multi = {
 _cache = {}
 
 def _action(name, argument, path):
+    """ Test given path for being it's size match specified criteria.
+
+        `name` - not used
+        `argument` - data passed by user. It's syntax is: [<>=]?[0-9]+[bkgm]?
+        `path` - path to tested file
+    """
     global _tests, _multi, _cache
 
     if not argument:
@@ -48,6 +69,8 @@ def _action(name, argument, path):
     return test(_cache[path], size)
 
 def plugin_action(name, argument, path):
+    """ Action used by `ff`. Wrapper for `_action`.
+    """
     try:
         return _action(name, argument, path)
     except PluginError:
