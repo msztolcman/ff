@@ -311,7 +311,7 @@ def parse_input_args(args):
     ## where to search plugins
     plugins_paths = [
         os.path.expanduser('~/.ff/plugins'),
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), 'plugins')
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ff_plugins')
     ]
     if args.plugins_path:
         plugins_paths.insert(0, os.path.expanduser(args.plugins_path))
