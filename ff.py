@@ -74,12 +74,19 @@ class FFPlugin(dict):
 
 
 class FFPlugins(list):
+    """ List of plugins available for `ff`.
+    """
+
+    """ List of paths where to search for plugins.
+    """
     paths = set([
         os.path.expanduser('~/.ff/plugins'),
         os.path.join(os.path.dirname(os.path.abspath(__file__)), 'plugins')
     ])
 
     def __init__(self, paths=None):
+        """ Extend `FFPlugins.paths`
+        """
         super(FFPlugins, self).__init__()
 
         if paths is not None:
@@ -87,6 +94,13 @@ class FFPlugins(list):
 
     @classmethod
     def find_all(cls, type_, paths=None):
+        """ Find all plugins available for `ff` and return FFPlugins
+            initialized with it.
+
+            Every item is instance of FFPlugin.
+
+            Uses `FFPlugins.find` to load plugins.
+        """
         if paths is not None:
             cls.paths.update(paths)
 
@@ -110,6 +124,10 @@ class FFPlugins(list):
 
     @classmethod
     def find(cls, names, type_, paths=None):
+        """ Load given plugins list and initialize `FFPlugins` with them.
+
+            Returns `FFPlugins` instance.
+        """
         if paths is not None:
             cls.paths.update(paths)
 
