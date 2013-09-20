@@ -3,7 +3,7 @@ ff
 
 Easily search and process files.
 
-It's not designed for search by file content. If you need this, see [ack](https://github.com/petdance/ack2) or [pss](https://github.com/eliben/pss).
+If you need to search files by their contents, *or* search for their contents, please look at [ack](https://github.com/petdance/ack2) or [pss](https://github.com/eliben/pss). These are better suited for this kind of task.
 
 Why `ff` and not `find`?
 ------------------------
