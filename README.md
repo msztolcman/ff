@@ -60,6 +60,48 @@ Search for all files and directories in current directory and below, which name 
 
 Search for all files and directories in current directory and below, which name starts from 'chkpasswd' or 'passwd'.
 
+Plugins
+-------
+
+Plugins are the way to easily extend capabilities of `ff`. Currently there is only support for plugins allowing to extend tests made on files list. In future, there is plan to add support for plugins allowing to make some actions on found files (currently is _built-in plugin_: `--shell`), for example modifying, copying or anything else).
+
+`ff` search for plugins in two places (by default), but there is posibility to tell him about third one.
+Automaticaly recognized paths are:
+* `~/.ff/plugins`
+* directory `ff_plugins` in programs root (if You have `ff` placed in `~/bin`, it will search for plugins in `~/bin/ff_plugins`)
+
+And using switch `--plugins-path` You can show `ff` where the plugins must be searched.
+
+You can also pass argument to plugins. For example, in `size` plugin (You can download it from [GitHub](https://github.com/mysz/ff/tree/master/plugins)), You must to tell the plugin what size of file You expect:
+
+    `ff pas --test size:=5k`
+
+Above example will find every file with _pas_ part in its name, and its size is *exactly* 5 [kibibytes](http://en.wikipedia.org/wiki/Binary_prefix#IEC_standard_prefixes). More about `size` plugin in [projects wiki](https://github.com/mysz/ff/wiki/).
+
+Writing plugins
+---------------
+
+Plugins are written in [Python](http://python.org), and are simple Python modules with at least `plugin_action` callable specified. Plugins are imported, and `plugin_action` must return `True` or `False` to tell `ff` that given found object meets expectations, and should be returned.
+
+`ff` recognize and use only 3 objects in plugin:
+
+* `plugin_action` - (REQUIRED) [callable] must return `True` od `False`. Must recognize 3 arguments:
+    * `name` - name of plugin
+    * `argument` - argument passed by user
+    * `path` - absolute path to tested object
+* `plugin_descr` - (OPTIONAL) [string or callable] short descr of plugin, printed when `ff` is called with switch `--help-test-plugins`
+* `plugin_help` - (OPTIONAL) [string or callable] full help for plugin, printed when `ff` is called with switch `--help-test-plugins TEST_NAME`
+
+Plugin file also must have special name, and be placed in directory recognized by `ff` (see: [plugins][plugins]).
+Name of file is built with three parts, connected with underscore:
+* `ffplugin` - fixed prefix
+* `test` - type of plugin (currently only `test` plugins are recignized)
+* `NAME` - name of plugin
+
+And as Python module, must and with `.py` extension :)
+
+There is an example plugin, which allow us to search for files in specified size. Is in [project repository](https://github.com/mysz/ff/tree/master/plugins) in directory plugins. You can use it as a base for your own plugins :)
+
 Installation
 ------------
 
@@ -204,7 +246,8 @@ ChangeLog
 ---------
 # v0.5
 * added --version switch
-* improvements for Python3 (not ready yet)
+* improvements for Python3 (not finished yet)
+* improved PEP8 compatibility (pylint)
 * ability to run plugins for tests (with first plugin: size)
 
 # v.04
