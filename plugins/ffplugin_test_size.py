@@ -9,20 +9,20 @@ from __future__ import print_function, unicode_literals
 import os.path
 import textwrap
 
-def _test_greater(a, b):
+def _test_greater(arg1, arg2):
     """ Test for being greater then.
     """
-    return a > b
+    return arg1 > arg2
 
-def _test_less(a, b):
+def _test_less(arg1, arg2):
     """ Test for being less then.
     """
-    return a < b
+    return arg1 < arg2
 
-def _test_equal(a, b):
+def _test_equal(arg1, arg2):
     """ Test for being equal.
     """
-    return a == b
+    return arg1 == arg2
 
 _tests = {
     '>': _test_greater,
