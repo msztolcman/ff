@@ -57,10 +57,10 @@ class FFPlugin(dict):
 
     def load(self):
         _module = self._import(self.type, self.name)
-        self.descr = getattr(_module, 'plugin_descr', '')
+        self.descr = getattr(_module, 'PLUGIN_DESCR', '')
         if isinstance(self.descr, collections.Callable):
             self.descr = self.descr(self.name)
-        self.help = getattr(_module, 'plugin_help', '')
+        self.help = getattr(_module, 'PLUGIN_HELP', '')
         if isinstance(self.help, collections.Callable):
             self.help = self.help(self.name)
         self.action = _module.plugin_action
