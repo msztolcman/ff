@@ -20,6 +20,8 @@ from pprint import pprint, pformat # pylint: disable-msg=unused-import
 __version__ = '0.5'
 
 class FFPluginError(Exception):
+    """ Exception class for plugins.
+    """
     pass
 
 
