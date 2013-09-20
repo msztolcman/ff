@@ -36,7 +36,7 @@ _MULTI = {
     'g': 1024**3,
 }
 
-_cache = {}
+_cache = {} # pylint: disable-msg=invalid-name
 
 def _action(name, argument, path):
     """ Test given path for being it's size match specified criteria.
