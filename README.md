@@ -89,8 +89,8 @@ Plugins are written in [Python](http://python.org), and are simple Python module
     * `name` - name of plugin
     * `argument` - argument passed by user
     * `path` - absolute path to tested object
-* `plugin_descr` - (OPTIONAL) [string or callable] short descr of plugin, printed when `ff` is called with switch `--help-test-plugins`
-* `plugin_help` - (OPTIONAL) [string or callable] full help for plugin, printed when `ff` is called with switch `--help-test-plugins TEST_NAME`
+* `PLUGIN_DESCR` - (OPTIONAL) [string or callable] short descr of plugin, printed when `ff` is called with switch `--help-test-plugins`
+* `PLUGIN_HELP` - (OPTIONAL) [string or callable] full help for plugin, printed when `ff` is called with switch `--help-test-plugins TEST_NAME`
 
 Plugin file also must have special name, and be placed in directory recognized by `ff` (see: [plugins][plugins]).
 Name of file is built with three parts, connected with underscore:

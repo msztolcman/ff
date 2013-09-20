@@ -57,8 +57,8 @@ def plugin_action(name, argument, path):
         e = sys.exc_info()[1]
         raise PluginError(e.message)
 
-plugin_descr = 'Filter files by their size.'
-plugin_help = '''Size must be given as argument, and must follow pattern (without spaces):
+PLUGIN_DESCR = 'Filter files by their size.'
+PLUGIN_HELP = '''Size must be given as argument, and must follow pattern (without spaces):
 
     operator size multiplier
 
