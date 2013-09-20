@@ -244,13 +244,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ChangeLog
 ---------
-# v0.5
+### v0.5
 * added --version switch
 * improvements for Python3 (not finished yet)
 * improved PEP8 compatibility (pylint)
 * ability to run plugins for tests (with first plugin: size)
 
-# v.04
+### v.04
 * added changelog
 * added fuzzy-search mode
 * added 'magic pattern' mode
@@ -259,12 +259,12 @@ ChangeLog
 * handling CTRL-C
 * added modifier: --path-search
 
-# v0.3
+### v0.3
 * use argparse instead of getopt to parse options
 * allow to exclude path from search
 * improved help and documentation
 
-# v0.2
+### v0.2
 * added option 'shell-exec' - allow to exec programs with shell expansion
 * exec: add shell variables expansion
 * by default, skip VCS directories
@@ -277,5 +277,5 @@ ChangeLog
 * improved help and documentation
 * cleanups in code
 
-# v0.1
+### v0.1
 * initial version
