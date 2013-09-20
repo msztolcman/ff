@@ -100,6 +100,11 @@ Name of file is built with three parts, connected with underscore:
 
 And as Python module, must and with `.py` extension :)
 
+Plugin must validate input data (`argument`), and raise `PluginError` exception with approbiate message on any error. Plugin shouldn't raise any other exceptions.
+There is one caveat with this: `PluginError` exception is declared *inside* `ff`! When given plugin is imported, it is _monkeypatched_ and `PluginError` exception is injected into.
+
+This is made by one of goals I have: try to have whole `ff` program in single file. It's important to me that I can move it easy between servers.
+
 There is an example plugin, which allow us to search for files in specified size. Is in [project repository](https://github.com/mysz/ff/tree/master/plugins) in directory plugins. You can use it as a base for your own plugins :)
 
 Installation
