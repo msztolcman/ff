@@ -75,8 +75,8 @@ def plugin_action(name, argument, path):
         raise
     except:
         import sys
-        e = sys.exc_info()[1]
-        raise PluginError(e.message) # pylint: disable=undefined-variable
+        ex = sys.exc_info()[1]
+        raise PluginError(ex.message) # pylint: disable=undefined-variable
 
 PLUGIN_DESCR = 'Filter files by their size.'
 PLUGIN_HELP = '''Size must be given as argument, and must follow pattern (without spaces):
