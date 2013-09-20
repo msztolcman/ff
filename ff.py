@@ -97,10 +97,11 @@ class FFPlugin(dict):
 
 class FFPlugins(list):
     """ List of plugins available for `ff`.
+
+        Static fields:
+            * list of paths where to search for plugins.
     """
 
-    """ List of paths where to search for plugins.
-    """
     paths = set([
         os.path.expanduser('~/.ff/plugins'),
         os.path.join(os.path.dirname(os.path.abspath(__file__)), 'plugins')
