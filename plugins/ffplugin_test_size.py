@@ -48,7 +48,7 @@ def _action(name, argument, path):
     global _tests, _multi, _cache
 
     if not argument:
-        raise PluginError('missing size')
+        raise PluginError('missing size') # pylint: disable=undefined-variable
 
     if argument[0] in ('<', '>', '='):
         test = _TESTS[argument[0]]
@@ -72,12 +72,12 @@ def plugin_action(name, argument, path):
     """
     try:
         return _action(name, argument, path)
-    except PluginError:
+    except PluginError: # pylint: disable=undefined-variable
         raise
     except:
         import sys
         e = sys.exc_info()[1]
-        raise PluginError(e.message)
+        raise PluginError(e.message) # pylint: disable=undefined-variable
 
 PLUGIN_DESCR = 'Filter files by their size.'
 PLUGIN_HELP = '''Size must be given as argument, and must follow pattern (without spaces):
