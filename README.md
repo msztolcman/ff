@@ -5,6 +5,19 @@ Easily search and process files.
 
 It's not designed for search by file content. If you need this, see [ack](https://github.com/petdance/ack2) or [pss](https://github.com/eliben/pss).
 
+Why `ff` and not `find`?
+------------------------
+
+Just because I find that most of my searches was:
+
+    find . -iname '*name*'
+
+And it's easier to me to enter:
+
+    ff name
+
+:)
+
 Basic usage
 -----------
 
