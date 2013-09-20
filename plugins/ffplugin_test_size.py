@@ -45,7 +45,6 @@ def _action(__, argument, path):
         `argument` - data passed by user. It's syntax is: [<>=]?[0-9]+[bkgm]?
         `path` - path to tested file
     """
-    global _tests, _multi, _cache
 
     if not argument:
         raise PluginError('missing size') # pylint: disable=undefined-variable
