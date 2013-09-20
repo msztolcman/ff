@@ -23,13 +23,13 @@ def _test_equal(arg1, arg2):
     """
     return arg1 == arg2
 
-_tests = {
+_TESTS = {
     '>': _test_greater,
     '<': _test_less,
     '=': _test_equal
 }
 
-_multi = {
+_MULTI = {
     'b': 1,
     'k': 1024,
     'm': 1024**2,
@@ -51,14 +51,14 @@ def _action(name, argument, path):
         raise PluginError('missing size')
 
     if argument[0] in ('<', '>', '='):
-        test = _tests[argument[0]]
+        test = _TESTS[argument[0]]
         size = argument[1:]
     else:
-        test = _tests['=']
+        test = _TESTS['=']
         size = argument
 
     if size[-1] in 'bkmgBKMG':
-        size = int(size[:-1]) * _multi[size[-1].lower()]
+        size = int(size[:-1]) * _MULTI[size[-1].lower()]
     else:
         size = int(size)
 
