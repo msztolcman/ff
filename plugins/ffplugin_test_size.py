@@ -38,10 +38,10 @@ _MULTI = {
 
 _cache = {} # pylint: disable-msg=invalid-name
 
-def _action(name, argument, path):
+def _action(__, argument, path):
     """ Test given path for being it's size match specified criteria.
 
-        `name` - not used
+        `__` - not used
         `argument` - data passed by user. It's syntax is: [<>=]?[0-9]+[bkgm]?
         `path` - path to tested file
     """
