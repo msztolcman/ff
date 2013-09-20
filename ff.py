@@ -142,7 +142,7 @@ def ask(question, replies, default=None):
         try:
             raw_input
         except NameError:
-            reply = input(question).lower()
+            reply = input(question).lower() # pylint: disable-msg=bad-builtin
         else:
             reply = raw_input(question).lower()
 
