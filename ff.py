@@ -24,7 +24,21 @@ class FFPluginError(Exception):
 
 
 class FFPlugin(dict):
+    """ Wrapper for custoom plugin.
+
+        Loads module, read data, bind custom argument and allow to easy run plugin.
+    """
     def __init__(self, name, type_, **kw):
+        """ Initializer.
+
+            Allow to set values of instance:
+                * name (required)
+                * type_ (required)
+                * action (optional) (will be overwrited by `FFPlugin`.`load`)
+                * descr (optional) (will be overwrited by `FFPlugin`.`load`)
+                * help (optional) (will be overwrited by `FFPlugin`.`load`)
+                * argument (optional)
+        """
         super(FFPlugin, self).__init__()
 
         self.name = self['name'] = name
@@ -38,7 +52,7 @@ class FFPlugin(dict):
 
     @staticmethod
     def _import(type_, name):
-        ''' Imports plugins module.
+        """ Imports plugins module.
 
             Plugin's name is created from three parts:
             fixed prefix: 'ffplugin'
@@ -48,7 +62,7 @@ class FFPlugin(dict):
             joined with underscore.
 
             Returns imported module.
-        '''
+        """
         _mod = __import__('_'.join(['ffplugin', type_, name]), {}, {}, [], 0)
         ## monkey patch - plugin doesn't need to import FFPluginError
         _mod.FFPluginError = FFPluginError
@@ -56,6 +70,10 @@ class FFPlugin(dict):
         return _mod
 
     def load(self):
+        """ Load and initialize plugin with data from module.
+
+            Set `descr`, `help` and `action`.
+        """
         _module = self._import(self.type, self.name)
         self.descr = getattr(_module, 'PLUGIN_DESCR', '')
         if isinstance(self.descr, collections.Callable):
@@ -70,6 +88,10 @@ class FFPlugin(dict):
         self['action'] = self.action
 
     def run(self, path):
+        """ Run plugins callable.
+
+            Pass self.name, self.argument and path.
+        """
         return self.action(self.name, self.argument, path)
 
 
