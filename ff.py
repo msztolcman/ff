@@ -216,7 +216,7 @@ def ask(question, replies, default=None):
         elif reply in replies:
             return reply
 
-def _parse_input_args__prepare_magic_pattern(args):  # pylint: disable-msg=invalid-name
+def _prepare_pattern__magic(args):
     """ Parse pattern and try to recognize it is magic pattern.
         If so, parse magic pattern and set options for argparse
         result as in magic pattern is set.
@@ -332,17 +332,14 @@ def prepare_pattern(cfg):
     if cfg.pattern is None:
         cfg.pattern = cfg.anon_pattern
         if cfg.pattern:
-            err_msg = _parse_input_args__prepare_magic_pattern(cfg)
-            if err_msg:
-                return err_msg
+            err_msg = _prepare_pattern__magic(cfg)
+        else:
+            err_msg = 'argument -p/--pattern is required'
+
+        if err_msg:
+            return err_msg
     elif cfg.anon_pattern:
         cfg.anon_sources.insert(0, cfg.anon_pattern)
-
-    if cfg.pattern is None:
-        return 'argument -p/--pattern is required'
-
-    pattern = cfg.pattern
-    flags = 0
 
     if cfg.fuzzy:
         cfg.pattern = _prepare_pattern__compile_fuzzy(cfg)
