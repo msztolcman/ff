@@ -418,6 +418,8 @@ def parse_input_args(args):
     if args.pattern is None:
         raise p.error('argument -p/--pattern is required')
 
+    prepare_pattern(args)
+
     ## prepare sources
     args.source += args.anon_sources
     if not args.source:
@@ -523,8 +525,7 @@ def prepare_pattern(cfg):
         if not cfg.fnmatch_end:
             pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.VERBOSE)
 
-    pattern = re.compile(pattern, flags)
-    return pattern
+    cfg.pattern = re.compile(pattern, flags)
 
 def process_item(cfg, path):
     """ Test path for matching with pattern, print it if so, and execute command if given.
@@ -622,8 +623,6 @@ def main():
     except argparse.ArgumentError as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
-
-    config.pattern = prepare_pattern(config)
 
     try:
         for source in config.source:
