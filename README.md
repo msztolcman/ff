@@ -90,7 +90,7 @@ Automaticaly recognized paths are:
 
 And using switch `--plugins-path` You can show `ff` where the plugins must be searched.
 
-You can also pass argument to plugins. For example, in `size` plugin (You can download it from [GitHub](https://github.com/mysz/ff/tree/master/plugins)), You must to tell the plugin what size of file You expect:
+You can also pass argument to plugins. For example, in `size` plugin (You can download it from [GitHub](https://github.com/mysz/ff/tree/master/ff_plugins)), You must to tell the plugin what size of file You expect:
 
     `ff pas --test size:=5k`
 
@@ -123,7 +123,7 @@ There is one caveat with this: `PluginError` exception is declared *inside* `ff`
 
 This is made by one of goals I have: try to have whole `ff` program in single file. It's important to me that I can move it easy between servers.
 
-There is an example plugin, which allow us to search for files in specified size. Is in [project repository](https://github.com/mysz/ff/tree/master/plugins) in directory plugins. You can use it as a base for your own plugins :)
+There is an example plugin, which allow us to search for files in specified size. Is in [project repository](https://github.com/mysz/ff/tree/master/ff_plugins) in directory plugins. You can use it as a base for your own plugins :)
 
 Installation
 ------------
