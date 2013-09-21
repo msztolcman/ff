@@ -261,6 +261,27 @@ def _parse_input_args__prepare_magic_pattern(args):  # pylint: disable-msg=inval
             else:
                 return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
 
+def _prepare_pattern__compile_fuzzy(cfg):
+    """ Compile pattern to compiled regular expression using fuzzy syntax.
+
+        fuzzy syntax mean that we search for name where are all given characters
+        in given order, but there can be anything between them.
+    """
+
+    pattern = ''
+    if cfg.fnmatch_begin:
+        pattern += '^'
+    for char in cfg.pattern:
+        pattern += '.*' + re.escape(char)
+    if cfg.fnmatch_end:
+        pattern += '$'
+
+    flags = 0 | re.DOTALL | re.MULTILINE
+    if cfg.ignorecase:
+        flags = flags | re.IGNORECASE
+
+    return re.compile(pattern, flags)
+
 def prepare_pattern(cfg):
     """ Prepare pattern from input args to use.
 
@@ -286,20 +307,7 @@ def prepare_pattern(cfg):
     flags = 0
 
     if cfg.fuzzy:
-        new_pattern = ''
-        if cfg.fnmatch_begin:
-            new_pattern += '^'
-        for char in pattern:
-            new_pattern += '.*' + re.escape(char)
-        if cfg.fnmatch_end:
-            new_pattern += '$'
-
-        flags = flags | re.DOTALL | re.MULTILINE
-        if cfg.ignorecase:
-            flags = flags | re.IGNORECASE
-
-        pattern = new_pattern
-
+        cfg.pattern = _prepare_pattern__compile_fuzzy(cfg)
     elif cfg.regexp:
         if cfg.ignorecase:
             flags = flags | re.IGNORECASE
