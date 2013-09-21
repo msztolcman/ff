@@ -261,6 +261,55 @@ def _parse_input_args__prepare_magic_pattern(args):  # pylint: disable-msg=inval
             else:
                 return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
 
+def prepare_pattern(cfg):
+    """ Prepare pattern from input args to use.
+
+        If work in regex mode, there pattern is only compiled with flags. In normal mode,
+        pattern is converted to regex, and then compiled. Recognize also fuzzy mode.
+
+        Returns always compiled regexp, ready to use.
+    """
+
+    pattern = cfg.pattern
+    flags = 0
+
+    if cfg.fuzzy:
+        new_pattern = ''
+        if cfg.fnmatch_begin:
+            new_pattern += '^'
+        for char in pattern:
+            new_pattern += '.*' + re.escape(char)
+        if cfg.fnmatch_end:
+            new_pattern += '$'
+
+        flags = flags | re.DOTALL | re.MULTILINE
+        if cfg.ignorecase:
+            flags = flags | re.IGNORECASE
+
+        pattern = new_pattern
+
+    elif cfg.regexp:
+        if cfg.ignorecase:
+            flags = flags | re.IGNORECASE
+        if cfg.regex_dotall:
+            flags = flags | re.DOTALL
+        if cfg.regex_multiline:
+            flags = flags | re.MULTILINE
+    else:
+        import fnmatch
+
+        if cfg.ignorecase:
+            flags = flags | re.IGNORECASE
+
+        pattern = fnmatch.translate(pattern)
+        if cfg.fnmatch_begin:
+            pattern = r'\A' + pattern
+
+        if not cfg.fnmatch_end:
+            pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.VERBOSE)
+
+    cfg.pattern = re.compile(pattern, flags)
+
 def parse_input_args(args):
     """ Parse input 'arguments' and return parsed.
     """
@@ -477,55 +526,6 @@ def prepare_execute(exe, path, dirname, basename, expand_vars=True):
         exe[i] = elem
 
     return exe
-
-def prepare_pattern(cfg):
-    """ Prepare pattern from input args to use.
-
-        If work in regex mode, there pattern is only compiled with flags. In normal mode,
-        pattern is converted to regex, and then compiled. Recognize also fuzzy mode.
-
-        Returns always compiled regexp, ready to use.
-    """
-
-    pattern = cfg.pattern
-    flags = 0
-
-    if cfg.fuzzy:
-        new_pattern = ''
-        if cfg.fnmatch_begin:
-            new_pattern += '^'
-        for char in pattern:
-            new_pattern += '.*' + re.escape(char)
-        if cfg.fnmatch_end:
-            new_pattern += '$'
-
-        flags = flags | re.DOTALL | re.MULTILINE
-        if cfg.ignorecase:
-            flags = flags | re.IGNORECASE
-
-        pattern = new_pattern
-
-    elif cfg.regexp:
-        if cfg.ignorecase:
-            flags = flags | re.IGNORECASE
-        if cfg.regex_dotall:
-            flags = flags | re.DOTALL
-        if cfg.regex_multiline:
-            flags = flags | re.MULTILINE
-    else:
-        import fnmatch
-
-        if cfg.ignorecase:
-            flags = flags | re.IGNORECASE
-
-        pattern = fnmatch.translate(pattern)
-        if cfg.fnmatch_begin:
-            pattern = r'\A' + pattern
-
-        if not cfg.fnmatch_end:
-            pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.VERBOSE)
-
-    cfg.pattern = re.compile(pattern, flags)
 
 def process_item(cfg, path):
     """ Test path for matching with pattern, print it if so, and execute command if given.
