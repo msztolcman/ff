@@ -216,11 +216,12 @@ def ask(question, replies, default=None):
         elif reply in replies:
             return reply
 
-def _prepare_pattern__magic(args):
+def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
     """ Parse pattern and try to recognize it is magic pattern.
         If so, parse magic pattern and set options for argparse
         result as in magic pattern is set.
     """
+
     rxp_pattern = re.compile(r'''
         ^
         (?P<mode>           [a-z0-9]        )?
