@@ -112,10 +112,7 @@ class FFPlugins(list):
             * list of paths where to search for plugins.
     """
 
-    paths = set([
-        os.path.expanduser('~/.ff/plugins'),
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), 'plugins')
-    ])
+    _paths = set()
 
     def __init__(self, paths=None):
         """ Extend `FFPlugins.paths`
@@ -124,9 +121,16 @@ class FFPlugins(list):
 
         if paths is not None:
             self.__class__.paths.update(paths)
+    @classmethod
+    def path_add(cls, path):
+        """ Append path to known plugins paths.
+        """
+        if path not in cls._paths:
+            cls._paths.add(path)
+            sys.path.append(path)
 
     @classmethod
-    def find_all(cls, type_, paths=None):
+    def find_all(cls, type_):
         """ Find all plugins available for `ff` and return FFPlugins
             initialized with it.
 
@@ -134,12 +138,9 @@ class FFPlugins(list):
 
             Uses `FFPlugins.find` to load plugins.
         """
-        if paths is not None:
-            cls.paths.update(paths)
-
         result = {}
         prefix_len = len('ffplugin_') + len(type_) + 1
-        for path in cls.paths:
+        for path in cls._paths:
             if not os.path.isdir(path):
                 continue
 
@@ -156,14 +157,11 @@ class FFPlugins(list):
         return cls.find(order, type_=type_)
 
     @classmethod
-    def find(cls, names, type_, paths=None):
+    def find(cls, names, type_):
         """ Load given plugins list and initialize `FFPlugins` with them.
 
             Returns `FFPlugins` instance.
         """
-        if paths is not None:
-            cls.paths.update(paths)
-
         plugins = cls()
         for plugin_name in names:
             plugins.append(FFPlugin(plugin_name, type_))
@@ -359,28 +357,26 @@ def parse_input_args(args):
     args = p.parse_args()
     del args_description, args_epilog
 
-    ## where to search plugins
-    plugins_paths = [
-        os.path.expanduser('~/.ff/plugins'),
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ff_plugins')
-    ]
+    ## where to search for plugins
     if args.plugins_path:
-        plugins_paths.insert(0, os.path.expanduser(args.plugins_path))
+        FFPlugins.path_add(os.path.expanduser(args.plugins_path))
 
-    sys.path.extend(plugins_paths)
+    FFPlugins.path_add(os.path.expanduser('~/.ff/plugins'))
+    FFPlugins.path_add(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ff_plugins'))
 
     ## show info about test plugins
     if args.help_test_plugins:
         ## None means: show me list of plugins
         if None in args.help_test_plugins:
             mode = 'list'
-            help_data = FFPlugins.find_all('test', plugins_paths)
+            help_data = FFPlugins.find_all('test')
         else:
             mode = 'full'
             ## plugins names can be separated with comma
             args.help_test_plugins = itertools.chain(*[ data.split(',') for data in args.help_test_plugins])
+
             try:
-                help_data = FFPlugins.find(args.help_test_plugins, 'test', plugins_paths)
+                help_data = FFPlugins.find(args.help_test_plugins, 'test')
             except ImportError as ex:
                 print('Unknown plugin: %s' % ex.message, file=sys.stderr)
                 sys.exit(1)
@@ -389,7 +385,7 @@ def parse_input_args(args):
         sys.exit()
 
     ## find all requested test plugins
-    plugins = FFPlugins(paths=plugins_paths)
+    plugins = FFPlugins()
     for plugin in args.tests:
         if ':' in plugin:
             plugin_name, plugin_argument = plugin.split(':', 1)
