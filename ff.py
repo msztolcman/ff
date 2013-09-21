@@ -216,12 +216,7 @@ def ask(question, replies, default=None):
         elif reply in replies:
             return reply
 
-def _parse_input_args__prepare_anon_pattern(args):  # pylint: disable-msg=invalid-name
-    args.pattern = args.anon_pattern
-
-    if not args.pattern:
-        return
-
+def _parse_input_args__prepare_magic_pattern(args):  # pylint: disable-msg=invalid-name
     rxp_pattern = re.compile(r'''
         ^
         (?P<mode>           [a-z0-9]        )?
@@ -411,9 +406,12 @@ def parse_input_args(args):
 
     ## prepare pattern
     if args.pattern is None:
-        err = _parse_input_args__prepare_anon_pattern(args)
-        if err:
-            p.error(err)
+        args.pattern = args.anon_pattern
+
+        if args.pattern:
+            err = _parse_input_args__prepare_magic_pattern(args)
+            if err:
+                p.error(err)
     elif args.anon_pattern:
         args.anon_sources.insert(0, args.anon_pattern)
 
