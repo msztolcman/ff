@@ -232,34 +232,41 @@ def _prepare_pattern__magic(args):
     ''', re.VERBOSE)
 
     match = rxp_pattern.match(args.pattern)
-    if match:
-        pattern_parts = match.groupdict()
+    if not match:
+        return
 
-        delim_closed = { '}': '{', ']': '[', ')': '(', '>': '<', '/': '/', '!': '!', '@': '@', '#': '#', '%': '%', '|': '|' }
-        if pattern_parts['delim_close'] not in delim_closed or \
-                 delim_closed[pattern_parts['delim_close']] != pattern_parts['delim_open']:
-            return 'Invalid pattern'
+    pattern_parts = match.groupdict()
 
-        args.pattern = pattern_parts['pattern']
+    delim_closed = {
+        ## match same
+        '/': '/', '!': '!', '@': '@', '#': '#', '%': '%', '|': '|',
+        ## match pair
+        '}': '{', ']': '[', ')': '(', '>': '<'
+    }
+    if pattern_parts['delim_close'] not in delim_closed or \
+            delim_closed[pattern_parts['delim_close']] != pattern_parts['delim_open']:
+        return 'Invalid pattern'
 
-        for item in (pattern_parts['modifier'] or ''):
-            # pylint: disable-msg=multiple-statements
-            if item == 'i': args.ignorecase = True
-            elif item == 'm': args.regex_multiline = True
-            elif item == 's': args.regex_dotall = True
-            elif item == 'v': pass
-            elif item == 'r': args.invert_match = True
-            elif item == 'q': args.path_search = True
-            else:
-                return 'Unknown modifier in pattern: %s. Allowed modifiers: i, m, s, v, r,' % item
+    args.pattern = pattern_parts['pattern']
 
-        for item in (pattern_parts['mode'] or ''):
-            # pylint: disable-msg=multiple-statements
-            if item == 'g': args.regexp = True
-            elif item == 'p': pass
-            elif item == 'f': args.fuzzy = True
-            else:
-                return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
+    for item in (pattern_parts['modifier'] or ''):
+        # pylint: disable-msg=multiple-statements
+        if item == 'i': args.ignorecase = True
+        elif item == 'm': args.regex_multiline = True
+        elif item == 's': args.regex_dotall = True
+        elif item == 'v': pass
+        elif item == 'r': args.invert_match = True
+        elif item == 'q': args.path_search = True
+        else:
+            return 'Unknown modifier in pattern: %s. Allowed modifiers: i, m, s, v, r,' % item
+
+    for item in (pattern_parts['mode'] or ''):
+        # pylint: disable-msg=multiple-statements
+        if item == 'g': args.regexp = True
+        elif item == 'p': pass
+        elif item == 'f': args.fuzzy = True
+        else:
+            return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
 
 def _prepare_pattern__compile_fuzzy(cfg):
     """ Compile pattern to compiled regular expression using fuzzy syntax.
