@@ -572,6 +572,8 @@ def process_item(cfg, path):
             subprocess.call(exe, shell=cfg.shell_exec)
 
 def is_path_excluded(excluded_paths, path):
+    """ Check that path is excluded from processing
+    """
     path = path.rstrip('/')
     for exc in excluded_paths:
         if path == exc or exc + '/' in path:
