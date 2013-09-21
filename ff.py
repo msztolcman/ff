@@ -217,6 +217,10 @@ def ask(question, replies, default=None):
             return reply
 
 def _parse_input_args__prepare_magic_pattern(args):  # pylint: disable-msg=invalid-name
+    """ Parse pattern and try to recognize it is magic pattern.
+        If so, parse magic pattern and set options for argparse
+        result as in magic pattern is set.
+    """
     rxp_pattern = re.compile(r'''
         ^
         (?P<mode>           [a-z0-9]        )?
