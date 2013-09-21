@@ -270,6 +270,18 @@ def prepare_pattern(cfg):
         Returns always compiled regexp, ready to use.
     """
 
+    if cfg.pattern is None:
+        cfg.pattern = cfg.anon_pattern
+        if cfg.pattern:
+            err_msg = _parse_input_args__prepare_magic_pattern(cfg)
+            if err_msg:
+                return err_msg
+    elif cfg.anon_pattern:
+        cfg.anon_sources.insert(0, cfg.anon_pattern)
+
+    if cfg.pattern is None:
+        return 'argument -p/--pattern is required'
+
     pattern = cfg.pattern
     flags = 0
 
@@ -454,20 +466,9 @@ def parse_input_args(args):
     args.tests = plugins
 
     ## prepare pattern
-    if args.pattern is None:
-        args.pattern = args.anon_pattern
-
-        if args.pattern:
-            err = _parse_input_args__prepare_magic_pattern(args)
-            if err:
-                p.error(err)
-    elif args.anon_pattern:
-        args.anon_sources.insert(0, args.anon_pattern)
-
-    if args.pattern is None:
-        raise p.error('argument -p/--pattern is required')
-
-    prepare_pattern(args)
+    err_msg = prepare_pattern(args)
+    if err_msg:
+        raise p.error(err_msg)
 
     ## prepare sources
     args.source += args.anon_sources
