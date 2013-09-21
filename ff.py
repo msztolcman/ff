@@ -282,7 +282,7 @@ def _prepare_pattern__compile_fuzzy(cfg):
 
     return re.compile(pattern, flags)
 
-def _prepare_pattern__compile_regexp(cfg):
+def _prepare_pattern__compile_regexp(cfg): # pylint: disable-msg=invalid-name
     """ Compile pattern to compiled regular expression using regexp syntax.
 
         We found that pattern is regular expression, and just pass there
@@ -299,7 +299,7 @@ def _prepare_pattern__compile_regexp(cfg):
 
     return re.compile(cfg.pattern, flags)
 
-def _prepare_pattern__compile_fnmatch(cfg):
+def _prepare_pattern__compile_fnmatch(cfg): # pylint: disable-msg=invalid-name
     """ Compile pattern to compiled regular expression using fnmatch syntax.
 
         See: http://docs.python.org/library/fnmatch.html
