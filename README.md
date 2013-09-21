@@ -128,7 +128,11 @@ There is an example plugin, which allow us to search for files in specified size
 Installation
 ------------
 
-`ff` should work on any platform where [Python](http://python.org) is available, it means Linux, Windows, MacOS X etc. There is no dependencies, plain Python power :) Just copy file to your PATH, for example:
+`ff` should work on any platform where [Python](http://python.org) is available, it means Linux, Windows, MacOS X etc. There is no dependencies, plain Python power :) 
+
+To install, go to [GitHub releases](https://github.com/mysz/ff/releases), download newest release, unpack and put somewhere in `PATH` (ie. `~/bin` or `/usr/local/bin`).
+
+If You want to install newest unstable version, then just copy file to your PATH, for example:
 
     curl https://raw.github.com/mysz/ff/master/ff.py > /usr/local/bin/ff
 
