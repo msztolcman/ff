@@ -5,6 +5,11 @@ Easily search and process files.
 
 If you need to search files by their contents, *or* search for their contents, please look at [ack](https://github.com/petdance/ack2) or [pss](https://github.com/eliben/pss). These are better suited for this kind of task.
 
+Current stable version
+----------------------
+
+0.4
+
 Why `ff` and not `find`?
 ------------------------
 
