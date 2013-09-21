@@ -455,6 +455,7 @@ def _prepare_execute__vars(match):
     else:
         return match.group(0)
 
+_RXP_VARIABLE = re.compile(r' (\\*)\$ ([_a-zA-Z0-9]+) ', re.VERBOSE)
 def prepare_execute(exe, path, dirname, basename, expand_vars=True):
     """ Replace keywords and env variables in 'exe' with values.
         Recognized keywords:
@@ -464,13 +465,12 @@ def prepare_execute(exe, path, dirname, basename, expand_vars=True):
     """
 
     exe = copy.copy(exe)
-    rxp_var = re.compile(r'(\\*)\$([_a-zA-Z0-9]+)')
     for i, elem in enumerate(exe):
         elem = elem.replace('{path}', path)
         elem = elem.replace('{dirname}', dirname)
         elem = elem.replace('{basename}', basename)
         if expand_vars:
-            elem = rxp_var.sub(_prepare_execute__vars, elem)
+            elem = _RXP_VARIABLE.sub(_prepare_execute__vars, elem)
 
         exe[i] = elem
 
