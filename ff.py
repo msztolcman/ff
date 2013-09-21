@@ -114,13 +114,28 @@ class FFPlugins(list):
 
     _paths = set()
 
-    def __init__(self, paths=None):
-        """ Extend `FFPlugins.paths`
+    @staticmethod
+    def _print_descr(item):
+        """ Helper for FFPlugins.print_help/FFPlugins.print_list.
+            Prints single plugin description
         """
-        super(FFPlugins, self).__init__()
+        text = 'ff plugin: ' + item.name + (' - ' + textwrap.fill(item.descr) if item.descr else '')
+        print(text)
 
-        if paths is not None:
-            self.__class__.paths.update(paths)
+    def print_help(self):
+        """ Print list of plugins with their help to STDOUT
+        """
+        for item in self:
+            self._print_descr(item)
+            if item.help:
+                print(item.help.rstrip() + "\n")
+
+    def print_list(self):
+        """ Print list of plugins with their short descriptions to STDOUT
+        """
+        for item in self:
+            self._print_descr(item)
+
     @classmethod
     def path_add(cls, path):
         """ Append path to known plugins paths.
@@ -250,13 +265,6 @@ def _parse_input_args__prepare_anon_pattern(args):  # pylint: disable-msg=invali
             else:
                 return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
 
-def print_help_data(help_, mode):
-    for data in help_:
-        text = 'ff plugin: ' + data.name + (' - ' + textwrap.fill(data.descr) if data.descr else '') + "\n"
-        if mode == 'full' and data.help:
-            text += "\n" + data.help + "\n\n"
-        print(text, end='')
-
 def parse_input_args(args):
     """ Parse input 'args' and return parsed.
     """
@@ -368,10 +376,10 @@ def parse_input_args(args):
     if args.help_test_plugins:
         ## None means: show me list of plugins
         if None in args.help_test_plugins:
-            mode = 'list'
             help_data = FFPlugins.find_all('test')
+            help_data.print_list()
+
         else:
-            mode = 'full'
             ## plugins names can be separated with comma
             args.help_test_plugins = itertools.chain(*[ data.split(',') for data in args.help_test_plugins])
 
@@ -380,8 +388,8 @@ def parse_input_args(args):
             except ImportError as ex:
                 print('Unknown plugin: %s' % ex.message, file=sys.stderr)
                 sys.exit(1)
+            help_data.print_help()
 
-        print_help_data(help_data, mode)
         sys.exit()
 
     ## find all requested test plugins
