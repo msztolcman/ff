@@ -299,6 +299,27 @@ def _prepare_pattern__compile_regexp(cfg):
 
     return re.compile(cfg.pattern, flags)
 
+def _prepare_pattern__compile_fnmatch(cfg):
+    """ Compile pattern to compiled regular expression using fnmatch syntax.
+
+        See: http://docs.python.org/library/fnmatch.html
+    """
+    import fnmatch
+
+    flags = 0
+    if cfg.ignorecase:
+        flags = flags | re.IGNORECASE
+
+    pattern = fnmatch.translate(cfg.pattern)
+    if cfg.fnmatch_begin:
+        pattern = r'\A' + pattern
+
+    ## our behaviour is in the opposite to fnmatch: by default *do not* match end of string
+    if not cfg.fnmatch_end:
+        pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.VERBOSE)
+
+    return re.compile(pattern, flags)
+
 def prepare_pattern(cfg):
     """ Prepare pattern from input args to use.
 
@@ -328,19 +349,7 @@ def prepare_pattern(cfg):
     elif cfg.regexp:
         cfg.pattern = _prepare_pattern__compile_regexp(cfg)
     else:
-        import fnmatch
-
-        if cfg.ignorecase:
-            flags = flags | re.IGNORECASE
-
-        pattern = fnmatch.translate(pattern)
-        if cfg.fnmatch_begin:
-            pattern = r'\A' + pattern
-
-        if not cfg.fnmatch_end:
-            pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.VERBOSE)
-
-    cfg.pattern = re.compile(pattern, flags)
+        cfg.pattern = _prepare_pattern__compile_fnmatch(cfg)
 
 def parse_input_args(args):
     """ Parse input 'arguments' and return parsed.
