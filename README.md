@@ -205,7 +205,7 @@ Usage
     --help-test-plugins [TEST_NAME]
                           display help for installed test plugins
 
-    Pattern, provided as positional argument (not with `--pattern`) can be provided
+    Pattern, provided as positional argument (not with --pattern) can be provided
     in special form (called: magic pattern). It allows to more "nerdish"
     (or "perlish" :) ) way to control `ff` behavior.
 
@@ -214,19 +214,19 @@ Usage
         mode/pattern/modifier
 
     where:
-        `mode` - is one of 'p' (`--pattern`), 'g' - (`--regexp`) or 'f' (`--fuzzy`)
-        `/` - is delimiter:
+        mode - is one of 'p' (--pattern), 'g' - (--regexp) or 'f' (--fuzzy)
+        / - is delimiter:
             * one of: '/', '!', '@', '#', '%', '|', and then start and end
                 delimiter must be the same
             * one of: '{', '[', '(', '<', and the end delimiter must be the
                 closing one (ex. '}' if start is '{')
-        `pattern` - any pattern, processed in a way specified with `mode`
-        `modifier` - one of: 'i' (`--ignore-case`), 'm' (`--regex-multiline`),
-            's' (`--regex-dotall`), 'v' (not used currently), 'r' (`--invert-match`)
-            'q' (`--path-search`)
+        pattern - any pattern, processed in a way specified with 'mode'
+        modifier - one of: 'i' (--ignore-case), 'm' (--regex-multiline),
+            's' (--regex-dotall), 'v' (not used currently), 'r' (--invert-match)
+            'q' (--path-search)
 
     There is also ability to extend capabilities of `ff` by plugins. Plugins are
-    run with switch `--test` and then plugin name with optional plugin argument:
+    run with switch --test and then plugin name with optional plugin argument:
 
         --test plugin_name:plugin_arg
 
