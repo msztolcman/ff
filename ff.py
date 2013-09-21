@@ -230,17 +230,14 @@ def _parse_input_args__prepare_magic_pattern(args):  # pylint: disable-msg=inval
         (?P<modifier>       [a-z0-9]+       )?
         $
     ''', re.VERBOSE)
-    match = rxp_pattern.match(args.pattern)
 
+    match = rxp_pattern.match(args.pattern)
     if match:
         pattern_parts = match.groupdict()
 
-        delim_closed = { '}': '{', ']': '[', ')': '(', '>': '<' }
-        if pattern_parts['delim_open'] in '/!@#%|' and pattern_parts['delim_open'] != pattern_parts['delim_close']:
-            return 'Invalid pattern'
-        elif pattern_parts['delim_open'] in '{[(<' and \
-                (pattern_parts['delim_close'] not in delim_closed or \
-                 delim_closed[pattern_parts['delim_close']] != pattern_parts['delim_open']):
+        delim_closed = { '}': '{', ']': '[', ')': '(', '>': '<', '/': '/', '!': '!', '@': '@', '#': '#', '%': '%', '|': '|' }
+        if pattern_parts['delim_close'] not in delim_closed or \
+                 delim_closed[pattern_parts['delim_close']] != pattern_parts['delim_open']:
             return 'Invalid pattern'
 
         args.pattern = pattern_parts['pattern']
