@@ -262,7 +262,7 @@ def _parse_input_args__prepare_magic_pattern(args):  # pylint: disable-msg=inval
                 return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
 
 def parse_input_args(args):
-    """ Parse input 'args' and return parsed.
+    """ Parse input 'arguments' and return parsed.
     """
 
     args_description = 'Easily search and process files.'
