@@ -282,6 +282,23 @@ def _prepare_pattern__compile_fuzzy(cfg):
 
     return re.compile(pattern, flags)
 
+def _prepare_pattern__compile_regexp(cfg):
+    """ Compile pattern to compiled regular expression using regexp syntax.
+
+        We found that pattern is regular expression, and just pass there
+        flags from arguments.
+    """
+
+    flags = 0
+    if cfg.ignorecase:
+        flags = flags | re.IGNORECASE
+    if cfg.regex_dotall:
+        flags = flags | re.DOTALL
+    if cfg.regex_multiline:
+        flags = flags | re.MULTILINE
+
+    return re.compile(cfg.pattern, flags)
+
 def prepare_pattern(cfg):
     """ Prepare pattern from input args to use.
 
@@ -309,12 +326,7 @@ def prepare_pattern(cfg):
     if cfg.fuzzy:
         cfg.pattern = _prepare_pattern__compile_fuzzy(cfg)
     elif cfg.regexp:
-        if cfg.ignorecase:
-            flags = flags | re.IGNORECASE
-        if cfg.regex_dotall:
-            flags = flags | re.DOTALL
-        if cfg.regex_multiline:
-            flags = flags | re.MULTILINE
+        cfg.pattern = _prepare_pattern__compile_regexp(cfg)
     else:
         import fnmatch
 
