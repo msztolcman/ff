@@ -447,7 +447,7 @@ def parse_input_args(args):
 
 def _prepare_execute__vars(match):
     """ Helper method for prepare_execute, used in replacement of regular expression.
-        Returns environment variable if found, and quantity of escape characters ('\')
+        Returns environment variable if found and quantity of escape characters ('\')
         is even.
     """
     if len(match.group(1)) % 2 == 0:
@@ -484,6 +484,7 @@ def prepare_pattern(cfg):
 
         Returns always compiled regexp, ready to use.
     """
+
     pattern = cfg.pattern
     flags = 0
 
@@ -528,6 +529,7 @@ def prepare_pattern(cfg):
 def process_item(cfg, path):
     """ Test path for matching with pattern, print it if so, and execute command if given.
     """
+
     if cfg.path_search:
         is_name_match = cfg.pattern.search(path)
     else:
@@ -577,6 +579,8 @@ def is_path_excluded(excluded_paths, path):
     return False
 
 def main():
+    """ Run program
+    """
     try:
         config = parse_input_args(sys.argv[1:])
     except argparse.ArgumentError as ex:
