@@ -403,7 +403,6 @@ def parse_input_args(args):
         except AttributeError:
             p.error('Broken plugin: %s' % plugin_name)
     args.tests = plugins
-    del plugins_paths
 
     ## prepare pattern
     if args.pattern is None:
