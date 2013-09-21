@@ -578,6 +578,40 @@ def is_path_excluded(excluded_paths, path):
             return True
     return False
 
+_RXP_VCS = re.compile(r'(?:^|/)(?:\.git|\.svn|\.CVS|\.hg|_MTN|CVS|RCS|SCCS|_darcs|_sgbak)(?:$|/)')
+
+def process_source(src, cfg):
+    """ Process single source: search for items and call process_item on them.
+    """
+    for root, __, files in os.walk(src):
+        try:
+            root = root.decode('utf-8')
+        except UnicodeDecodeError as ex:
+            print(root, ': ', ex, sep='', file=sys.stderr)
+            continue
+
+        if is_path_excluded(cfg.excluded_paths, root):
+            continue
+
+        if cfg.mode in ('dirs', 'all'):
+            if cfg.vcs or not _RXP_VCS.search(root):
+                process_item(cfg, root)
+
+        if cfg.mode in ('files', 'all'):
+            for file_ in files:
+                try:
+                    file_ = file_.decode('utf-8')
+                except UnicodeDecodeError as ex:
+                    ## do not change to os.path.join, will break if are some strange characters in file_
+                    print(root, os.sep, file_, ': ', ex, sep='', file=sys.stderr)
+                    continue
+
+                path = os.path.join(root, file_)
+                if is_path_excluded(cfg.excluded_paths, path):
+                    continue
+                if cfg.vcs or not _RXP_VCS.search(path):
+                    process_item(cfg, path)
+
 def main():
     """ Run program
     """
@@ -589,38 +623,9 @@ def main():
 
     config.pattern = prepare_pattern(config)
 
-    rxp_vcs = re.compile(r'(?:^|/)(?:\.git|\.svn|\.CVS|\.hg|_MTN|CVS|RCS|SCCS|_darcs|_sgbak)(?:$|/)')
-
     try:
         for source in config.source:
-            for root, __, files in os.walk(source):
-                try:
-                    root = root.decode('utf-8')
-                except UnicodeDecodeError as ex:
-                    print(root, ': ', ex, sep='', file=sys.stderr)
-                    continue
-
-                if is_path_excluded(config.excluded_paths, root):
-                    continue
-
-                if config.mode in ('dirs', 'all'):
-                    if config.vcs or not rxp_vcs.search(root):
-                        process_item(config, root)
-
-                if config.mode in ('files', 'all'):
-                    for file_ in files:
-                        try:
-                            file_ = file_.decode('utf-8')
-                        except UnicodeDecodeError as ex:
-                            ## do not change to os.path.join, will break if are some strange characters in file_
-                            print(root, os.sep, file_, ': ', ex, sep='', file=sys.stderr)
-                            continue
-
-                        path = os.path.join(root, file_)
-                        if is_path_excluded(config.excluded_paths, path):
-                            continue
-                        if config.vcs or not rxp_vcs.search(path):
-                            process_item(config, path)
+            process_source(source, config)
     except KeyboardInterrupt:
         print('Interrupted by CTRL-C, aborting', file=sys.stderr)
 
