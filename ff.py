@@ -515,7 +515,7 @@ def parse_input_args(args):
     elif args.execute:
         args.execute = shlex.split(args.execute)
 
-    ## preapre excluded paths
+    ## prepare excluded paths
     for i, exc in enumerate(args.excluded_paths):
         args.excluded_paths[i] = os.path.abspath(exc).rstrip('/')
 
