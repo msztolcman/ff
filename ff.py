@@ -446,7 +446,7 @@ def parse_input_args(args):
     p.add_argument('--plugins-path', type=str,
                    help='additional path where to search plugins (see annotations below)')
     p.add_argument('--version', action='version', version="%s %s\n%s" % (os.path.basename(sys.argv[0]), __version__, args_description))
-    p.add_argument('--help-test-plugins', metavar='TEST_NAME', nargs='?', action='append', default=[],
+    p.add_argument('--help-test-plugins', metavar='TEST_NAME[,TEST2_NAME]', nargs='?', action='append', default=[],
                    help='display help for installed test plugins')
     p.add_argument('anon_pattern', metavar='pattern', type=str, nargs='?',
                    help='pattern to search')
