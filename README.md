@@ -88,7 +88,7 @@ Automaticaly recognized paths are:
 * `~/.ff/plugins`
 * directory `ff_plugins` in programs root (if You have `ff` placed in `~/bin`, it will search for plugins in `~/bin/ff_plugins`)
 
-And using switch `--plugins-path` You can show `ff` where the plugins must be searched.
+And using switch `--plugins-path` You can tell `ff` where the plugins must be searched.
 
 You can also pass argument to plugins. For example, in `size` plugin (You can download it from [GitHub](https://github.com/mysz/ff/tree/master/ff_plugins)), You must to tell the plugin what size of file You expect:
 
@@ -272,10 +272,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ChangeLog
 ---------
 ### v0.5
+* ability to run plugins for tests (with first plugin: size)
 * added --version switch
+* refactored code
 * improvements for Python3 (not finished yet)
 * improved PEP8 compatibility (pylint)
-* ability to run plugins for tests (with first plugin: size)
 
 ### v.04
 * added changelog
