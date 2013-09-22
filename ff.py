@@ -22,6 +22,7 @@ import shlex
 import subprocess
 import sys
 import textwrap
+import unicodedata
 
 from pprint import pprint, pformat # pylint: disable-msg=unused-import
 
@@ -522,6 +523,8 @@ def parse_input_args(args):
 
     ## prepare excluded paths
     for i, ex_path in enumerate(args.excluded_paths):
+        ex_path = ex_path.decode('utf-8')
+        ex_path = unicodedata.normalize('NFKC', ex_path)
         args.excluded_paths[i] = os.path.abspath(ex_path).rstrip('/')
 
     if args.print0:
@@ -612,6 +615,7 @@ def is_path_excluded(excluded_paths, path):
     """
 
     path = path.rstrip('/')
+    path = unicodedata.normalize('NFKC', path)
     for ex_path in excluded_paths:
         if path == ex_path or ex_path + '/' in path:
             return True
