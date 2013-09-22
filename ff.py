@@ -463,23 +463,23 @@ def parse_input_args(args):
     FFPlugins.path_add(os.path.expanduser('~/.ff/plugins'))
     FFPlugins.path_add(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ff_plugins'))
 
-    ## show info about test plugins
+    ## show info about testing plugins
     if args.help_test_plugins:
-        ## None means: show me list of plugins
+        ## None means: show me the list of plugins
         if None in args.help_test_plugins:
-            help_data = FFPlugins.find_all('test')
-            help_data.print_list()
+            plugins = FFPlugins.find_all('test')
+            plugins.print_list()
 
         else:
             ## plugins names can be separated with comma
             args.help_test_plugins = itertools.chain(*[ data.split(',') for data in args.help_test_plugins])
 
             try:
-                help_data = FFPlugins.find(args.help_test_plugins, 'test')
+                plugins = FFPlugins.find(args.help_test_plugins, 'test')
             except ImportError as ex:
                 print('Unknown plugin: %s' % ex.message, file=sys.stderr)
                 sys.exit(1)
-            help_data.print_help()
+            plugins.print_help()
 
         sys.exit()
 
