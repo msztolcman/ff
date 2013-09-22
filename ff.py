@@ -521,8 +521,8 @@ def parse_input_args(args):
         args.execute = shlex.split(args.execute)
 
     ## prepare excluded paths
-    for i, exc in enumerate(args.excluded_paths):
-        args.excluded_paths[i] = os.path.abspath(exc).rstrip('/')
+    for i, ex_path in enumerate(args.excluded_paths):
+        args.excluded_paths[i] = os.path.abspath(ex_path).rstrip('/')
 
     if args.print0:
         args.delim = chr(0)
@@ -610,9 +610,10 @@ def process_item(cfg, path):
 def is_path_excluded(excluded_paths, path):
     """ Check that path is excluded from processing
     """
+
     path = path.rstrip('/')
-    for exc in excluded_paths:
-        if path == exc or exc + '/' in path:
+    for ex_path in excluded_paths:
+        if path == ex_path or ex_path + '/' in path:
             return True
     return False
 
