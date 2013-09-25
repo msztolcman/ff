@@ -394,7 +394,7 @@ def prepare_pattern(cfg):
     else:
         cfg.pattern = _prepare_pattern__compile_fnmatch(cfg)
 
-def parse_input_args(args):
+def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-statements
     """ Parse input 'arguments' and return parsed.
     """
 
