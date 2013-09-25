@@ -538,9 +538,9 @@ def parse_input_args(args):
 
     ## prepare exec
     if args.shell_exec:
-        args.execute = [args.execute]
+        args.execute = [args.execute.decode('utf-8')]
     elif args.execute:
-        args.execute = shlex.split(args.execute)
+        args.execute = [ part.decode('utf-8') for part in shlex.split(args.execute) ]
 
     ## prepare excluded paths
     for i, exc in enumerate(args.excluded_paths):
