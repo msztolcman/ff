@@ -641,19 +641,28 @@ def is_path_excluded(excluded_paths, path):
             return True
     return False
 
-_RXP_VCS = re.compile(r'(?:^|/)(?:\.git|\.svn|\.CVS|\.hg|_MTN|CVS|RCS|SCCS|_darcs|_sgbak)(?:$|/)')
+_is_vcs__names = {'.git': 1, '.svn': 1, 'CVS': 1, '.hg': 1, '_MTN': 1, 'RCS': 1, 'SCCS': 1, '_darcs': 1, '_sgbak': 1}
+def _is_vcs(item):
+    """ Check if `item` is VCS
+    """
+    return item in _is_vcs__names
 
 def process_source(src, cfg):
     """ Process single source: search for items and call process_item on them.
     """
-    for root, __, files in os.walk(src):
+    for root, dirs, files in os.walk(src):
         root = unicodedata.normalize('NFKC', root)
         if is_path_excluded(cfg.excluded_paths, root):
             continue
 
+        # remove vcs directories from traversing
+        if not cfg.vcs:
+            for dir_ in dirs:
+                if _is_vcs(dir_):
+                    dirs.remove(dir_)
+
         if cfg.mode in ('dirs', 'all'):
-            if cfg.vcs or not _RXP_VCS.search(root):
-                process_item(cfg, root)
+            process_item(cfg, root)
 
         if cfg.mode in ('files', 'all'):
             for file_ in files:
@@ -661,8 +670,8 @@ def process_source(src, cfg):
                 path = os.path.join(root, file_)
                 if is_path_excluded(cfg.excluded_paths, path):
                     continue
-                if cfg.vcs or not _RXP_VCS.search(path):
-                    process_item(cfg, path)
+
+                process_item(cfg, path)
 
 def main():
     """ Run program
