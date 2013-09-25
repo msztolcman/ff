@@ -217,18 +217,7 @@ def ask(question, replies, default=None):
         elif reply in replies:
             return reply
 
-def _prepare_execute__vars(match):
-    """ Helper method for prepare_execute, used in replacement of regular expression.
-        Returns environment variable if found and quantity of escape characters ('\')
-        is even.
-    """
-    if len(match.group(1)) % 2 == 0:
-        return os.environ.get(match.group(2), '')
-    else:
-        return match.group(0)
-
-_RXP_VARIABLE = re.compile(r' (\\*)\$ ([_a-zA-Z0-9]+) ', re.VERBOSE)
-def prepare_execute(exe, path, dirname, basename, expand_vars=True):
+def prepare_execute(exe, path, dirname, basename):
     """ Replace keywords and env variables in 'exe' with values.
         Recognized keywords:
         {path} - full file path
@@ -241,9 +230,6 @@ def prepare_execute(exe, path, dirname, basename, expand_vars=True):
         elem = elem.replace('{path}', path)
         elem = elem.replace('{dirname}', dirname)
         elem = elem.replace('{basename}', basename)
-        if expand_vars:
-            elem = _RXP_VARIABLE.sub(_prepare_execute__vars, elem)
-
         exe[i] = elem
 
     return exe
@@ -625,7 +611,7 @@ def process_item(cfg, path):
         print(prefix, path.encode(sys.stdout.encoding or 'utf-8'), sep='', end=cfg.delim)
 
     if cfg.execute:
-        exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path), not cfg.shell_exec)
+        exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path))
         if cfg.verbose_exec:
             print(' '.join(exe))
         if not cfg.interactive_exec or ask('Execute command on %s?' % path, 'yn', 'n') == 'y':
