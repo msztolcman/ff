@@ -495,19 +495,19 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
     if args.help_test_plugins:
         ## None means: show me list of plugins
         if None in args.help_test_plugins:
-            help_data = FFPlugins.find_all('test')
-            help_data.print_list()
+            plugins = FFPlugins.find_all('test')
+            plugins.print_list()
 
         else:
             ## plugins names can be separated with comma
             args.help_test_plugins = itertools.chain(*[ data.split(',') for data in args.help_test_plugins])
 
             try:
-                help_data = FFPlugins.find(args.help_test_plugins, 'test')
+                plugins = FFPlugins.find(args.help_test_plugins, 'test')
             except ImportError as ex:
                 print('ERROR: Unknown plugin: %s' % ex.message, file=sys.stderr)
                 sys.exit(1)
-            help_data.print_help()
+            plugins.print_help()
 
         sys.exit()
 
