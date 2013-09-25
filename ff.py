@@ -30,11 +30,15 @@ __version__ = '0.5'
 
 PY2 = sys.version_info[0] < 3
 
-def u(st):
-    if PY2 and type(st) is str:
-        return st.decode('utf-8')
+def u(string):
+    """ Wrapper to decode string into unicode.
+        Converts only when `string` is type of `str`, and in python2.
+        Thanks to this there is possible single codebase between PY2 and PY3.
+    """
+    if PY2 and type(string) is str:
+        return string.decode('utf-8')
     else:
-        return st
+        return string
 
 
 class FFPluginError(Exception):
