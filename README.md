@@ -272,6 +272,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ChangeLog
 ---------
 ### v0.5
+* removed expanding shell variables when execute external command if no --shell-exec is given
 * many improvements to proper handling UTF-8
 * added --version switch
 * improvements for Python3 (not finished yet)
