@@ -8,7 +8,7 @@ If you need to search files by their contents, *or* search for their contents, p
 Current stable version
 ----------------------
 
-0.4
+0.5
 
 Why `ff` and not `find`?
 ------------------------
@@ -85,6 +85,7 @@ Plugins are the way to easily extend capabilities of `ff`. Currently there is on
 
 `ff` search for plugins in two places (by default), but there is posibility to tell him about third one.
 Automaticaly recognized paths are:
+
 * `~/.ff/plugins`
 * directory `ff_plugins` in programs root (if You have `ff` placed in `~/bin`, it will search for plugins in `~/bin/ff_plugins`)
 
@@ -273,10 +274,12 @@ ChangeLog
 ---------
 ### v0.5
 * ability to run plugins for tests (with first plugin: size)
-* added --version switch
+* many improvements to proper handling UTF-8
+* many improvements for work in Python3
+* improved PEP8 compatibility
 * refactored code
-* improvements for Python3 (not finished yet)
-* improved PEP8 compatibility (pylint)
+* added --version switch
+* removed expanding shell variables when execute external command if no --shell-exec is given
 
 ### v.04
 * added changelog

@@ -28,17 +28,31 @@ from pprint import pprint, pformat # pylint: disable-msg=unused-import
 
 __version__ = '0.5'
 
+PY2 = sys.version_info[0] < 3
+
+def u(string):
+    """ Wrapper to decode string into unicode.
+        Converts only when `string` is type of `str`, and in python2.
+        Thanks to this there is possible single codebase between PY2 and PY3.
+    """
+    if PY2 and type(string) is str:
+        return string.decode('utf-8')
+    else:
+        return string
+
+
 class FFPluginError(Exception):
     """ Exception class for plugins.
     """
     pass
 
 
-class FFPlugin(dict):
+class FFPlugin(object):
     """ Wrapper for custoom plugin.
 
         Loads module, read data, bind custom argument and allow to easy run plugin.
     """
+
     def __init__(self, name, type_, **kw):
         """ Initializer.
 
@@ -52,12 +66,12 @@ class FFPlugin(dict):
         """
         super(FFPlugin, self).__init__()
 
-        self.name = self['name'] = name
-        self.type = self['type'] = type_
-        self.action = self['action'] = kw.get('action', None)
-        self.descr = self['descr'] = kw.get('descr', '')
-        self.help = self['help'] = kw.get('help', '')
-        self.argument = self['argument'] = kw.get('argument', None)
+        self.name = name
+        self.type = type_
+        self.action = kw.get('action', None)
+        self.descr = kw.get('descr', '')
+        self.help = kw.get('help', '')
+        self.argument = kw.get('argument', None)
 
         self.load()
 
@@ -93,10 +107,6 @@ class FFPlugin(dict):
         if isinstance(self.help, collections.Callable):
             self.help = self.help(self.name)
         self.action = _module.plugin_action
-
-        self['descr'] = self.descr
-        self['help'] = self.help
-        self['action'] = self.action
 
     def run(self, path):
         """ Run plugins callable.
@@ -216,6 +226,23 @@ def ask(question, replies, default=None):
                 return default
         elif reply in replies:
             return reply
+
+def prepare_execute(exe, path, dirname, basename):
+    """ Replace keywords and env variables in 'exe' with values.
+        Recognized keywords:
+        {path} - full file path
+        {dirname} - parent directory for file
+        {basename} - filename without path
+    """
+
+    exe = copy.copy(exe)
+    for i, elem in enumerate(exe):
+        elem = elem.replace('{path}', path)
+        elem = elem.replace('{dirname}', dirname)
+        elem = elem.replace('{basename}', basename)
+        exe[i] = elem
+
+    return exe
 
 def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
     """ Parse pattern and try to recognize it is magic pattern.
@@ -338,17 +365,23 @@ def prepare_pattern(cfg):
         Returns always compiled regexp, ready to use.
     """
 
-    if cfg.pattern is None:
+    parse_magic_pattern = False
+    if cfg.pattern is not None:
+        cfg.anon_sources.insert(0, cfg.anon_pattern)
+    else:
+        parse_magic_pattern = True
         cfg.pattern = cfg.anon_pattern
-        if cfg.pattern:
-            err_msg = _prepare_pattern__magic(cfg)
-        else:
-            err_msg = 'argument -p/--pattern is required'
 
+    if cfg.pattern is None:
+        return 'argument -p/--pattern is required'
+
+    cfg.pattern = u(cfg.pattern)
+    cfg.pattern = unicodedata.normalize('NFKC', cfg.pattern)
+
+    if parse_magic_pattern:
+        err_msg = _prepare_pattern__magic(cfg)
         if err_msg:
             return err_msg
-    elif cfg.anon_pattern:
-        cfg.anon_sources.insert(0, cfg.anon_pattern)
 
     if cfg.fuzzy:
         cfg.pattern = _prepare_pattern__compile_fuzzy(cfg)
@@ -357,7 +390,7 @@ def prepare_pattern(cfg):
     else:
         cfg.pattern = _prepare_pattern__compile_fnmatch(cfg)
 
-def parse_input_args(args):
+def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-statements
     """ Parse input 'arguments' and return parsed.
     """
 
@@ -459,7 +492,14 @@ def parse_input_args(args):
 
     ## where to search for plugins
     if args.plugins_path:
-        FFPlugins.path_add(os.path.expanduser(args.plugins_path))
+        try:
+            plugins_path = u(args.plugins_path)
+        except UnicodeDecodeError as ex:
+            print('ERROR: ', args.plugins_path, ': ', ex, sep='', file=sys.stderr)
+            sys.exit(1)
+        else:
+            plugins_path = os.path.expanduser(plugins_path)
+            FFPlugins.path_add(plugins_path)
 
     FFPlugins.path_add(os.path.expanduser('~/.ff/plugins'))
     FFPlugins.path_add(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ff_plugins'))
@@ -473,12 +513,12 @@ def parse_input_args(args):
 
         else:
             ## plugins names can be separated with comma
-            args.help_test_plugins = itertools.chain(*[ data.split(',') for data in args.help_test_plugins])
+            args.help_test_plugins = itertools.chain(*[ plugin.split(',') for plugin in args.help_test_plugins])
 
             try:
                 plugins = FFPlugins.find(args.help_test_plugins, 'test')
             except ImportError as ex:
-                print('Unknown plugin: %s' % ex.message, file=sys.stderr)
+                print('ERROR: Unknown plugin: %s' % ex.message, file=sys.stderr)
                 sys.exit(1)
             plugins.print_help()
 
@@ -495,9 +535,11 @@ def parse_input_args(args):
         try:
             plugins.append(FFPlugin(plugin_name, 'test', argument=plugin_argument))
         except ImportError:
-            p.error('Unknown plugin: %s' % plugin_name)
+            print('ERROR: unknown plugin: %s' % plugin_name, file=sys.stderr)
+            sys.exit(1)
         except AttributeError:
-            p.error('Broken plugin: %s' % plugin_name)
+            print('ERROR: broken plugin: %s' % plugin_name, file=sys.stderr)
+            sys.exit(1)
     args.tests = plugins
 
     ## prepare pattern
@@ -511,19 +553,25 @@ def parse_input_args(args):
         args.source.append('.')
 
     for i, src in enumerate(args.source):
+        try:
+            src = u(src)
+        except UnicodeDecodeError as ex:
+            print('ERROR: ', src, ': ', ex, sep='', file=sys.stderr)
+            sys.exit()
+
         if not os.path.isdir(src):
             p.error('Source %s doesn\'t exists or is not a directory' % src)
-        args.source[i] = os.path.abspath(src)
+        args.source[i] = unicodedata.normalize('NFKC', os.path.abspath(src))
 
     ## prepare exec
     if args.shell_exec:
-        args.execute = [args.execute]
+        args.execute = [u(args.execute)]
     elif args.execute:
-        args.execute = shlex.split(args.execute)
+        args.execute = [ u(part) for part in shlex.split(args.execute) ]
 
     ## prepare excluded paths
     for i, ex_path in enumerate(args.excluded_paths):
-        ex_path = ex_path.decode('utf-8')
+        ex_path = u(ex_path)
         ex_path = unicodedata.normalize('NFKC', ex_path)
         args.excluded_paths[i] = os.path.abspath(ex_path).rstrip('/')
 
@@ -533,37 +581,6 @@ def parse_input_args(args):
         args.delim = "\n"
 
     return args
-
-def _prepare_execute__vars(match):
-    """ Helper method for prepare_execute, used in replacement of regular expression.
-        Returns environment variable if found and quantity of escape characters ('\')
-        is even.
-    """
-    if len(match.group(1)) % 2 == 0:
-        return os.environ.get(match.group(2), '')
-    else:
-        return match.group(0)
-
-_RXP_VARIABLE = re.compile(r' (\\*)\$ ([_a-zA-Z0-9]+) ', re.VERBOSE)
-def prepare_execute(exe, path, dirname, basename, expand_vars=True):
-    """ Replace keywords and env variables in 'exe' with values.
-        Recognized keywords:
-        {path} - full file path
-        {dirname} - parent directory for file
-        {basename} - filename without path
-    """
-
-    exe = copy.copy(exe)
-    for i, elem in enumerate(exe):
-        elem = elem.replace('{path}', path)
-        elem = elem.replace('{dirname}', dirname)
-        elem = elem.replace('{basename}', basename)
-        if expand_vars:
-            elem = _RXP_VARIABLE.sub(_prepare_execute__vars, elem)
-
-        exe[i] = elem
-
-    return exe
 
 def process_item(cfg, path):
     """ Test path for matching with pattern, print it if so, and execute command if given.
@@ -601,10 +618,10 @@ def process_item(cfg, path):
             prefix = 'd: '
         else:
             prefix = 'f: '
-        print(prefix, path.encode(sys.stdout.encoding or 'utf-8'), sep='', end=cfg.delim)
+        print(prefix, path, sep='', end=cfg.delim)
 
     if cfg.execute:
-        exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path), not cfg.shell_exec)
+        exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path))
         if cfg.verbose_exec:
             print(' '.join(exe))
         if not cfg.interactive_exec or ask('Execute command on %s?' % path, 'yn', 'n') == 'y':
@@ -621,39 +638,37 @@ def is_path_excluded(excluded_paths, path):
             return True
     return False
 
-_RXP_VCS = re.compile(r'(?:^|/)(?:\.git|\.svn|\.CVS|\.hg|_MTN|CVS|RCS|SCCS|_darcs|_sgbak)(?:$|/)')
+_IS_VCS__NAMES = {'.git': 1, '.svn': 1, 'CVS': 1, '.hg': 1, '_MTN': 1, 'RCS': 1, 'SCCS': 1, '_darcs': 1, '_sgbak': 1}
+def _is_vcs(item):
+    """ Check if `item` is VCS
+    """
+    return item in _IS_VCS__NAMES
 
 def process_source(src, cfg):
     """ Process single source: search for items and call process_item on them.
     """
-    for root, __, files in os.walk(src):
-        try:
-            root = root.decode('utf-8')
-        except UnicodeDecodeError as ex:
-            print(root, ': ', ex, sep='', file=sys.stderr)
-            continue
-
+    for root, dirs, files in os.walk(src):
+        root = unicodedata.normalize('NFKC', root)
         if is_path_excluded(cfg.excluded_paths, root):
             continue
 
-        if cfg.mode in ('dirs', 'all'):
-            if cfg.vcs or not _RXP_VCS.search(root):
-                process_item(cfg, root)
+        # remove vcs directories from traversing
+        if not cfg.vcs:
+            for dir_ in dirs:
+                if _is_vcs(dir_):
+                    dirs.remove(dir_)
+
+        if cfg.mode in ('dirs', 'all') and root != src:
+            process_item(cfg, root)
 
         if cfg.mode in ('files', 'all'):
             for file_ in files:
-                try:
-                    file_ = file_.decode('utf-8')
-                except UnicodeDecodeError as ex:
-                    ## do not change to os.path.join, will break if are some strange characters in file_
-                    print(root, os.sep, file_, ': ', ex, sep='', file=sys.stderr)
-                    continue
-
+                file_ = unicodedata.normalize('NFKC', file_)
                 path = os.path.join(root, file_)
                 if is_path_excluded(cfg.excluded_paths, path):
                     continue
-                if cfg.vcs or not _RXP_VCS.search(path):
-                    process_item(cfg, path)
+
+                process_item(cfg, path)
 
 def main():
     """ Run program
