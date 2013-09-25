@@ -38,6 +38,11 @@
 <p>If you need to search files by their contents, <em>or</em> search for their contents, please look at <a href="https://github.com/petdance/ack2">ack</a> or <a href="https://github.com/eliben/pss">pss</a>. These are better suited for this kind of task.</p>
 
 <h2>
+<a name="current-stable-version" class="anchor" href="#current-stable-version"><span class="octicon octicon-link"></span></a>Current stable version</h2>
+
+<p>0.4</p>
+
+<h2>
 <a name="why-ff-and-not-find" class="anchor" href="#why-ff-and-not-find"><span class="octicon octicon-link"></span></a>Why <code>ff</code> and not <code>find</code>?</h2>
 
 <p>Just because I find that most of my searches was:</p>
@@ -128,7 +133,7 @@ Automaticaly recognized paths are:</p>
 <li>directory <code>ff_plugins</code> in programs root (if You have <code>ff</code> placed in <code>~/bin</code>, it will search for plugins in <code>~/bin/ff_plugins</code>)</li>
 </ul><p>And using switch <code>--plugins-path</code> You can show <code>ff</code> where the plugins must be searched.</p>
 
-<p>You can also pass argument to plugins. For example, in <code>size</code> plugin (You can download it from <a href="https://github.com/mysz/ff/tree/master/plugins">GitHub</a>), You must to tell the plugin what size of file You expect:</p>
+<p>You can also pass argument to plugins. For example, in <code>size</code> plugin (You can download it from <a href="https://github.com/mysz/ff/tree/master/ff_plugins">GitHub</a>), You must to tell the plugin what size of file You expect:</p>
 
 <pre><code>`ff pas --test size:=5k`
 </code></pre>
@@ -178,12 +183,16 @@ There is one caveat with this: <code>PluginError</code> exception is declared <e
 
 <p>This is made by one of goals I have: try to have whole <code>ff</code> program in single file. It's important to me that I can move it easy between servers.</p>
 
-<p>There is an example plugin, which allow us to search for files in specified size. Is in <a href="https://github.com/mysz/ff/tree/master/plugins">project repository</a> in directory plugins. You can use it as a base for your own plugins :)</p>
+<p>There is an example plugin, which allow us to search for files in specified size. Is in <a href="https://github.com/mysz/ff/tree/master/ff_plugins">project repository</a> in directory plugins. You can use it as a base for your own plugins :)</p>
 
 <h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<p><code>ff</code> should work on any platform where <a href="http://python.org">Python</a> is available, it means Linux, Windows, MacOS X etc. There is no dependencies, plain Python power :) Just copy file to your PATH, for example:</p>
+<p><code>ff</code> should work on any platform where <a href="http://python.org">Python</a> is available, it means Linux, Windows, MacOS X etc. There is no dependencies, plain Python power :) </p>
+
+<p>To install, go to <a href="https://github.com/mysz/ff/releases">GitHub releases</a>, download newest release, unpack and put somewhere in <code>PATH</code> (ie. <code>~/bin</code> or <code>/usr/local/bin</code>).</p>
+
+<p>If You want to install newest unstable version, then just copy file to your PATH, for example:</p>
 
 <pre><code>curl https://raw.github.com/mysz/ff/master/ff.py &gt; /usr/local/bin/ff
 </code></pre>
@@ -258,7 +267,7 @@ optional arguments:
 --help-test-plugins [TEST_NAME]
                       display help for installed test plugins
 
-Pattern, provided as positional argument (not with `--pattern`) can be provided
+Pattern, provided as positional argument (not with --pattern) can be provided
 in special form (called: magic pattern). It allows to more "nerdish"
 (or "perlish" :) ) way to control `ff` behavior.
 
@@ -267,19 +276,19 @@ The general pattern for magic pattern is:
     mode/pattern/modifier
 
 where:
-    `mode` - is one of 'p' (`--pattern`), 'g' - (`--regexp`) or 'f' (`--fuzzy`)
-    `/` - is delimiter:
+    mode - is one of 'p' (--pattern), 'g' - (--regexp) or 'f' (--fuzzy)
+    / - is delimiter:
         * one of: '/', '!', '@', '#', '%', '|', and then start and end
             delimiter must be the same
         * one of: '{', '[', '(', '&lt;', and the end delimiter must be the
             closing one (ex. '}' if start is '{')
-    `pattern` - any pattern, processed in a way specified with `mode`
-    `modifier` - one of: 'i' (`--ignore-case`), 'm' (`--regex-multiline`),
-        's' (`--regex-dotall`), 'v' (not used currently), 'r' (`--invert-match`)
-        'q' (`--path-search`)
+    pattern - any pattern, processed in a way specified with 'mode'
+    modifier - one of: 'i' (--ignore-case), 'm' (--regex-multiline),
+        's' (--regex-dotall), 'v' (not used currently), 'r' (--invert-match)
+        'q' (--path-search)
 
 There is also ability to extend capabilities of `ff` by plugins. Plugins are
-run with switch `--test` and then plugin name with optional plugin argument:
+run with switch --test and then plugin name with optional plugin argument:
 
     --test plugin_name:plugin_arg
 
@@ -330,6 +339,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <a name="v05" class="anchor" href="#v05"><span class="octicon octicon-link"></span></a>v0.5</h3>
 
 <ul>
+<li>removed expanding shell variables when execute external command if no --shell-exec is given</li>
+<li>many improvements to proper handling UTF-8</li>
 <li>added --version switch</li>
 <li>improvements for Python3 (not finished yet)</li>
 <li>improved PEP8 compatibility (pylint)</li>
