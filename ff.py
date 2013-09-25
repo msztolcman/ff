@@ -465,7 +465,14 @@ def parse_input_args(args):
 
     ## where to search for plugins
     if args.plugins_path:
-        FFPlugins.path_add(os.path.expanduser(args.plugins_path))
+        try:
+            plugins_path = args.plugins_path.decode('utf-8')
+        except UnicodeDecodeError as ex:
+            print('ERROR: ', plugins_path, ': ', ex, sep='', file=sys.stderr)
+            sys.exit(1)
+        else:
+            plugins_path = os.path.expanduser(plugins_path)
+            FFPlugins.path_add(plugins_path)
 
     FFPlugins.path_add(os.path.expanduser('~/.ff/plugins'))
     FFPlugins.path_add(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ff_plugins'))
