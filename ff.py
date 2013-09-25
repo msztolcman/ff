@@ -551,7 +551,7 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
 
         if not os.path.isdir(src):
             p.error('Source %s doesn\'t exists or is not a directory' % src)
-        args.source[i] = os.path.abspath(src)
+        args.source[i] = unicodedata.normalize('NFKC', os.path.abspath(src))
 
     ## prepare exec
     if args.shell_exec:
