@@ -500,7 +500,7 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
 
         else:
             ## plugins names can be separated with comma
-            args.help_test_plugins = itertools.chain(*[ data.split(',') for data in args.help_test_plugins])
+            args.help_test_plugins = itertools.chain(*[ plugin.split(',') for plugin in args.help_test_plugins])
 
             try:
                 plugins = FFPlugins.find(args.help_test_plugins, 'test')
