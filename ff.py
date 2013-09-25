@@ -482,7 +482,7 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
         try:
             plugins_path = args.plugins_path.decode('utf-8')
         except UnicodeDecodeError as ex:
-            print('ERROR: ', plugins_path, ': ', ex, sep='', file=sys.stderr)
+            print('ERROR: ', args.plugins_path, ': ', ex, sep='', file=sys.stderr)
             sys.exit(1)
         else:
             plugins_path = os.path.expanduser(plugins_path)
