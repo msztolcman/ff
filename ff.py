@@ -22,6 +22,7 @@ import shlex
 import subprocess
 import sys
 import textwrap
+import unicodedata
 
 from pprint import pprint, pformat # pylint: disable-msg=unused-import
 
@@ -337,17 +338,23 @@ def prepare_pattern(cfg):
         Returns always compiled regexp, ready to use.
     """
 
-    if cfg.pattern is None:
+    parse_magic_pattern = False
+    if cfg.pattern is not None:
+        cfg.anon_sources.insert(0, cfg.anon_pattern)
+    else:
+        parse_magic_pattern = True
         cfg.pattern = cfg.anon_pattern
-        if cfg.pattern:
-            err_msg = _prepare_pattern__magic(cfg)
-        else:
-            err_msg = 'argument -p/--pattern is required'
 
+    if cfg.pattern is None:
+        return 'argument -p/--pattern is required'
+
+    cfg.pattern = cfg.pattern.decode('utf-8')
+    cfg.pattern = unicodedata.normalize('NFKC', cfg.pattern)
+
+    if parse_magic_pattern:
+        err_msg = _prepare_pattern__magic(cfg)
         if err_msg:
             return err_msg
-    elif cfg.anon_pattern:
-        cfg.anon_sources.insert(0, cfg.anon_pattern)
 
     if cfg.fuzzy:
         cfg.pattern = _prepare_pattern__compile_fuzzy(cfg)
