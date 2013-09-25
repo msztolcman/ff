@@ -647,7 +647,7 @@ def process_source(src, cfg):
                 if _is_vcs(dir_):
                     dirs.remove(dir_)
 
-        if cfg.mode in ('dirs', 'all'):
+        if cfg.mode in ('dirs', 'all') and root != src:
             process_item(cfg, root)
 
         if cfg.mode in ('files', 'all'):
