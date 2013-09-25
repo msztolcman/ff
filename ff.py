@@ -517,6 +517,12 @@ def parse_input_args(args):
         args.source.append('.')
 
     for i, src in enumerate(args.source):
+        try:
+            src = src.decode('utf-8')
+        except UnicodeDecodeError as ex:
+            print('ERROR: ', src, ': ', ex, sep='', file=sys.stderr)
+            sys.exit()
+
         if not os.path.isdir(src):
             p.error('Source %s doesn\'t exists or is not a directory' % src)
         args.source[i] = os.path.abspath(src)
@@ -618,6 +624,7 @@ def is_path_excluded(excluded_paths, path):
     """ Check that path is excluded from processing
     """
     path = path.rstrip('/')
+    path = unicodedata.normalize('NFKC', path)
     for exc in excluded_paths:
         if path == exc or exc + '/' in path:
             return True
@@ -629,12 +636,7 @@ def process_source(src, cfg):
     """ Process single source: search for items and call process_item on them.
     """
     for root, __, files in os.walk(src):
-        try:
-            root = root.decode('utf-8')
-        except UnicodeDecodeError as ex:
-            print(root, ': ', ex, sep='', file=sys.stderr)
-            continue
-
+        root = unicodedata.normalize('NFKC', root)
         if is_path_excluded(cfg.excluded_paths, root):
             continue
 
@@ -644,13 +646,7 @@ def process_source(src, cfg):
 
         if cfg.mode in ('files', 'all'):
             for file_ in files:
-                try:
-                    file_ = file_.decode('utf-8')
-                except UnicodeDecodeError as ex:
-                    ## do not change to os.path.join, will break if are some strange characters in file_
-                    print(root, os.sep, file_, ': ', ex, sep='', file=sys.stderr)
-                    continue
-
+                file_ = unicodedata.normalize('NFKC', file_)
                 path = os.path.join(root, file_)
                 if is_path_excluded(cfg.excluded_paths, path):
                     continue
