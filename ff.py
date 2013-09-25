@@ -28,6 +28,15 @@ from pprint import pprint, pformat # pylint: disable-msg=unused-import
 
 __version__ = '0.5'
 
+PY2 = sys.version_info[0] < 3
+
+def u(st):
+    if PY2 and type(st) is str:
+        return st.decode('utf-8')
+    else:
+        return st
+
+
 class FFPluginError(Exception):
     """ Exception class for plugins.
     """
@@ -362,7 +371,7 @@ def prepare_pattern(cfg):
     if cfg.pattern is None:
         return 'argument -p/--pattern is required'
 
-    cfg.pattern = cfg.pattern.decode('utf-8')
+    cfg.pattern = u(cfg.pattern)
     cfg.pattern = unicodedata.normalize('NFKC', cfg.pattern)
 
     if parse_magic_pattern:
@@ -480,7 +489,7 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
     ## where to search for plugins
     if args.plugins_path:
         try:
-            plugins_path = args.plugins_path.decode('utf-8')
+            plugins_path = u(args.plugins_path)
         except UnicodeDecodeError as ex:
             print('ERROR: ', args.plugins_path, ': ', ex, sep='', file=sys.stderr)
             sys.exit(1)
@@ -541,7 +550,7 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
 
     for i, src in enumerate(args.source):
         try:
-            src = src.decode('utf-8')
+            src = u(src)
         except UnicodeDecodeError as ex:
             print('ERROR: ', src, ': ', ex, sep='', file=sys.stderr)
             sys.exit()
@@ -552,13 +561,13 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
 
     ## prepare exec
     if args.shell_exec:
-        args.execute = [args.execute.decode('utf-8')]
+        args.execute = [u(args.execute)]
     elif args.execute:
-        args.execute = [ part.decode('utf-8') for part in shlex.split(args.execute) ]
+        args.execute = [ u(part) for part in shlex.split(args.execute) ]
 
     ## prepare excluded paths
     for i, ex_path in enumerate(args.excluded_paths):
-        ex_path = ex_path.decode('utf-8')
+        ex_path = u(ex_path)
         ex_path = unicodedata.normalize('NFKC', ex_path)
         args.excluded_paths[i] = os.path.abspath(ex_path).rstrip('/')
 
@@ -605,7 +614,7 @@ def process_item(cfg, path):
             prefix = 'd: '
         else:
             prefix = 'f: '
-        print(prefix, path.encode(sys.stdout.encoding or 'utf-8'), sep='', end=cfg.delim)
+        print(prefix, path, sep='', end=cfg.delim)
 
     if cfg.execute:
         exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path))
