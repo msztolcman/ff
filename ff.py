@@ -491,7 +491,7 @@ def parse_input_args(args):
             try:
                 help_data = FFPlugins.find(args.help_test_plugins, 'test')
             except ImportError as ex:
-                print('Unknown plugin: %s' % ex.message, file=sys.stderr)
+                print('ERROR: Unknown plugin: %s' % ex.message, file=sys.stderr)
                 sys.exit(1)
             help_data.print_help()
 
@@ -508,9 +508,11 @@ def parse_input_args(args):
         try:
             plugins.append(FFPlugin(plugin_name, 'test', argument=plugin_argument))
         except ImportError:
-            p.error('Unknown plugin: %s' % plugin_name)
+            print('ERROR: unknown plugin: %s' % plugin_name, file=sys.stderr)
+            sys.exit(1)
         except AttributeError:
-            p.error('Broken plugin: %s' % plugin_name)
+            print('ERROR: broken plugin: %s' % plugin_name, file=sys.stderr)
+            sys.exit(1)
     args.tests = plugins
 
     ## prepare pattern
