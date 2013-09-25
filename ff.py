@@ -543,8 +543,10 @@ def parse_input_args(args):
         args.execute = [ part.decode('utf-8') for part in shlex.split(args.execute) ]
 
     ## prepare excluded paths
-    for i, exc in enumerate(args.excluded_paths):
-        args.excluded_paths[i] = os.path.abspath(exc).rstrip('/')
+    for i, ex_path in enumerate(args.excluded_paths):
+        ex_path = ex_path.decode('utf-8')
+        ex_path = unicodedata.normalize('NFKC', ex_path)
+        args.excluded_paths[i] = os.path.abspath(ex_path).rstrip('/')
 
     if args.print0:
         args.delim = chr(0)
