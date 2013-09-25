@@ -34,11 +34,12 @@ class FFPluginError(Exception):
     pass
 
 
-class FFPlugin(dict):
+class FFPlugin(object):
     """ Wrapper for custoom plugin.
 
         Loads module, read data, bind custom argument and allow to easy run plugin.
     """
+
     def __init__(self, name, type_, **kw):
         """ Initializer.
 
@@ -52,12 +53,12 @@ class FFPlugin(dict):
         """
         super(FFPlugin, self).__init__()
 
-        self.name = self['name'] = name
-        self.type = self['type'] = type_
-        self.action = self['action'] = kw.get('action', None)
-        self.descr = self['descr'] = kw.get('descr', '')
-        self.help = self['help'] = kw.get('help', '')
-        self.argument = self['argument'] = kw.get('argument', None)
+        self.name = name
+        self.type = type_
+        self.action = kw.get('action', None)
+        self.descr = kw.get('descr', '')
+        self.help = kw.get('help', '')
+        self.argument = kw.get('argument', None)
 
         self.load()
 
@@ -93,10 +94,6 @@ class FFPlugin(dict):
         if isinstance(self.help, collections.Callable):
             self.help = self.help(self.name)
         self.action = _module.plugin_action
-
-        self['descr'] = self.descr
-        self['help'] = self.help
-        self['action'] = self.action
 
     def run(self, path):
         """ Run plugins callable.
