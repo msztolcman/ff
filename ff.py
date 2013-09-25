@@ -624,11 +624,11 @@ def is_path_excluded(excluded_paths, path):
             return True
     return False
 
-_is_vcs__names = {'.git': 1, '.svn': 1, 'CVS': 1, '.hg': 1, '_MTN': 1, 'RCS': 1, 'SCCS': 1, '_darcs': 1, '_sgbak': 1}
+_IS_VCS__NAMES = {'.git': 1, '.svn': 1, 'CVS': 1, '.hg': 1, '_MTN': 1, 'RCS': 1, 'SCCS': 1, '_darcs': 1, '_sgbak': 1}
 def _is_vcs(item):
     """ Check if `item` is VCS
     """
-    return item in _is_vcs__names
+    return item in _IS_VCS__NAMES
 
 def process_source(src, cfg):
     """ Process single source: search for items and call process_item on them.
