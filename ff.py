@@ -217,6 +217,37 @@ def ask(question, replies, default=None):
         elif reply in replies:
             return reply
 
+def _prepare_execute__vars(match):
+    """ Helper method for prepare_execute, used in replacement of regular expression.
+        Returns environment variable if found and quantity of escape characters ('\')
+        is even.
+    """
+    if len(match.group(1)) % 2 == 0:
+        return os.environ.get(match.group(2), '')
+    else:
+        return match.group(0)
+
+_RXP_VARIABLE = re.compile(r' (\\*)\$ ([_a-zA-Z0-9]+) ', re.VERBOSE)
+def prepare_execute(exe, path, dirname, basename, expand_vars=True):
+    """ Replace keywords and env variables in 'exe' with values.
+        Recognized keywords:
+        {path} - full file path
+        {dirname} - parent directory for file
+        {basename} - filename without path
+    """
+
+    exe = copy.copy(exe)
+    for i, elem in enumerate(exe):
+        elem = elem.replace('{path}', path)
+        elem = elem.replace('{dirname}', dirname)
+        elem = elem.replace('{basename}', basename)
+        if expand_vars:
+            elem = _RXP_VARIABLE.sub(_prepare_execute__vars, elem)
+
+        exe[i] = elem
+
+    return exe
+
 def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
     """ Parse pattern and try to recognize it is magic pattern.
         If so, parse magic pattern and set options for argparse
@@ -554,37 +585,6 @@ def parse_input_args(args):
         args.delim = "\n"
 
     return args
-
-def _prepare_execute__vars(match):
-    """ Helper method for prepare_execute, used in replacement of regular expression.
-        Returns environment variable if found and quantity of escape characters ('\')
-        is even.
-    """
-    if len(match.group(1)) % 2 == 0:
-        return os.environ.get(match.group(2), '')
-    else:
-        return match.group(0)
-
-_RXP_VARIABLE = re.compile(r' (\\*)\$ ([_a-zA-Z0-9]+) ', re.VERBOSE)
-def prepare_execute(exe, path, dirname, basename, expand_vars=True):
-    """ Replace keywords and env variables in 'exe' with values.
-        Recognized keywords:
-        {path} - full file path
-        {dirname} - parent directory for file
-        {basename} - filename without path
-    """
-
-    exe = copy.copy(exe)
-    for i, elem in enumerate(exe):
-        elem = elem.replace('{path}', path)
-        elem = elem.replace('{dirname}', dirname)
-        elem = elem.replace('{basename}', basename)
-        if expand_vars:
-            elem = _RXP_VARIABLE.sub(_prepare_execute__vars, elem)
-
-        exe[i] = elem
-
-    return exe
 
 def process_item(cfg, path):
     """ Test path for matching with pattern, print it if so, and execute command if given.
