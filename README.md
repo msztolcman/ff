@@ -8,7 +8,7 @@ If you need to search files by their contents, *or* search for their contents, p
 Current stable version
 ----------------------
 
-0.4
+0.5
 
 Why `ff` and not `find`?
 ------------------------
@@ -272,12 +272,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ChangeLog
 ---------
 ### v0.5
-* removed expanding shell variables when execute external command if no --shell-exec is given
-* many improvements to proper handling UTF-8
-* added --version switch
-* improvements for Python3 (not finished yet)
-* improved PEP8 compatibility (pylint)
 * ability to run plugins for tests (with first plugin: size)
+* improved PEP8 compatibility (pylint)
+* many improvements to proper handling UTF-8
+* improvements for Python3 (in progress)
+* removed expanding shell variables when execute external command if no --shell-exec is given
+* added --version switch
 
 ### v.04
 * added changelog
