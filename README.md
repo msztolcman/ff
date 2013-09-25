@@ -272,6 +272,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ChangeLog
 ---------
 ### v0.5
+* many improvements to proper handling UTF-8
 * added --version switch
 * improvements for Python3 (not finished yet)
 * improved PEP8 compatibility (pylint)
