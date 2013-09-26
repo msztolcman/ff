@@ -75,7 +75,7 @@ class TestFFPlugin(unittest.TestCase):
         self.assertEqual(p.action('mod2_action', '', path), path.upper())
         self.assertEqual(p.descr, '')
         self.assertEqual(p.help, '')
-        self.assertTrue(p.argument is None)
+        self.assertIsNone(p.argument)
 
     def test_init_descr_help(self):
         p = ff.FFPlugin('mod3_action_descr_help', 'test')
@@ -87,7 +87,7 @@ class TestFFPlugin(unittest.TestCase):
         self.assertEqual(p.action('mod3_action_descr_help', '', path), path.upper())
         self.assertEqual(p.descr, 'short descr')
         self.assertEqual(p.help, 'some help')
-        self.assertTrue(p.argument is None)
+        self.assertIsNone(p.argument)
 
     def test_init_descr_help_callable(self):
         p = ff.FFPlugin('mod4_action_descr_help_callable', 'test')
@@ -99,7 +99,7 @@ class TestFFPlugin(unittest.TestCase):
         self.assertEqual(p.action('mod4_action_descr_help_callable', '', path), 'mod4_action_descr_help_callable'.upper() + '!!' + path.upper())
         self.assertEqual(p.descr, 'short descr for mod4_action_descr_help_callable')
         self.assertEqual(p.help, 'some help for mod4_action_descr_help_callable')
-        self.assertTrue(p.argument is None)
+        self.assertIsNone(p.argument)
 
     def test_run(self):
         path = 'asd'
