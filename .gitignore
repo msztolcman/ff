@@ -19,6 +19,7 @@ develop-eggs
 /lib64
 /.Python
 /include
+/man
 
 # Installer logs
 pip-log.txt
