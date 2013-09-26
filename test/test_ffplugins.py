@@ -3,6 +3,7 @@
 
 from __future__ import print_function, unicode_literals, absolute_import
 
+import functools
 import glob
 import os, os.path
 import sys
@@ -22,6 +23,7 @@ from test_config import *
 import ff
 
 def clear_ffplugins_paths(f):
+    @functools.wraps(f)
     def _(*a, **b):
         try:
             f(*a, **b)
@@ -30,6 +32,7 @@ def clear_ffplugins_paths(f):
     return _
 
 def clear_sys_path(f):
+    @functools.wraps(f)
     def _(*a, **b):
         old_sys_path = sys.path
         sys.path = []
