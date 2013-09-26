@@ -54,7 +54,7 @@ class FFPluginError(Exception):
 
 
 class FFPlugin(object):
-    """ Wrapper for custoom plugin.
+    """ Wrapper for custom plugin.
 
         Loads module, read data, bind custom argument and allow to easy run plugin.
     """
