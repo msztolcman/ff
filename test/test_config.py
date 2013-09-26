@@ -7,8 +7,9 @@ import sys
 import re
 from pprint import pprint, pformat
 
-__all__ = ['PLAYGROUND_PATH']
+__all__ = ['PLAYGROUND_PATH', 'PY2']
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 PLAYGROUND_PATH = os.path.join(os.path.dirname(__file__), 'playground')
+PY2 = sys.version_info[0] < 3

@@ -11,11 +11,9 @@ from pprint import pprint, pformat
 
 import unittest
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from test_config import *
 
 import ff
-
-PY2 = sys.version_info[0] < 3
 
 if PY2:
     type_bytes = str

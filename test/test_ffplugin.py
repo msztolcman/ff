@@ -13,10 +13,9 @@ from pprint import pprint, pformat
 
 import unittest
 
-import ff
 from test_config import *
 
-PY2 = sys.version_info[0] < 3
+import ff
 
 sys.path.append(PLAYGROUND_PATH)
 
