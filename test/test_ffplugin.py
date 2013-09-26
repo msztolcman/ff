@@ -17,10 +17,10 @@ from test_config import *
 
 import ff
 
-sys.path.append(PLAYGROUND_PATH)
-
 class TestFFPlugin(unittest.TestCase):
     def setUp(self):
+        sys.path.append(PLAYGROUND_PATH)
+
         with open(os.path.join(PLAYGROUND_PATH, 'ffplugin_test_mod1_empty.py'), 'w') as fh:
             pass
 
@@ -38,6 +38,8 @@ class TestFFPlugin(unittest.TestCase):
             fh.write("PLUGIN_HELP = lambda name: \"some help for \" + name\n")
 
     def tearDown(self):
+        sys.path.remove(PLAYGROUND_PATH)
+
         os.unlink(os.path.join(PLAYGROUND_PATH, 'ffplugin_test_mod1_empty.py'))
         os.unlink(os.path.join(PLAYGROUND_PATH, 'ffplugin_test_mod2_action.py'))
         os.unlink(os.path.join(PLAYGROUND_PATH, 'ffplugin_test_mod3_action_descr_help.py'))
