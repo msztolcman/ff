@@ -224,7 +224,7 @@ def ask(question, replies, default=None):
         default = default.lower()
         replies.add(default)
 
-    choices = ','.join(replies)
+    choices = ','.join(sorted(replies))
     if default:
         choices = choices.replace(default, default.upper())
 
