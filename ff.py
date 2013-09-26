@@ -68,10 +68,10 @@ class FFPlugin(object):
 
         self.name = name
         self.type = type_
-        self.action = kw.get('action', None)
+        self.action = kw.get('action')
         self.descr = kw.get('descr', '')
         self.help = kw.get('help', '')
-        self.argument = kw.get('argument', None)
+        self.argument = kw.get('argument')
 
         self.load()
 
