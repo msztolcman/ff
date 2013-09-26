@@ -34,5 +34,5 @@ nosetests.xml
 .project
 .pydevproject
 
-test/playground/*
+/test/playground/*
 /.idea
