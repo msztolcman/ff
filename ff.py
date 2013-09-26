@@ -37,10 +37,14 @@ def u(string):
         Converts only when `string` is type of `str`, and in python2.
         Thanks to this there is possible single codebase between PY2 and PY3.
     """
-    if PY2 and type(string) is str:
-        return string.decode('utf-8')
+    if PY2:
+        if type(string) is str:
+            return string.decode('utf-8')
     else:
-        return string
+        if type(string) is bytes:
+            return str(string)
+
+    return string
 
 
 class FFPluginError(Exception):
