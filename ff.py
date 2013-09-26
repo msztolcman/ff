@@ -162,13 +162,10 @@ class FFPlugins(list):
             sys.path.append(path)
 
     @classmethod
-    def find_all(cls, type_):
-        """ Find all plugins available for `ff` and return FFPlugins
-            initialized with it.
+    def _find_all_plugins(cls, type_):
+        """ Helper for FFPlugins.find_all
 
-            Every item is instance of FFPlugin.
-
-            Uses `FFPlugins.find` to load plugins.
+            Search for every plugin in specified paths and returns it's names.
         """
         result = {}
         prefix_len = len('ffplugin_') + len(type_) + 1
@@ -186,7 +183,20 @@ class FFPlugins(list):
         order = list(result.keys())
         order.sort()
 
-        return cls.find(order, type_=type_)
+        return order
+
+    @classmethod
+    def find_all(cls, type_):
+        """ Find all plugins available for `ff` and return FFPlugins
+            initialized with it.
+
+            Every item is instance of FFPlugin.
+
+            Uses `FFPlugins.find` to load plugins.
+        """
+
+        plugins_names = cls._find_all_plugins(type_)
+        return cls.find(plugins_names, type_=type_)
 
     @classmethod
     def find(cls, names, type_):
