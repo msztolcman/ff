@@ -16,7 +16,8 @@ import copy
 import collections
 import glob
 import itertools
-import os, os.path
+import os
+import os.path
 import re
 import shlex
 import subprocess
@@ -29,6 +30,7 @@ from pprint import pprint, pformat # pylint: disable-msg=unused-import
 __version__ = '0.5'
 
 PY2 = sys.version_info[0] < 3
+_IS_VCS__NAMES = {'.git': 1, '.svn': 1, 'CVS': 1, '.hg': 1, '_MTN': 1, 'RCS': 1, 'SCCS': 1, '_darcs': 1, '_sgbak': 1}
 
 def u(string):
     """ Wrapper to decode string into unicode.
@@ -227,6 +229,7 @@ def ask(question, replies, default=None):
         elif reply in replies:
             return reply
 
+
 def prepare_execute(exe, path, dirname, basename):
     """ Replace keywords and env variables in 'exe' with values.
         Recognized keywords:
@@ -243,6 +246,7 @@ def prepare_execute(exe, path, dirname, basename):
         exe[i] = elem
 
     return exe
+
 
 def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
     """ Parse pattern and try to recognize it is magic pattern.
@@ -297,6 +301,7 @@ def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
         else:
             return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
 
+
 def _prepare_pattern__compile_fuzzy(cfg):
     """ Compile pattern to compiled regular expression using fuzzy syntax.
 
@@ -318,6 +323,7 @@ def _prepare_pattern__compile_fuzzy(cfg):
 
     return re.compile(pattern, flags)
 
+
 def _prepare_pattern__compile_regexp(cfg): # pylint: disable-msg=invalid-name
     """ Compile pattern to compiled regular expression using regexp syntax.
 
@@ -334,6 +340,7 @@ def _prepare_pattern__compile_regexp(cfg): # pylint: disable-msg=invalid-name
         flags = flags | re.MULTILINE
 
     return re.compile(cfg.pattern, flags)
+
 
 def _prepare_pattern__compile_fnmatch(cfg): # pylint: disable-msg=invalid-name
     """ Compile pattern to compiled regular expression using fnmatch syntax.
@@ -355,6 +362,7 @@ def _prepare_pattern__compile_fnmatch(cfg): # pylint: disable-msg=invalid-name
         pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.VERBOSE)
 
     return re.compile(pattern, flags)
+
 
 def prepare_pattern(cfg):
     """ Prepare pattern from input args to use.
@@ -389,6 +397,7 @@ def prepare_pattern(cfg):
         cfg.pattern = _prepare_pattern__compile_regexp(cfg)
     else:
         cfg.pattern = _prepare_pattern__compile_fnmatch(cfg)
+
 
 def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-statements
     """ Parse input 'arguments' and return parsed.
@@ -582,6 +591,7 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
 
     return args
 
+
 def process_item(cfg, path):
     """ Test path for matching with pattern, print it if so, and execute command if given.
     """
@@ -627,6 +637,7 @@ def process_item(cfg, path):
         if not cfg.interactive_exec or ask('Execute command on %s?' % path, 'yn', 'n') == 'y':
             subprocess.call(exe, shell=cfg.shell_exec)
 
+
 def is_path_excluded(excluded_paths, path):
     """ Check that path is excluded from processing
     """
@@ -638,11 +649,12 @@ def is_path_excluded(excluded_paths, path):
             return True
     return False
 
-_IS_VCS__NAMES = {'.git': 1, '.svn': 1, 'CVS': 1, '.hg': 1, '_MTN': 1, 'RCS': 1, 'SCCS': 1, '_darcs': 1, '_sgbak': 1}
+
 def _is_vcs(item):
     """ Check if `item` is VCS
     """
     return item in _IS_VCS__NAMES
+
 
 def process_source(src, cfg):
     """ Process single source: search for items and call process_item on them.
@@ -669,6 +681,7 @@ def process_source(src, cfg):
                     continue
 
                 process_item(cfg, path)
+
 
 def main():
     """ Run program
