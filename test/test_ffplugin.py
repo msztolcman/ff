@@ -40,10 +40,12 @@ class TestFFPlugin(unittest.TestCase):
     def tearDown(self):
         sys.path.remove(PLAYGROUND_PATH)
 
-        os.unlink(os.path.join(PLAYGROUND_PATH, 'ffplugin_test_mod1_empty.py'))
-        os.unlink(os.path.join(PLAYGROUND_PATH, 'ffplugin_test_mod2_action.py'))
-        os.unlink(os.path.join(PLAYGROUND_PATH, 'ffplugin_test_mod3_action_descr_help.py'))
-        os.unlink(os.path.join(PLAYGROUND_PATH, 'ffplugin_test_mod4_action_descr_help_callable.py'))
+        for file_ in ('ffplugin_test_mod1_empty.py', 'ffplugin_test_mod2_action.py',
+                      'ffplugin_test_mod3_action_descr_help.py', 'ffplugin_test_mod4_action_descr_help_callable.py'):
+            path = os.path.join(PLAYGROUND_PATH, file_)
+            if os.path.exists(path):
+                os.unlink(path)
+
         for file_ in glob.glob(os.path.join(PLAYGROUND_PATH, '*.pyc')):
             os.unlink(file_)
 
