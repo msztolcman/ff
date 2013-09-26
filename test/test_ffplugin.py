@@ -67,10 +67,10 @@ class TestFFPlugin(unittest.TestCase):
 
     def test_init_action(self):
         p = ff.FFPlugin('mod2_action', 'test')
-        self.assertTrue(isinstance(p, ff.FFPlugin))
+        self.assertIsInstance(p, ff.FFPlugin)
         self.assertEqual(p.name, 'mod2_action')
         self.assertEqual(p.type, 'test')
-        self.assertTrue(isinstance(p.action, types.FunctionType))
+        self.assertIsInstance(p.action, types.FunctionType)
         path = 'asd'
         self.assertEqual(p.action('mod2_action', '', path), path.upper())
         self.assertEqual(p.descr, '')
@@ -79,10 +79,10 @@ class TestFFPlugin(unittest.TestCase):
 
     def test_init_descr_help(self):
         p = ff.FFPlugin('mod3_action_descr_help', 'test')
-        self.assertTrue(isinstance(p, ff.FFPlugin))
+        self.assertIsInstance(p, ff.FFPlugin)
         self.assertEqual(p.name, 'mod3_action_descr_help')
         self.assertEqual(p.type, 'test')
-        self.assertTrue(isinstance(p.action, types.FunctionType))
+        self.assertIsInstance(p.action, types.FunctionType)
         path = 'asd'
         self.assertEqual(p.action('mod3_action_descr_help', '', path), path.upper())
         self.assertEqual(p.descr, 'short descr')
@@ -91,10 +91,10 @@ class TestFFPlugin(unittest.TestCase):
 
     def test_init_descr_help_callable(self):
         p = ff.FFPlugin('mod4_action_descr_help_callable', 'test')
-        self.assertTrue(isinstance(p, ff.FFPlugin))
+        self.assertIsInstance(p, ff.FFPlugin)
         self.assertEqual(p.name, 'mod4_action_descr_help_callable')
         self.assertEqual(p.type, 'test')
-        self.assertTrue(isinstance(p.action, types.FunctionType))
+        self.assertIsInstance(p.action, types.FunctionType)
         path = 'asd'
         self.assertEqual(p.action('mod4_action_descr_help_callable', '', path), 'mod4_action_descr_help_callable'.upper() + '!!' + path.upper())
         self.assertEqual(p.descr, 'short descr for mod4_action_descr_help_callable')
@@ -106,7 +106,7 @@ class TestFFPlugin(unittest.TestCase):
         arg = 'ARG'
 
         p = ff.FFPlugin('mod4_action_descr_help_callable', 'test', argument=arg)
-        self.assertTrue(isinstance(p, ff.FFPlugin))
+        self.assertIsInstance(p, ff.FFPlugin)
 
         result = 'mod4_action_descr_help_callable'.upper() + '!' + arg.lower() + '!' + path.upper()
         self.assertEqual(p.run(path), result)

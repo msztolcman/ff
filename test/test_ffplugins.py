@@ -79,13 +79,13 @@ class TestFFPlugin(unittest.TestCase):
 
     def test_init(self):
         p = ff.FFPlugins()
-        self.assertTrue(isinstance(p, ff.FFPlugins))
-        self.assertTrue(isinstance(p, list))
+        self.assertIsInstance(p, ff.FFPlugins)
+        self.assertIsInstance(p, list)
 
     @clear_ffplugins_paths
     def test_paths(self):
         self.assertTrue(hasattr(ff.FFPlugins, '_paths'))
-        self.assertTrue(isinstance(ff.FFPlugins._paths, set), 'FFPlugins._paths should be of type: set()')
+        self.assertIsInstance(ff.FFPlugins._paths, set, 'FFPlugins._paths should be of type: set()')
         self.assertFalse(ff.FFPlugins._paths, 'There should be no paths at start')
 
         ## PLAYGROUND_PATH should not be in FFPlugins._paths yet...
@@ -121,10 +121,10 @@ class TestFFPlugin(unittest.TestCase):
 
         plugins = ff.FFPlugins.find_all('test')
 
-        self.assertTrue(isinstance(plugins, ff.FFPlugins))
+        self.assertIsInstance(plugins, ff.FFPlugins)
         self.assertTrue(len(plugins), 3)
         for plugin in plugins:
-            self.assertTrue(isinstance(plugin, ff.FFPlugin))
+            self.assertIsInstance(plugin, ff.FFPlugin)
 
     @clear_ffplugins_paths
     @clear_sys_path
@@ -136,10 +136,10 @@ class TestFFPlugin(unittest.TestCase):
 
         plugins = ff.FFPlugins.find(['mod2_action'], 'test')
 
-        self.assertTrue(isinstance(plugins, ff.FFPlugins))
+        self.assertIsInstance(plugins, ff.FFPlugins)
         self.assertTrue(len(plugins), 1)
         for plugin in plugins:
-            self.assertTrue(isinstance(plugin, ff.FFPlugin))
+            self.assertIsInstance(plugin, ff.FFPlugin)
 
     @clear_ffplugins_paths
     @clear_sys_path
@@ -151,7 +151,7 @@ class TestFFPlugin(unittest.TestCase):
         os.unlink(os.path.join(PLAYGROUND_PATH, 'ffplugin_test_mod1_empty.py'))
 
         p = ff.FFPlugins.find_all('test')
-        self.assertTrue(isinstance(p, ff.FFPlugins))
+        self.assertIsInstance(p, ff.FFPlugins)
 
         self.assertEqual(len(p), 3)
 
@@ -181,7 +181,7 @@ class TestFFPlugin(unittest.TestCase):
         os.unlink(os.path.join(PLAYGROUND_PATH, 'ffplugin_test_mod1_empty.py'))
 
         p = ff.FFPlugins.find(['mod2_action', 'mod3_action_descr_help'], 'test')
-        self.assertTrue(isinstance(p, ff.FFPlugins))
+        self.assertIsInstance(p, ff.FFPlugins)
 
         self.assertEqual(len(p), 2)
 
