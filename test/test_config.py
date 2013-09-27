@@ -29,3 +29,4 @@ if PY2 and sys.version_info[1] < 7:
 def import_unittest():
     unittest = __import__(unittest_module_name)
     sys.modules['unittest'] = unittest
+    return unittest
