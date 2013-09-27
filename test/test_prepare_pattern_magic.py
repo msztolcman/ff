@@ -399,7 +399,7 @@ class TestMagicPatternDelims(unittest.TestCase):
             '}': '{', ']': '[', ')': '(', '>': '<'
         }
 
-        delims = set(delim_closed.keys() + delim_closed.values())
+        delims = set(delim_closed.keys()) | set(delim_closed.values())
 
         for delim_close, delim_open in itertools.product(delims, repeat=2):
             cfg = MockArgParse()
