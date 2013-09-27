@@ -9,9 +9,9 @@ import sys
 import re
 from pprint import pprint, pformat
 
-import unittest
-
 from test_config import *
+
+unittest = import_unittest()
 
 import ff
 
