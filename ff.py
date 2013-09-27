@@ -308,7 +308,7 @@ def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
         elif item == 'r': args.invert_match = True
         elif item == 'q': args.path_search = True
         else:
-            return 'Unknown modifier in pattern: %s. Allowed modifiers: i, m, s, v, r,' % item
+            return 'Unknown modifier in pattern: %s. Allowed modifiers: i, m, s, v, r.' % item
 
     for item in (pattern_parts['mode'] or ''):
         # pylint: disable-msg=multiple-statements
