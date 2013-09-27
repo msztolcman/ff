@@ -325,11 +325,11 @@ def _prepare_pattern__compile_fuzzy(cfg):
 
     pattern = ''
     if cfg.fnmatch_begin:
-        pattern += '^'
+        pattern += r'\A'
     for char in cfg.pattern:
         pattern += '.*' + re.escape(char)
     if cfg.fnmatch_end:
-        pattern += '$'
+        pattern += r'\Z'
 
     flags = re.UNICODE | re.DOTALL | re.MULTILINE
     if cfg.ignorecase:
