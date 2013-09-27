@@ -270,11 +270,11 @@ def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
 
     rxp_pattern = re.compile(r'''
         ^
-        (?P<mode>           [a-z0-9]+       )?
-        (?P<delim_open>     [{[(</!@#%|?+]  )
-        (?P<pattern>        .*              )
-        (?P<delim_close>    [}\])>/!@#%|?+] )
-        (?P<modifier>       [a-z0-9]+       )?
+        (?P<mode>           [a-z0-9]+            )?
+        (?P<delim_open>     [{}[\]()<>/!@#%|?+]  )
+        (?P<pattern>        .*                   )
+        (?P<delim_close>    [{}[\]()<>/!@#%|?+]  )
+        (?P<modifier>       [a-z0-9]+            )?
         $
     ''', re.UNICODE | re.VERBOSE)
 
