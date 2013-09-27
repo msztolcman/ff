@@ -11,7 +11,7 @@ import types
 
 from pprint import pprint, pformat
 
-from test_config import *
+from test_manager import *
 
 unittest = import_unittest()
 
