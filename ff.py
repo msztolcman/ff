@@ -276,7 +276,7 @@ def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
         (?P<delim_close>    [}\])>/!@#%|]   )
         (?P<modifier>       [a-z0-9]+       )?
         $
-    ''', re.VERBOSE)
+    ''', re.UNICODE | re.VERBOSE)
 
     match = rxp_pattern.match(args.pattern)
     if not match:
@@ -331,7 +331,7 @@ def _prepare_pattern__compile_fuzzy(cfg):
     if cfg.fnmatch_end:
         pattern += '$'
 
-    flags = 0 | re.DOTALL | re.MULTILINE
+    flags = re.UNICODE | re.DOTALL | re.MULTILINE
     if cfg.ignorecase:
         flags = flags | re.IGNORECASE
 
@@ -345,7 +345,7 @@ def _prepare_pattern__compile_regexp(cfg): # pylint: disable-msg=invalid-name
         flags from arguments.
     """
 
-    flags = 0
+    flags = re.UNICODE
     if cfg.ignorecase:
         flags = flags | re.IGNORECASE
     if cfg.regex_dotall:
@@ -363,7 +363,7 @@ def _prepare_pattern__compile_fnmatch(cfg): # pylint: disable-msg=invalid-name
     """
     import fnmatch
 
-    flags = 0
+    flags = re.UNICODE
     if cfg.ignorecase:
         flags = flags | re.IGNORECASE
 
@@ -373,7 +373,7 @@ def _prepare_pattern__compile_fnmatch(cfg): # pylint: disable-msg=invalid-name
 
     ## our behaviour is in the opposite to fnmatch: by default *do not* match end of string
     if not cfg.fnmatch_end:
-        pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.VERBOSE)
+        pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.UNICODE | re.VERBOSE)
 
     return re.compile(pattern, flags)
 
