@@ -311,6 +311,9 @@ def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
             return 'Unknown modifier in pattern: %s. Allowed modifiers: i, m, s, v, r.' % item
 
     if pattern_parts['mode'] is not None:
+        if len(pattern_parts['mode']) > 1:
+            return 'Incorrect mode: %s. Allowed modes: p, g, f.' % pattern_parts['mode']
+
         # pylint: disable-msg=multiple-statements
         if pattern_parts['mode'] == 'g': args.regexp = True
         elif pattern_parts['mode'] == 'p': pass
