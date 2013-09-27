@@ -297,6 +297,9 @@ def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
     args.pattern = pattern_parts['pattern']
 
     for item in (pattern_parts['modifier'] or ''):
+        if len(set(pattern_parts['modifier'])) != len(pattern_parts['modifier']):
+            return 'Incorrect modifiers in pattern: %s. Allowed modifiers: i, m, s, v, r.' % item
+
         # pylint: disable-msg=multiple-statements
         if item == 'i': args.ignorecase = True
         elif item == 'm': args.regex_multiline = True
