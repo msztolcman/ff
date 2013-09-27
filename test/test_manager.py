@@ -7,26 +7,21 @@ import sys
 import re
 from pprint import pprint, pformat
 
-__all__ = ['PLAYGROUND_PATH', 'PY2', 'import_unittest']
+__all__ = ['PLAYGROUND_PATH', 'PY2', 'unittest']
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 PLAYGROUND_PATH = os.path.join(os.path.dirname(__file__), 'playground')
 PY2 = sys.version_info[0] < 3
 
-unittest_module_name = 'unittest'
 if PY2 and sys.version_info[1] < 7:
     try:
-        import unittest2
+        import unittest2 as unittest
     except ImportError:
         import unittest
         class Fail(unittest.TestCase):
             def test_fail(self):
                 self.fail('Need unittest2 module for python older then 2.7!')
-    else:
-        unittest_module_name = 'unittest2'
+else:
+    import unittest
 
-def import_unittest():
-    unittest = __import__(unittest_module_name)
-    sys.modules['unittest'] = unittest
-    return unittest

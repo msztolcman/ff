@@ -18,8 +18,6 @@ from pprint import pprint, pformat
 
 from test_manager import *
 
-unittest = import_unittest()
-
 import ff
 
 def clear_ffplugins_paths(f):
