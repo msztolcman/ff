@@ -310,13 +310,13 @@ def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
         else:
             return 'Unknown modifier in pattern: %s. Allowed modifiers: i, m, s, v, r.' % item
 
-    for item in (pattern_parts['mode'] or ''):
+    if pattern_parts['mode'] is not None:
         # pylint: disable-msg=multiple-statements
-        if item == 'g': args.regexp = True
-        elif item == 'p': pass
-        elif item == 'f': args.fuzzy = True
+        if pattern_parts['mode'] == 'g': args.regexp = True
+        elif pattern_parts['mode'] == 'p': pass
+        elif pattern_parts['mode'] == 'f': args.fuzzy = True
         else:
-            return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
+            return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % pattern_parts['mode']
 
 
 def _prepare_pattern__compile_fuzzy(cfg):
