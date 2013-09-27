@@ -292,7 +292,7 @@ def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
     }
     if pattern_parts['delim_close'] not in delim_closed or \
             delim_closed[pattern_parts['delim_close']] != pattern_parts['delim_open']:
-        return 'Invalid pattern'
+        return 'Inappropriate delimiters: %(delim_open)s %(delim_close)s' % pattern_parts
 
     args.pattern = pattern_parts['pattern']
 
