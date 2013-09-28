@@ -270,13 +270,13 @@ def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
 
     rxp_pattern = re.compile(r'''
         ^
-        (?P<mode>           [a-z0-9]        )?
-        (?P<delim_open>     [{[(</!@#%|]    )
-        (?P<pattern>        .*              )
-        (?P<delim_close>    [}\])>/!@#%|]   )
-        (?P<modifier>       [a-z0-9]+       )?
+        (?P<mode>           [a-z0-9]+            )?
+        (?P<delim_open>     [{}[\]()<>/!@#%|?+]  )
+        (?P<pattern>        .*                   )
+        (?P<delim_close>    [{}[\]()<>/!@#%|?+]  )
+        (?P<modifier>       [a-z0-9]+            )?
         $
-    ''', re.VERBOSE)
+    ''', re.UNICODE | re.VERBOSE)
 
     match = rxp_pattern.match(args.pattern)
     if not match:
@@ -286,17 +286,20 @@ def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
 
     delim_closed = {
         ## match same
-        '/': '/', '!': '!', '@': '@', '#': '#', '%': '%', '|': '|',
+        '/': '/', '!': '!', '@': '@', '#': '#', '%': '%', '|': '|', '?': '?', '+': '+',
         ## match pair
         '}': '{', ']': '[', ')': '(', '>': '<'
     }
     if pattern_parts['delim_close'] not in delim_closed or \
             delim_closed[pattern_parts['delim_close']] != pattern_parts['delim_open']:
-        return 'Invalid pattern'
+        return 'Inappropriate delimiters: %(delim_open)s %(delim_close)s' % pattern_parts
 
     args.pattern = pattern_parts['pattern']
 
     for item in (pattern_parts['modifier'] or ''):
+        if len(set(pattern_parts['modifier'])) != len(pattern_parts['modifier']):
+            return 'Incorrect modifiers in pattern: %s. Allowed modifiers: i, m, s, v, r.' % item
+
         # pylint: disable-msg=multiple-statements
         if item == 'i': args.ignorecase = True
         elif item == 'm': args.regex_multiline = True
@@ -305,15 +308,18 @@ def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
         elif item == 'r': args.invert_match = True
         elif item == 'q': args.path_search = True
         else:
-            return 'Unknown modifier in pattern: %s. Allowed modifiers: i, m, s, v, r,' % item
+            return 'Unknown modifier in pattern: %s. Allowed modifiers: i, m, s, v, r.' % item
 
-    for item in (pattern_parts['mode'] or ''):
+    if pattern_parts['mode'] is not None:
+        if len(pattern_parts['mode']) > 1:
+            return 'Incorrect mode: %s. Allowed modes: p, g, f.' % pattern_parts['mode']
+
         # pylint: disable-msg=multiple-statements
-        if item == 'g': args.regexp = True
-        elif item == 'p': pass
-        elif item == 'f': args.fuzzy = True
+        if pattern_parts['mode'] == 'g': args.regexp = True
+        elif pattern_parts['mode'] == 'p': pass
+        elif pattern_parts['mode'] == 'f': args.fuzzy = True
         else:
-            return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % item
+            return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % pattern_parts['mode']
 
 
 def _prepare_pattern__compile_fuzzy(cfg):
@@ -325,13 +331,13 @@ def _prepare_pattern__compile_fuzzy(cfg):
 
     pattern = ''
     if cfg.fnmatch_begin:
-        pattern += '^'
+        pattern += r'\A'
     for char in cfg.pattern:
         pattern += '.*' + re.escape(char)
     if cfg.fnmatch_end:
-        pattern += '$'
+        pattern += r'\Z'
 
-    flags = 0 | re.DOTALL | re.MULTILINE
+    flags = re.UNICODE | re.DOTALL | re.MULTILINE
     if cfg.ignorecase:
         flags = flags | re.IGNORECASE
 
@@ -345,7 +351,7 @@ def _prepare_pattern__compile_regexp(cfg): # pylint: disable-msg=invalid-name
         flags from arguments.
     """
 
-    flags = 0
+    flags = re.UNICODE
     if cfg.ignorecase:
         flags = flags | re.IGNORECASE
     if cfg.regex_dotall:
@@ -363,7 +369,7 @@ def _prepare_pattern__compile_fnmatch(cfg): # pylint: disable-msg=invalid-name
     """
     import fnmatch
 
-    flags = 0
+    flags = re.UNICODE
     if cfg.ignorecase:
         flags = flags | re.IGNORECASE
 
@@ -373,7 +379,7 @@ def _prepare_pattern__compile_fnmatch(cfg): # pylint: disable-msg=invalid-name
 
     ## our behaviour is in the opposite to fnmatch: by default *do not* match end of string
     if not cfg.fnmatch_end:
-        pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.VERBOSE)
+        pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.UNICODE | re.VERBOSE)
 
     return re.compile(pattern, flags)
 
