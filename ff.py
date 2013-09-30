@@ -46,7 +46,7 @@ def u(string):
 
     return string
 
-def disp(*a, **b):
+def disp(*args, **kwargs):
     """ Print data in safe way.
 
         First, try to encode whole data to utf-8. If printing fails, try to encode to
@@ -54,12 +54,18 @@ def disp(*a, **b):
         with replacing unconvertable characters.
     """
     try:
-        print(*[part.encode('utf-8') for part in a], sep=b.get('sep'), end=b.get('end'), file=b.get('file'))
-    except UnicodeEncodeError as ex:
+        if PY2:
+            data = [part.encode('utf-8') for part in args]
+        else:
+            data = args
+        print(*data, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
+    except UnicodeEncodeError:
         try:
-            print(*[part.encode(sys.stdout.encoding or sys.getdefaultencoding()) for part in a], sep=b.get('sep'), end=b.get('end'), file=b.get('file'))
-        except UnicodeEncodeError as ex2:
-            print(*[part.encode('ascii', 'replace') for part in a], sep=b.get('sep'), end=b.get('end'), file=b.get('file'))
+            data = [part.encode(sys.stdout.encoding or sys.getdefaultencoding()) for part in args]
+            print(*data, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
+        except UnicodeEncodeError:
+            data = [part.encode('ascii', 'replace') for part in args]
+            print(*data, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
 
 class FFPluginError(Exception):
     """ Exception class for plugins.
