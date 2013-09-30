@@ -46,6 +46,20 @@ def u(string):
 
     return string
 
+def disp(*a, **b):
+    """ Print data in safe way.
+
+        First, try to encode whole data to utf-8. If printing fails, try to encode to
+        sys.stdout.encoding or sys.getdefaultencoding(). In last step, encode to 'ascii'
+        with replacing unconvertable characters.
+    """
+    try:
+        print(*[part.encode('utf-8') for part in a], sep=b.get('sep'), end=b.get('end'), file=b.get('file'))
+    except UnicodeEncodeError as ex:
+        try:
+            print(*[part.encode(sys.stdout.encoding or sys.getdefaultencoding()) for part in a], sep=b.get('sep'), end=b.get('end'), file=b.get('file'))
+        except UnicodeEncodeError as ex2:
+            print(*[part.encode('ascii', 'replace') for part in a], sep=b.get('sep'), end=b.get('end'), file=b.get('file'))
 
 class FFPluginError(Exception):
     """ Exception class for plugins.
@@ -137,7 +151,7 @@ class FFPlugins(list):
             Prints single plugin description
         """
         text = 'ff plugin: ' + item.name + (' - ' + textwrap.fill(item.descr) if item.descr else '')
-        print(text)
+        disp(text)
 
     def print_help(self):
         """ Print list of plugins with their help to STDOUT
@@ -145,7 +159,7 @@ class FFPlugins(list):
         for item in self:
             self._print_descr(item)
             if item.help:
-                print(item.help.rstrip() + "\n")
+                disp(item.help.rstrip() + "\n")
 
     def print_list(self):
         """ Print list of plugins with their short descriptions to STDOUT
@@ -524,7 +538,7 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
         try:
             plugins_path = u(args.plugins_path)
         except UnicodeDecodeError as ex:
-            print('ERROR: ', args.plugins_path, ': ', ex, sep='', file=sys.stderr)
+            disp('ERROR: ', args.plugins_path, ': ', ex, sep='', file=sys.stderr)
             sys.exit(1)
         else:
             plugins_path = os.path.expanduser(plugins_path)
@@ -547,7 +561,7 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
             try:
                 plugins = FFPlugins.find(args.help_test_plugins, 'test')
             except ImportError as ex:
-                print('ERROR: Unknown plugin: %s' % ex.message, file=sys.stderr)
+                disp('ERROR: Unknown plugin: %s' % ex.message, file=sys.stderr)
                 sys.exit(1)
             plugins.print_help()
 
@@ -564,10 +578,10 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
         try:
             plugins.append(FFPlugin(plugin_name, 'test', argument=plugin_argument))
         except ImportError:
-            print('ERROR: unknown plugin: %s' % plugin_name, file=sys.stderr)
+            disp('ERROR: unknown plugin: %s' % plugin_name, file=sys.stderr)
             sys.exit(1)
         except AttributeError:
-            print('ERROR: broken plugin: %s' % plugin_name, file=sys.stderr)
+            disp('ERROR: broken plugin: %s' % plugin_name, file=sys.stderr)
             sys.exit(1)
     args.tests = plugins
 
@@ -585,7 +599,7 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
         try:
             src = u(src)
         except UnicodeDecodeError as ex:
-            print('ERROR: ', src, ': ', ex, sep='', file=sys.stderr)
+            disp('ERROR: ', src, ': ', ex, sep='', file=sys.stderr)
             sys.exit()
 
         if not os.path.isdir(src):
@@ -635,7 +649,7 @@ def process_item(cfg, path):
             try:
                 to_show = test.run(path)
             except FFPluginError as ex:
-                print('Plugin "%s" error: %s' % (test.name, ex), file=sys.stderr)
+                disp('Plugin "%s" error: %s' % (test.name, ex), file=sys.stderr)
                 sys.exit(1)
             else:
                 if not to_show:
@@ -649,18 +663,12 @@ def process_item(cfg, path):
         else:
             prefix = 'f: '
 
-        try:
-            print(prefix, path.encode('utf-8'), sep='', end=cfg.delim)
-        except UnicodeEncodeError as ex:
-            try:
-                print(prefix, path.encode(sys.stdout.encoding or sys.getdefaultencoding(), 'replace'), sep='', end=cfg.delim)
-            except UnicodeEncodeError as ex2:
-                print(prefix, path.encode('ascii', 'replace'), sep='', end=cfg.delim)
+        disp(prefix, path, sep='', end=cfg.delim)
 
     if cfg.execute:
         exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path))
         if cfg.verbose_exec:
-            print(' '.join(exe))
+            disp(*exe)
         if not cfg.interactive_exec or ask('Execute command on %s?' % path, 'yn', 'n') == 'y':
             subprocess.call(exe, shell=cfg.shell_exec)
 
@@ -716,14 +724,14 @@ def main():
     try:
         config = parse_input_args(sys.argv[1:])
     except argparse.ArgumentError as ex:
-        print(ex, file=sys.stderr)
+        disp(ex, file=sys.stderr)
         sys.exit(1)
 
     try:
         for source in config.source:
             process_source(source, config)
     except KeyboardInterrupt:
-        print('Interrupted by CTRL-C, aborting', file=sys.stderr)
+        disp('Interrupted by CTRL-C, aborting', file=sys.stderr)
 
 if __name__ == '__main__':
     main()
