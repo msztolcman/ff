@@ -21,6 +21,19 @@ And it's easier to me to enter:
 
     ff name
 
+Also, my `find` have sometimes problems with non ascii files:
+
+    % find /etc -name '*GÖS*'
+    % 
+
+And with `ff`:
+
+    % ./ff.py '*GÖS*' /etc
+    /etc/eee_GÖS_från_förstår_pas
+    /etc/eee_GÖS_från_pas_förstår_qq
+    /etc/pas_GÖS_från_förstår
+    %
+
 :)
 
 Basic usage
