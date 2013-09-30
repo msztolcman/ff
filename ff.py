@@ -648,8 +648,14 @@ def process_item(cfg, path):
             prefix = 'd: '
         else:
             prefix = 'f: '
-        print(prefix, path.encode('ascii', 'replace'), sep='', enc=cfg.delim)
 
+        try:
+            print(prefix, path.encode('utf-8'), sep='', end=cfg.delim)
+        except UnicodeEncodeError as ex:
+            try:
+                print(prefix, path.encode(sys.stdout.encoding or sys.getdefaultencoding(), 'replace'), sep='', end=cfg.delim)
+            except UnicodeEncodeError as ex2:
+                print(prefix, path.encode('ascii', 'replace'), sep='', end=cfg.delim)
 
     if cfg.execute:
         exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path))
