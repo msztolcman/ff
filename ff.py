@@ -506,7 +506,7 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
                    help='match pattern to end of item name (ignored in regexp mode)')
     p.add_argument('-v', '-r', '--invert-match', action='store_true', default=False,
                    help='')
-    p.add_argument('-m', '--mode', choices=('all', 'files', 'dirs'), default='all',
+    p.add_argument('-m', '--mode', choices=('all', 'files', 'f', 'files', 'dirs', 'd', 'dir'), default='all',
                    help='')
     p.add_argument('-x', '--exec', metavar='COMMAND', dest='execute', type=str,
                    help='execute some command on every found item. In command, placeholders: {path}, '
@@ -711,10 +711,10 @@ def process_source(src, cfg):
                 if _is_vcs(dir_):
                     dirs.remove(dir_)
 
-        if cfg.mode in ('dirs', 'all') and root != src:
+        if cfg.mode in ('dirs', 'dir', 'd', 'all') and root != src:
             process_item(cfg, root)
 
-        if cfg.mode in ('files', 'all'):
+        if cfg.mode in ('files', 'file', 'f', 'all'):
             for file_ in files:
                 file_ = unicodedata.normalize('NFKC', file_)
                 path = os.path.join(root, file_)
