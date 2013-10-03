@@ -163,10 +163,10 @@ class TestFFPlugins(unittest.TestCase):
 
         data = stdout.getvalue().strip().split("\n")
 
-        self.assertTrue(len(data) == 3)
-        self.assertTrue(data[0].startswith('ff plugin: mod2'))
-        self.assertTrue(data[1].startswith('ff plugin: mod3'))
-        self.assertTrue(data[2].startswith('ff plugin: mod4'))
+        self.assertEqual(len(data), 3, "Incorrect len of read data: %s (%s)" % (len(data), data))
+        self.assertRegexpMatches(data[0], r'^ff plugin: mod2')
+        self.assertRegexpMatches(data[1], r'^ff plugin: mod3')
+        self.assertRegexpMatches(data[2], r'^ff plugin: mod4')
 
     @clear_ffplugins_paths
     @clear_sys_path
