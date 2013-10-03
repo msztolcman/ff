@@ -630,7 +630,7 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
     for i, ex_path in enumerate(args.excluded_paths):
         ex_path = u(ex_path)
         ex_path = unicodedata.normalize('NFKC', ex_path)
-        args.excluded_paths[i] = os.path.abspath(ex_path).rstrip('/')
+        args.excluded_paths[i] = os.path.abspath(ex_path).rstrip(os.sep)
 
     if args.print0:
         args.delim = chr(0)
@@ -689,12 +689,14 @@ def process_item(cfg, path):
 
 def is_path_excluded(excluded_paths, path):
     """ Check that path is excluded from processing
+
+        Excluded paths shouldn't end with `os.sep`.
     """
 
-    path = path.rstrip('/')
+    path = path.rstrip(os.sep)
     path = unicodedata.normalize('NFKC', path)
     for ex_path in excluded_paths:
-        if path == ex_path or ex_path + '/' in path:
+        if path == ex_path or ex_path + os.sep in path:
             return True
     return False
 
