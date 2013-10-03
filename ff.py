@@ -506,8 +506,7 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
                    help='match pattern to end of item name (ignored in regexp mode)')
     p.add_argument('-v', '-r', '--invert-match', action='store_true', default=False,
                    help='')
-    p.add_argument('-m', '--mode', choices=('all', 'files', 'f', 'files', 'dirs', 'd', 'dir'), default='all',
-                   help='')
+    p.add_argument('-m', '--mode', default='all', help='allow to choose to search for "files" only, "dirs", or "all"')
     p.add_argument('-x', '--exec', metavar='COMMAND', dest='execute', type=str,
                    help='execute some command on every found item. In command, placeholders: {path}, '
                    '{dirname}, {basename} are replaced with correct value')
@@ -590,6 +589,11 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
             disp('ERROR: broken plugin: %s' % plugin_name, file=sys.stderr)
             sys.exit(1)
     args.tests = plugins
+
+    ## mode
+    available_modes = ('all', 'files', 'f', 'file', 'dirs', 'd', 'dir')
+    if args.mode not in available_modes:
+        p.error("argument -m/--mode: invalid choice: '%s' (choose from 'files', 'dirs', 'all')" % args.mode)
 
     ## prepare pattern
     err_msg = prepare_pattern(args)
