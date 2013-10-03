@@ -43,7 +43,7 @@ def clear_sys_path(f):
 TEST_MOD3_DESCR = 'short descr'
 TEST_MOD3_HELP = 'some help'
 
-class TestFFPlugin(unittest.TestCase):
+class TestFFPlugins(unittest.TestCase):
     def setUp(self):
         sys.path.append(PLAYGROUND_PATH)
 
