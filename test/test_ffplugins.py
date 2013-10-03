@@ -161,8 +161,7 @@ class TestFFPlugins(unittest.TestCase):
 
         sys.stdout = old_stdout
 
-        stdout.seek(0)
-        data = stdout.readlines()
+        data = stdout.getvalue().strip().split("\n")
 
         self.assertTrue(len(data) == 3)
         self.assertTrue(data[0].startswith('ff plugin: mod2'))
@@ -191,8 +190,7 @@ class TestFFPlugins(unittest.TestCase):
 
         sys.stdout = old_stdout
 
-        stdout.seek(0)
-        data = stdout.read()
+        data = stdout.getvalue()
 
         self.assertIn(TEST_MOD3_DESCR, data)
         self.assertIn(TEST_MOD3_HELP, data)
