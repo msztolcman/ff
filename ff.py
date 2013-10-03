@@ -591,8 +591,11 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
     args.tests = plugins
 
     ## mode
-    available_modes = ('all', 'files', 'f', 'file', 'dirs', 'd', 'dir')
-    if args.mode not in available_modes:
+    if args.mode in ('file', 'f'):
+        args.mode = 'files'
+    elif args.mode in ('dir', 'd'):
+        args.mode = 'dirs'
+    elif args.mode not in ('all', 'files', 'dirs'):
         p.error("argument -m/--mode: invalid choice: '%s' (choose from 'files', 'dirs', 'all')" % args.mode)
 
     ## prepare pattern
@@ -715,10 +718,10 @@ def process_source(src, cfg):
                 if _is_vcs(dir_):
                     dirs.remove(dir_)
 
-        if cfg.mode in ('dirs', 'dir', 'd', 'all') and root != src:
+        if cfg.mode in ('dirs', 'all') and root != src:
             process_item(cfg, root)
 
-        if cfg.mode in ('files', 'file', 'f', 'all'):
+        if cfg.mode in ('files', 'all'):
             for file_ in files:
                 file_ = unicodedata.normalize('NFKC', file_)
                 path = os.path.join(root, file_)
