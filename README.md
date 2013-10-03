@@ -160,11 +160,10 @@ Usage
 -----
 
     usage: ff.py [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-f] [-q] [-l] [-d]
-                [-B] [-E] [-v] [-m {all,files,dirs}] [-x COMMAND] [--prefix]
-                [--no-display] [--verbose-exec] [--interactive-exec]
-                [--shell-exec] [--vcs] [-c EXCLUDED_PATH] [-t TESTS]
-                [--plugins-path PLUGINS_PATH] [--version]
-                [--help-test-plugins [TEST_NAME]]
+                [-B] [-E] [-v] [-m MODE] [-x COMMAND] [--prefix] [--no-display]
+                [--verbose-exec] [--interactive-exec] [--shell-exec] [--vcs]
+                [-c EXCLUDED_PATH] [-t TESTS] [--plugins-path PLUGINS_PATH]
+                [--version] [--help-test-plugins [TEST_NAME[,TEST2_NAME]]]
                 [pattern] [sources [sources ...]]
 
     Easily search and process files.
@@ -178,6 +177,7 @@ Usage
     -0, --print0          split results by binary zero instead of new line
                           (useful to work with xargs)
     -i, --ignorecase, --ignore-case
+                          ignore case when match pattern to paths
     -s SOURCE, --source SOURCE
                           optional, see: source above
     -p PATTERN, --pattern PATTERN
@@ -188,13 +188,20 @@ Usage
                           in filename
     -q, --path-search     search in full path, instead of bare name of item
     -l, --regex-multiline
-    -d, --regex-dotall
+                          modify meta characters: "^" and "$" behaviour when
+                          pattern is regular expression. See:
+                          http://docs.python.org/2/library/re.html#re.MULTILINE
+    -d, --regex-dotall    modify meta character: "." behaviour when pattern is
+                          regular expression. See:
+                          http://docs.python.org/2/library/re.html#re.DOTALL
     -B, --begin           match pattern to begin of item name (ignored in regexp
                           mode)
     -E, --end             match pattern to end of item name (ignored in regexp
                           mode)
     -v, -r, --invert-match
-    -m {all,files,dirs}, --mode {all,files,dirs}
+                          find objects that do *not* match pattern
+    -m MODE, --mode MODE  allow to choose to search for "files" only, "dirs", or
+                          "all"
     -x COMMAND, --exec COMMAND
                           execute some command on every found item. In command,
                           placeholders: {path}, {dirname}, {basename} are
@@ -216,7 +223,7 @@ Usage
                           additional path where to search plugins (see
                           annotations below)
     --version             show program's version number and exit
-    --help-test-plugins [TEST_NAME]
+    --help-test-plugins [TEST_NAME[,TEST2_NAME]]
                           display help for installed test plugins
 
     Pattern, provided as positional argument (not with --pattern) can be provided
@@ -245,12 +252,6 @@ Usage
         --test plugin_name:plugin_arg
 
     There can be used more then one plugin at once.
-
-    Authors:
-        Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
-
-    HomePage:
-        https://github.com/mysz/ff/
 
 Contact
 -------

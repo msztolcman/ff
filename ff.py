@@ -485,7 +485,7 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
     p.add_argument('-0', '--print0', action='store_true', default=False,
                    help='split results by binary zero instead of new line (useful to work with xargs)')
     p.add_argument('-i', '--ignorecase', '--ignore-case', action='store_true', default=False,
-                   help='')
+                   help='ignore case when match pattern to paths')
     p.add_argument('-s', '--source', action='append', type=str, default=[],
                    help='optional, see: source above')
     p.add_argument('-p', '--pattern', type=str,
@@ -497,15 +497,17 @@ def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-st
     p.add_argument('-q', '--path-search', action='store_true', default=False,
                    help='search in full path, instead of bare name of item')
     p.add_argument('-l', '--regex-multiline', action='store_true', default=False,
-                   help='')
+                   help='modify meta characters: "^" and "$" behaviour when pattern is regular expression. '
+                   'See: http://docs.python.org/2/library/re.html#re.MULTILINE')
     p.add_argument('-d', '--regex-dotall', action='store_true', default=False,
-                   help='')
+                   help='modify meta character: "." behaviour when pattern is regular expression. '
+                   'See: http://docs.python.org/2/library/re.html#re.DOTALL')
     p.add_argument('-B', '--begin', dest='fnmatch_begin', action='store_true', default=False,
                    help='match pattern to begin of item name (ignored in regexp mode)')
     p.add_argument('-E', '--end', dest='fnmatch_end', action='store_true', default=False,
                    help='match pattern to end of item name (ignored in regexp mode)')
     p.add_argument('-v', '-r', '--invert-match', action='store_true', default=False,
-                   help='')
+                   help='find objects that do *not* match pattern')
     p.add_argument('-m', '--mode', default='all', help='allow to choose to search for "files" only, "dirs", or "all"')
     p.add_argument('-x', '--exec', metavar='COMMAND', dest='execute', type=str,
                    help='execute some command on every found item. In command, placeholders: {path}, '
