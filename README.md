@@ -253,6 +253,11 @@ Usage
 
     There can be used more then one plugin at once.
 
+Authors
+-------
+
+Marcin Sztolcman <marcin@urzenia.net>
+
 Contact
 -------
 
