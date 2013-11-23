@@ -706,10 +706,10 @@ def is_path_excluded(excluded_paths, path):
     return False
 
 
-def _is_vcs(item):
+def _is_not_vcs(item):
     """ Check if `item` is VCS
     """
-    return item in _IS_VCS__NAMES
+    return item not in _IS_VCS__NAMES
 
 
 def process_source(src, cfg):
@@ -718,6 +718,7 @@ def process_source(src, cfg):
 
     src_len = len(src)
     for root, dirs, files in os.walk(src):
+        ## limit search depth to cfg.depth
         if -1 < cfg.depth < len(root[src_len:].split('/')):
             dirs[:] = []
             continue
@@ -728,9 +729,7 @@ def process_source(src, cfg):
 
         # remove vcs directories from traversing
         if not cfg.vcs:
-            for dir_ in dirs:
-                if _is_vcs(dir_):
-                    dirs.remove(dir_)
+            dirs[:] = filter(_is_not_vcs, dirs)
 
         if cfg.mode in ('dirs', 'all') and root != src:
             process_item(cfg, root)
