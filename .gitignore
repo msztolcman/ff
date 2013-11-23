@@ -10,16 +10,10 @@
 /build
 eggs
 parts
-/bin
-/var
 /sdist
 develop-eggs
 .installed.cfg
-/lib
-/lib64
 /.Python
-/include
-/man
 
 # Installer logs
 pip-log.txt
@@ -39,3 +33,4 @@ nosetests.xml
 
 /test/playground/*
 /.idea
+/venv
