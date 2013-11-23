@@ -496,6 +496,7 @@ def parse_input_args(args):  # pylint: disable-msg=too-many-branches, too-many-s
                    help='treat pattern as regular expression (uses Python regexp engine)')
     p.add_argument('-f', '--fuzzy', action='store_true', default=False,
                    help='pattern defines only set and order of characters used in filename')
+    p.add_argument('-D', '--depth', type=int, default=-1, help='how deep we should search (default: -1, means infinite)')
     p.add_argument('-q', '--path-search', action='store_true', default=False,
                    help='search in full path, instead of bare name of item')
     p.add_argument('-l', '--regex-multiline', action='store_true', default=False,
@@ -714,7 +715,13 @@ def _is_vcs(item):
 def process_source(src, cfg):
     """ Process single source: search for items and call process_item on them.
     """
+
+    src_len = len(src)
     for root, dirs, files in os.walk(src):
+        if -1 < cfg.depth < len(root[src_len:].split('/')):
+            dirs[:] = []
+            continue
+
         root = unicodedata.normalize('NFKC', root)
         if is_path_excluded(cfg.excluded_paths, root):
             continue
