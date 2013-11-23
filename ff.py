@@ -17,7 +17,6 @@ import collections
 import glob
 import itertools
 import os
-import os.path
 import re
 import shlex
 import subprocess
@@ -32,6 +31,7 @@ __version__ = '0.5'
 PY2 = sys.version_info[0] < 3
 _IS_VCS__NAMES = {'.git': 1, '.svn': 1, 'CVS': 1, '.hg': 1, '_MTN': 1, 'RCS': 1, 'SCCS': 1, '_darcs': 1, '_sgbak': 1}
 
+
 def u(string):
     """ Wrapper to decode string into unicode.
         Converts only when `string` is type of `str`, and in python2.
@@ -45,6 +45,7 @@ def u(string):
             return str(string)
 
     return string
+
 
 def disp(*args, **kwargs):
     """ Print data in safe way.
@@ -66,6 +67,7 @@ def disp(*args, **kwargs):
         except UnicodeEncodeError:
             data = [part.encode('ascii', 'replace') for part in args]
             print(*data, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
+
 
 class FFPluginError(Exception):
     """ Exception class for plugins.
@@ -253,7 +255,7 @@ def ask(question, replies, default=None):
         try:
             raw_input
         except NameError:
-            reply = input(question).lower() # pylint: disable-msg=bad-builtin
+            reply = input(question).lower()  # pylint: disable-msg=bad-builtin
         else:
             reply = raw_input(question).lower()
 
@@ -282,7 +284,7 @@ def prepare_execute(exe, path, dirname, basename):
     return exe
 
 
-def _prepare_pattern__magic(args): # pylint: disable-msg=too-many-branches
+def _prepare_pattern__magic(args):  # pylint: disable-msg=too-many-branches
     """ Parse pattern and try to recognize it is magic pattern.
         If so, parse magic pattern and set options for argparse
         result as in magic pattern is set.
@@ -364,7 +366,7 @@ def _prepare_pattern__compile_fuzzy(cfg):
     return re.compile(pattern, flags)
 
 
-def _prepare_pattern__compile_regexp(cfg): # pylint: disable-msg=invalid-name
+def _prepare_pattern__compile_regexp(cfg):  # pylint: disable-msg=invalid-name
     """ Compile pattern to compiled regular expression using regexp syntax.
 
         We found that pattern is regular expression, and just pass there
@@ -382,7 +384,7 @@ def _prepare_pattern__compile_regexp(cfg): # pylint: disable-msg=invalid-name
     return re.compile(cfg.pattern, flags)
 
 
-def _prepare_pattern__compile_fnmatch(cfg): # pylint: disable-msg=invalid-name
+def _prepare_pattern__compile_fnmatch(cfg):  # pylint: disable-msg=invalid-name
     """ Compile pattern to compiled regular expression using fnmatch syntax.
 
         See: http://docs.python.org/library/fnmatch.html
@@ -439,7 +441,7 @@ def prepare_pattern(cfg):
         cfg.pattern = _prepare_pattern__compile_fnmatch(cfg)
 
 
-def parse_input_args(args): # pylint: disable-msg=too-many-branches, too-many-statements
+def parse_input_args(args):  # pylint: disable-msg=too-many-branches, too-many-statements
     """ Parse input 'arguments' and return parsed.
     """
 
