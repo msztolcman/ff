@@ -539,7 +539,7 @@ def parse_input_args(args):  # pylint: disable-msg=too-many-branches, too-many-s
     p.add_argument('anon_sources', metavar='sources', type=str, nargs='*',
                    help='optional source (if missing, use current directory)')
 
-    args = p.parse_args()
+    args = p.parse_args(args)
     del args_description, args_epilog
 
     ## where to search for plugins
