@@ -255,7 +255,7 @@ def ask(question, replies, default=None):
         try:
             raw_input
         except NameError:
-            reply = input(question).lower()  # pylint: disable-msg=bad-builtin
+            reply = input(question).lower()  ## pylint: disable-msg=bad-builtin
         else:
             reply = raw_input(question).lower()
 
@@ -284,7 +284,7 @@ def prepare_execute(exe, path, dirname, basename):
     return exe
 
 
-def _prepare_pattern__magic(args):  # pylint: disable-msg=too-many-branches
+def _prepare_pattern__magic(args):  ## pylint: disable-msg=too-many-branches
     """ Parse pattern and try to recognize it is magic pattern.
         If so, parse magic pattern and set options for argparse
         result as in magic pattern is set.
@@ -322,7 +322,7 @@ def _prepare_pattern__magic(args):  # pylint: disable-msg=too-many-branches
         if len(set(pattern_parts['modifier'])) != len(pattern_parts['modifier']):
             return 'Incorrect modifiers in pattern: %s. Allowed modifiers: i, m, s, v, r.' % item
 
-        # pylint: disable-msg=multiple-statements
+        ## pylint: disable-msg=multiple-statements
         if item == 'i': args.ignorecase = True
         elif item == 'm': args.regex_multiline = True
         elif item == 's': args.regex_dotall = True
@@ -336,7 +336,7 @@ def _prepare_pattern__magic(args):  # pylint: disable-msg=too-many-branches
         if len(pattern_parts['mode']) > 1:
             return 'Incorrect mode: %s. Allowed modes: p, g, f.' % pattern_parts['mode']
 
-        # pylint: disable-msg=multiple-statements
+        ## pylint: disable-msg=multiple-statements
         if pattern_parts['mode'] == 'g': args.regexp = True
         elif pattern_parts['mode'] == 'p': pass
         elif pattern_parts['mode'] == 'f': args.fuzzy = True
@@ -366,7 +366,7 @@ def _prepare_pattern__compile_fuzzy(cfg):
     return re.compile(pattern, flags)
 
 
-def _prepare_pattern__compile_regexp(cfg):  # pylint: disable-msg=invalid-name
+def _prepare_pattern__compile_regexp(cfg):  ## pylint: disable-msg=invalid-name
     """ Compile pattern to compiled regular expression using regexp syntax.
 
         We found that pattern is regular expression, and just pass there
@@ -384,7 +384,7 @@ def _prepare_pattern__compile_regexp(cfg):  # pylint: disable-msg=invalid-name
     return re.compile(cfg.pattern, flags)
 
 
-def _prepare_pattern__compile_fnmatch(cfg):  # pylint: disable-msg=invalid-name
+def _prepare_pattern__compile_fnmatch(cfg):  ## pylint: disable-msg=invalid-name
     """ Compile pattern to compiled regular expression using fnmatch syntax.
 
         See: http://docs.python.org/library/fnmatch.html
@@ -441,7 +441,7 @@ def prepare_pattern(cfg):
         cfg.pattern = _prepare_pattern__compile_fnmatch(cfg)
 
 
-def parse_input_args(args):  # pylint: disable-msg=too-many-branches, too-many-statements
+def parse_input_args(args):  ## pylint: disable-msg=too-many-branches, too-many-statements
     """ Parse input 'arguments' and return parsed.
     """
 
@@ -481,7 +481,7 @@ def parse_input_args(args):  # pylint: disable-msg=too-many-branches, too-many-s
             https://github.com/mysz/ff/
     ''').strip()
 
-    p = argparse.ArgumentParser(description=args_description, epilog=args_epilog,       # pylint: disable-msg=invalid-name
+    p = argparse.ArgumentParser(description=args_description, epilog=args_epilog,       ## pylint: disable-msg=invalid-name
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
 
     p.add_argument('-0', '--print0', action='store_true', default=False,
@@ -727,7 +727,7 @@ def process_source(src, cfg):
         if is_path_excluded(cfg.excluded_paths, root):
             continue
 
-        # remove vcs directories from traversing
+        ## remove vcs directories from traversing
         if not cfg.vcs:
             dirs[:] = filter(_is_not_vcs, dirs)
 
