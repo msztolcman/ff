@@ -241,7 +241,7 @@ def ask(question, replies, default=None):
         'replies' is iterable with one letter possible answers.
         'default' can be empty.
     """
-    replies = { reply.lower() for reply in replies }
+    replies = set(reply.lower() for reply in replies)
     if default:
         default = default.lower()
         replies.add(default)
