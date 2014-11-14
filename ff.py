@@ -28,7 +28,7 @@ from pprint import pprint, pformat # pylint: disable-msg=unused-import
 
 __version__ = '0.5'
 
-PY2 = sys.version_info[0] < 3
+IS_PY2 = sys.version_info[0] < 3
 _IS_VCS__NAMES = {'.git': 1, '.svn': 1, 'CVS': 1, '.hg': 1, '_MTN': 1, 'RCS': 1, 'SCCS': 1, '_darcs': 1, '_sgbak': 1}
 
 
@@ -37,7 +37,7 @@ def u(string):
         Converts only when `string` is type of `str`, and in python2.
         Thanks to this there is possible single codebase between PY2 and PY3.
     """
-    if PY2:
+    if IS_PY2:
         if type(string) is str:
             return string.decode('utf-8')
     else:
@@ -55,7 +55,7 @@ def disp(*args, **kwargs):
         with replacing unconvertable characters.
     """
     try:
-        if PY2:
+        if IS_PY2:
             data = [part.encode('utf-8') for part in args]
         else:
             data = args
