@@ -304,7 +304,8 @@ ChangeLog
 * added --version switch
 * removed expanding shell variables when execute external command if no --shell-exec is given
 
-### v.04
+### v.0.4
+
 * added changelog
 * added fuzzy-search mode
 * added 'magic pattern' mode
