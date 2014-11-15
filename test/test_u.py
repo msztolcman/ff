@@ -13,7 +13,7 @@ from test_manager import *
 
 import ff
 
-if PY2:
+if IS_PY2:
     type_bytes = str
     type_unicode = unicode
 else:
