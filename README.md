@@ -144,7 +144,11 @@ Installation
 
 `ff` should work on any platform where [Python](http://python.org) is available, it means Linux, Windows, MacOS X etc. There is no dependencies, plain Python power :) 
 
-To install, go to [GitHub releases](https://github.com/mysz/ff/releases), download newest release, unpack and put somewhere in `PATH` (ie. `~/bin` or `/usr/local/bin`).
+To install, you can use `pip`:
+
+    pip install ff
+
+You can also go to [GitHub releases](https://github.com/mysz/ff/releases), download newest release, unpack and put somewhere in `PATH` (ie. `~/bin` or `/usr/local/bin`).
 
 If You want to install newest unstable version, then just copy file to your PATH, for example:
 
