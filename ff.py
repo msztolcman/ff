@@ -26,7 +26,7 @@ import unicodedata
 
 from pprint import pprint, pformat # pylint: disable-msg=unused-import
 
-__version__ = '0.5'
+__version__ = '0.5.1'
 
 IS_PY2 = sys.version_info[0] < 3
 _IS_VCS__NAMES = {'.git': 1, '.svn': 1, 'CVS': 1, '.hg': 1, '_MTN': 1, 'RCS': 1, 'SCCS': 1, '_darcs': 1, '_sgbak': 1}

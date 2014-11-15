@@ -8,7 +8,7 @@ If you need to search files by their contents, *or* search for their contents, p
 Current stable version
 ----------------------
 
-0.5
+0.5.1
 
 Why `ff` and not `find`?
 ------------------------
@@ -295,7 +295,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ChangeLog
 ---------
+
+### v0.5.1
+
+* added ability to install via pip
+
 ### v0.5
+
 * ability to run plugins for tests (with first plugin: size)
 * many improvements to proper handling UTF-8
 * many improvements for work in Python3
@@ -315,11 +321,13 @@ ChangeLog
 * added modifier: --path-search
 
 ### v0.3
+
 * use argparse instead of getopt to parse options
 * allow to exclude path from search
 * improved help and documentation
 
 ### v0.2
+
 * added option 'shell-exec' - allow to exec programs with shell expansion
 * exec: add shell variables expansion
 * by default, skip VCS directories
@@ -333,4 +341,5 @@ ChangeLog
 * cleanups in code
 
 ### v0.1
+
 * initial version
