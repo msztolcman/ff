@@ -1,0 +1,3 @@
+--ignore-dir=venv27
+--ignore-dir=venv34
+--ignore-dir=.idea
