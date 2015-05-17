@@ -39,7 +39,7 @@ And with ``ff``:
 
 ::
 
-    % ./ff.py '*GÖS*' /tmp
+    % ff '*GÖS*' /tmp
     /tmp/eee_GÖS_från_förstår_pas
     /tmp/eee_GÖS_från_pas_förstår_qq
     /tmp/pas_GÖS_från_förstår
@@ -80,7 +80,7 @@ Advanced usage
 
 ::
 
-    ./ff.py -p pa -s /etc --shell-exec -x '[ -f "{path}" ] && mkdir -p /tmp{dirname}; cp -r "{path}" "/tmp{path}"'
+    ff -p pa -s /etc --shell-exec -x '[ -f "{path}" ] && mkdir -p /tmp{dirname}; cp -r "{path}" "/tmp{path}"'
 
 Find all files and directories in /etc that match expression: ``*pa*``,
 and copy them (with original directories hierarchy!) to /tmp.
@@ -226,24 +226,6 @@ To install, you can use ``pip``:
 
     pip install ff
 
-You can also go to `GitHub
-releases <https://github.com/mysz/ff/releases>`__, download newest
-release, unpack and put somewhere in ``PATH`` (ie. ``~/bin`` or
-``/usr/local/bin``).
-
-If You want to install newest unstable version, then just copy file to
-your PATH, for example:
-
-::
-
-    curl https://raw.github.com/mysz/ff/master/ff.py > /usr/local/bin/ff
-
-or:
-
-::
-
-    wget https://raw.github.com/mysz/ff/master/ff.py -O /usr/local/bin/ff
-
 Voila!
 
 Usage
@@ -251,7 +233,7 @@ Usage
 
 ::
 
-    usage: ff.py [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-f] [-q] [-l] [-d]
+    usage: ff [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-f] [-q] [-l] [-d]
                 [-B] [-E] [-v] [-m MODE] [-x COMMAND] [--prefix] [--no-display]
                 [--verbose-exec] [--interactive-exec] [--shell-exec] [--vcs]
                 [-c EXCLUDED_PATH] [-t TESTS] [--plugins-path PLUGINS_PATH]
