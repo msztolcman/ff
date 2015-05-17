@@ -23,7 +23,7 @@ And it's easier to me to enter:
 
 Also, my `find` have sometimes problems with non ascii files:
 
-    % find /etc -name '*GÖS*'
+    % find /tmp -name '*GÖS*'
     % 
 
 And with `ff`:
@@ -56,9 +56,9 @@ Search for all files and directories in current directory and below, which is ma
 Advanced usage
 --------------
 
-    ff -p pa -s /etc --shell-exec -x '[ -f "{path}" ] && mkdir -p /tmp{dirname}; cp -r "{path}" "/tmp{path}"'
+    ff -p pa -s /tmp --shell-exec -x '[ -f "{path}" ] && mkdir -p /tmp{dirname}; cp -r "{path}" "/tmp{path}"'
 
-Find all files and directories in /etc that match expression: `*pa*`, and copy them (with original directories hierarchy!) to /tmp.
+Find all files and directories in /tmp that match expression: `*pa*`, and copy them (with original directories hierarchy!) to /tmp.
 
 So powerful!
 
