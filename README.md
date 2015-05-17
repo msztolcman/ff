@@ -148,16 +148,6 @@ To install, you can use `pip`:
 
     pip install ff
 
-You can also go to [GitHub releases](https://github.com/mysz/ff/releases), download newest release, unpack and put somewhere in `PATH` (ie. `~/bin` or `/usr/local/bin`).
-
-If You want to install newest unstable version, then just copy file to your PATH, for example:
-
-    curl https://raw.github.com/mysz/ff/master/ff.py > /usr/local/bin/ff
-
-or:
-
-    wget https://raw.github.com/mysz/ff/master/ff.py -O /usr/local/bin/ff
-
 Voila!
 
 Usage
