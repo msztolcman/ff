@@ -217,6 +217,6 @@ def parse_input_args(args):
     if args.print0:
         args.delim = chr(0)
     else:
-        args.delim = "\n"
+        args.delim = os.linesep
 
     return args
