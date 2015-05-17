@@ -296,9 +296,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ChangeLog
 ---------
 
-### v0.5.1
+### v0.6.0
 
+* new option: --depth - limit searching to this depth
+* code cleanups and refactorization
+* documentation improvements
+* paths are now normalized before comparisons of excluded paths
+* more tests
 * added ability to install via pip
+* improved fuzzy search
+* better validation of arguments
+* improved error messages
+* improved help
+* FIX: do not crash on unknown characters, just replace them
+* FIX: do not crash on printing unknown characters
 
 ### v0.5
 
