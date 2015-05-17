@@ -253,11 +253,9 @@ def ask(question, replies, default=None):
     question += ' (' + choices + ') '
     while True:
         try:
-            raw_input
+            reply = raw_input(question).lower()
         except NameError:
             reply = input(question).lower()  ## pylint: disable-msg=bad-builtin
-        else:
-            reply = raw_input(question).lower()
 
         if reply == '':
             if default:
