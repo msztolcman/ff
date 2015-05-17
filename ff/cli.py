@@ -15,7 +15,8 @@ from ff.plugin import FFPlugins, FFPlugin
 from ff.utils import disp, u
 
 
-def parse_input_args(args):  ## pylint: disable-msg=too-many-branches, too-many-statements
+# pylint: disable-msg=too-many-branches, too-many-statements
+def parse_input_args(args):
     """ Parse input 'arguments' and return parsed.
     """
 
@@ -55,7 +56,8 @@ def parse_input_args(args):  ## pylint: disable-msg=too-many-branches, too-many-
             https://github.com/mysz/ff/
     ''').strip()
 
-    p = argparse.ArgumentParser(description=args_description, epilog=args_epilog,       ## pylint: disable-msg=invalid-name
+    # pylint: disable-msg=invalid-name
+    p = argparse.ArgumentParser(description=args_description, epilog=args_epilog,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
 
     p.add_argument('-0', '--print0', action='store_true', default=False,
