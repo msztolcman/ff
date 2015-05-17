@@ -46,10 +46,10 @@ def u(string):
         Thanks to this there is possible single codebase between PY2 and PY3.
     """
     if IS_PY2:
-        if type(string) is str:
+        if isinstance(string, str):
             return string.decode('utf-8')
     else:
-        if type(string) is bytes:
+        if isinstance(string, bytes):
             return str(string)
 
     return string
