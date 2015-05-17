@@ -53,7 +53,7 @@ def parse_input_args(args):
             Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
 
         HomePage:
-            https://github.com/mysz/ff/
+            http://mysz.github.io/ff/
     ''').strip()
 
     # pylint: disable-msg=invalid-name
