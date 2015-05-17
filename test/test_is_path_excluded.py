@@ -5,11 +5,9 @@ from __future__ import print_function, unicode_literals, absolute_import
 
 import unicodedata
 
-from pprint import pprint, pformat
-
 from test_manager import *
-
 import ff
+
 
 class TestIsPathExcluded(unittest.TestCase):
     def test_simple_is_excluded(self):

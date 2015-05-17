@@ -5,20 +5,21 @@ from __future__ import print_function, unicode_literals, absolute_import
 
 import functools
 import glob
-import os, os.path
 import sys
-import re
+
+import os
+import os.path
+
+
 try:
     from StringIO import StringIO
 except ImportError:
     from io import StringIO
-import types
-
-from pprint import pprint, pformat
 
 from test_manager import *
 
 import ff
+
 
 def clear_ffplugins_paths(f):
     @functools.wraps(f)

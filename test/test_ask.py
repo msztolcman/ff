@@ -3,17 +3,10 @@
 
 from __future__ import print_function, unicode_literals, absolute_import
 
-import glob
-import os, os.path
-import sys
-import re
 try:
     from StringIO import StringIO
 except ImportError:
     from io import StringIO
-import types
-
-from pprint import pprint, pformat
 
 from test_manager import *
 

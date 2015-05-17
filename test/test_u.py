@@ -3,12 +3,6 @@
 
 from __future__ import print_function, unicode_literals
 
-import codecs
-import os, os.path
-import sys
-import re
-from pprint import pprint, pformat
-
 from test_manager import *
 
 import ff

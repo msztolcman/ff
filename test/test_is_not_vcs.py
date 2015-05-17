@@ -3,8 +3,6 @@
 
 from __future__ import print_function, unicode_literals, absolute_import
 
-from pprint import pprint, pformat
-
 from test_manager import *
 
 import ff
