@@ -132,7 +132,9 @@ def parse_input_args(args):
             FFPlugins.path_add(plugins_path)
 
     FFPlugins.path_add(os.path.expanduser('~/.ff/plugins'))
-    FFPlugins.path_add(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ff_plugins'))
+    plugins_path = os.path.dirname(os.path.abspath(__file__))
+    plugins_path = os.path.join(plugins_path, '..', 'ff_plugins')
+    FFPlugins.path_add(os.path.abspath(plugins_path))
 
     # show info about testing plugins
     if args.help_test_plugins:
