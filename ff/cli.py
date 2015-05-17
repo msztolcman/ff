@@ -16,7 +16,62 @@ from ff.plugin import FFPlugins, FFPlugin
 from ff.utils import disp, u
 
 
-# pylint: disable-msg=too-many-branches, too-many-statements
+def _detect_plugins_paths(args):
+    if args.plugins_path:
+        for plugins_path in args.plugins_path:
+            try:
+                plugins_path = u(plugins_path)
+            except UnicodeDecodeError as ex:
+                disp('ERROR: ', plugins_path, ': ', ex, sep='', file=sys.stderr)
+                sys.exit(1)
+            else:
+                plugins_path = os.path.expanduser(plugins_path)
+                FFPlugins.path_add(plugins_path)
+
+    FFPlugins.path_add(os.path.expanduser('~/.ff/plugins'))
+    plugins_path = os.path.dirname(os.path.abspath(__file__))
+    plugins_path = os.path.join(plugins_path, '..', 'ff_plugins')
+    FFPlugins.path_add(os.path.abspath(plugins_path))
+
+
+def _help_test_plugins(args):
+    # None means: show me the list of plugins
+    if None in args.help_test_plugins:
+        plugins = FFPlugins.find_all('test')
+        plugins.print_list()
+
+    else:
+        # plugins names can be separated with comma
+        args.help_test_plugins = itertools.chain(*[plugin.split(',') for plugin in args.help_test_plugins])
+
+        try:
+            plugins = FFPlugins.find(args.help_test_plugins, 'test')
+        except ImportError as ex:
+            disp('ERROR: Unknown plugin: %s' % ex.message, file=sys.stderr)
+            sys.exit(1)
+        plugins.print_help()
+
+
+def _find_plugins(args):
+    plugins = FFPlugins()
+    for plugin in args.tests:
+        if ':' in plugin:
+            plugin_name, plugin_argument = plugin.split(':', 1)
+        else:
+            plugin_name, plugin_argument = plugin, None
+
+        try:
+            plugins.append(FFPlugin(plugin_name, 'test', argument=plugin_argument))
+        except ImportError:
+            disp('ERROR: unknown plugin: %s' % plugin_name, file=sys.stderr)
+            sys.exit(1)
+        except AttributeError:
+            disp('ERROR: broken plugin: %s' % plugin_name, file=sys.stderr)
+            sys.exit(1)
+    args.tests = plugins
+
+
+# pylint: disable=too-many-branches, too-many-statements
 def parse_input_args(args):
     """ Parse input 'arguments' and return parsed.
     """
@@ -121,59 +176,15 @@ def parse_input_args(args):
     del args_description, args_epilog
 
     # where to search for plugins
-    if args.plugins_path:
-        for plugins_path in args.plugins_path:
-            try:
-                plugins_path = u(plugins_path)
-            except UnicodeDecodeError as ex:
-                disp('ERROR: ', plugins_path, ': ', ex, sep='', file=sys.stderr)
-                sys.exit(1)
-            else:
-                plugins_path = os.path.expanduser(plugins_path)
-                FFPlugins.path_add(plugins_path)
-
-    FFPlugins.path_add(os.path.expanduser('~/.ff/plugins'))
-    plugins_path = os.path.dirname(os.path.abspath(__file__))
-    plugins_path = os.path.join(plugins_path, '..', 'ff_plugins')
-    FFPlugins.path_add(os.path.abspath(plugins_path))
+    _detect_plugins_paths(args)
 
     # show info about testing plugins
     if args.help_test_plugins:
-        # None means: show me the list of plugins
-        if None in args.help_test_plugins:
-            plugins = FFPlugins.find_all('test')
-            plugins.print_list()
-
-        else:
-            # plugins names can be separated with comma
-            args.help_test_plugins = itertools.chain(*[ plugin.split(',') for plugin in args.help_test_plugins])
-
-            try:
-                plugins = FFPlugins.find(args.help_test_plugins, 'test')
-            except ImportError as ex:
-                disp('ERROR: Unknown plugin: %s' % ex.message, file=sys.stderr)
-                sys.exit(1)
-            plugins.print_help()
-
+        _help_test_plugins(args)
         sys.exit()
 
     # find all requested test plugins
-    plugins = FFPlugins()
-    for plugin in args.tests:
-        if ':' in plugin:
-            plugin_name, plugin_argument = plugin.split(':', 1)
-        else:
-            plugin_name, plugin_argument = plugin, None
-
-        try:
-            plugins.append(FFPlugin(plugin_name, 'test', argument=plugin_argument))
-        except ImportError:
-            disp('ERROR: unknown plugin: %s' % plugin_name, file=sys.stderr)
-            sys.exit(1)
-        except AttributeError:
-            disp('ERROR: broken plugin: %s' % plugin_name, file=sys.stderr)
-            sys.exit(1)
-    args.tests = plugins
+    _find_plugins(args)
 
     # mode
     if args.mode.lower() in ('file', 'f'):
