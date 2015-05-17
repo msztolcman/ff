@@ -33,6 +33,7 @@ def prepare_execute(exe, path, dirname, basename):
     return exe
 
 
+# pylint: disable=too-many-branches
 def process_item(cfg, path):
     """ Test path for matching with pattern, print it if so, and execute command if given.
     """

@@ -8,7 +8,7 @@ import os
 import sys
 import textwrap
 
-from utils import disp
+from ff.utils import disp
 
 class FFPluginError(Exception):
     """ Exception class for plugins.

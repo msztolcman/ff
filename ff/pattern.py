@@ -8,7 +8,7 @@ import unicodedata
 from ff.utils import u
 
 
-# pylint: disable-msg=too-many-branches
+# pylint: disable=too-many-branches
 def _prepare_pattern__magic(args):
     """ Parse pattern and try to recognize it is magic pattern.
         If so, parse magic pattern and set options for argparse
@@ -43,11 +43,12 @@ def _prepare_pattern__magic(args):
 
     args.pattern = pattern_parts['pattern']
 
+    # pylint: disable=superfluous-parens
     for item in (pattern_parts['modifier'] or ''):
         if len(set(pattern_parts['modifier'])) != len(pattern_parts['modifier']):
             return 'Incorrect modifiers in pattern: %s. Allowed modifiers: i, m, s, v, r.' % item
 
-        # pylint: disable-msg=multiple-statements
+        # pylint: disable=multiple-statements
         if item == 'i': args.ignorecase = True
         elif item == 'm': args.regex_multiline = True
         elif item == 's': args.regex_dotall = True
@@ -61,7 +62,7 @@ def _prepare_pattern__magic(args):
         if len(pattern_parts['mode']) > 1:
             return 'Incorrect mode: %s. Allowed modes: p, g, f.' % pattern_parts['mode']
 
-        # pylint: disable-msg=multiple-statements
+        # pylint: disable=multiple-statements
         if pattern_parts['mode'] == 'g': args.regexp = True
         elif pattern_parts['mode'] == 'p': pass
         elif pattern_parts['mode'] == 'f': args.fuzzy = True
@@ -91,7 +92,7 @@ def _prepare_pattern__compile_fuzzy(cfg):
     return re.compile(pattern, flags)
 
 
-# pylint: disable-msg=invalid-name
+# pylint: disable=invalid-name
 def _prepare_pattern__compile_regexp(cfg):
     """ Compile pattern to compiled regular expression using regexp syntax.
 
@@ -110,7 +111,7 @@ def _prepare_pattern__compile_regexp(cfg):
     return re.compile(cfg.pattern, flags)
 
 
-# pylint: disable-msg=invalid-name
+# pylint: disable=invalid-name
 def _prepare_pattern__compile_fnmatch(cfg):
     """ Compile pattern to compiled regular expression using fnmatch syntax.
 

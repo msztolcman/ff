@@ -30,7 +30,7 @@ def ask(question, replies, default=None):
         try:
             reply = raw_input(question).lower()
         except NameError:
-            # pylint: disable-msg=bad-builtin
+            # pylint: disable=bad-builtin
             reply = input(question).lower()
 
         if reply == '':

@@ -112,7 +112,7 @@ def parse_input_args(args):
             http://mysz.github.io/ff/
     ''').strip()
 
-    # pylint: disable-msg=invalid-name
+    # pylint: disable=invalid-name
     p = argparse.ArgumentParser(description=args_description, epilog=args_epilog,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
 
