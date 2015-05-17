@@ -206,7 +206,7 @@ def parse_input_args(args):
     if args.shell_exec:
         args.execute = [u(args.execute)]
     elif args.execute:
-        args.execute = [ u(part) for part in shlex.split(args.execute) ]
+        args.execute = [u(part) for part in shlex.split(args.execute)]
 
     # prepare excluded paths
     for i, ex_path in enumerate(args.excluded_paths):
