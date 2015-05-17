@@ -28,7 +28,7 @@ Also, my `find` have sometimes problems with non ascii files:
 
 And with `ff`:
 
-    % ./ff.py '*GÖS*' /tmp
+    % ff '*GÖS*' /tmp
     /tmp/eee_GÖS_från_förstår_pas
     /tmp/eee_GÖS_från_pas_förstår_qq
     /tmp/pas_GÖS_från_förstår
@@ -56,7 +56,7 @@ Search for all files and directories in current directory and below, which is ma
 Advanced usage
 --------------
 
-    ./ff.py -p pa -s /etc --shell-exec -x '[ -f "{path}" ] && mkdir -p /tmp{dirname}; cp -r "{path}" "/tmp{path}"'
+    ff -p pa -s /etc --shell-exec -x '[ -f "{path}" ] && mkdir -p /tmp{dirname}; cp -r "{path}" "/tmp{path}"'
 
 Find all files and directories in /etc that match expression: `*pa*`, and copy them (with original directories hierarchy!) to /tmp.
 
@@ -153,7 +153,7 @@ Voila!
 Usage
 -----
 
-    usage: ff.py [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-f] [-q] [-l] [-d]
+    usage: ff [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-f] [-q] [-l] [-d]
                 [-B] [-E] [-v] [-m MODE] [-x COMMAND] [--prefix] [--no-display]
                 [--verbose-exec] [--interactive-exec] [--shell-exec] [--vcs]
                 [-c EXCLUDED_PATH] [-t TESTS] [--plugins-path PLUGINS_PATH]
