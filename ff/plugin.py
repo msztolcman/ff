@@ -112,7 +112,7 @@ class FFPlugins(list):
         for item in self:
             self._print_descr(item)
             if item.help:
-                disp(item.help.rstrip() + "\n")
+                disp(item.help.rstrip() + os.linesep)
 
     def print_list(self):
         """ Print list of plugins with their short descriptions to STDOUT
