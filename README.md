@@ -28,13 +28,13 @@ Also, my `find` have sometimes problems with non ascii files:
 
 And with `ff`:
 
-    % ./ff.py '*GÖS*' /etc
-    /etc/eee_GÖS_från_förstår_pas
-    /etc/eee_GÖS_från_pas_förstår_qq
-    /etc/pas_GÖS_från_förstår
+    % ./ff.py '*GÖS*' /tmp
+    /tmp/eee_GÖS_från_förstår_pas
+    /tmp/eee_GÖS_från_pas_förstår_qq
+    /tmp/pas_GÖS_från_förstår
     %
 
-:)
+it just works! :)
 
 Basic usage
 -----------
