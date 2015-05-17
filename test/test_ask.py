@@ -10,7 +10,7 @@ except ImportError:
 
 from test_manager import *
 
-import ff
+from ff import utils
 
 _set_input__prompt = None
 def set_input(*a):
@@ -22,9 +22,9 @@ def set_input(*a):
     try:
         raw_input
     except NameError:
-        ff.input = _
+        utils.input = _
     else:
-        ff.raw_input = _
+        utils.raw_input = _
 
 
 class TestAsk(unittest.TestCase):
@@ -32,12 +32,12 @@ class TestAsk(unittest.TestCase):
         question = 'My question'
 
         set_input('n')
-        ret = ff.ask(question, 'yn')
+        ret = utils.ask(question, 'yn')
         self.assertEqual(_set_input__prompt, question + ' (n,y) ')
         self.assertEqual(ret, 'n')
 
         set_input('y')
-        ret = ff.ask(question, 'yn')
+        ret = utils.ask(question, 'yn')
         self.assertEqual(_set_input__prompt, question + ' (n,y) ')
         self.assertEqual(ret, 'y')
 
@@ -45,7 +45,7 @@ class TestAsk(unittest.TestCase):
         question = 'My question'
 
         set_input('w', 'y')
-        ret = ff.ask(question, 'yn')
+        ret = utils.ask(question, 'yn')
         self.assertEqual(_set_input__prompt, question + ' (n,y) ')
         self.assertEqual(ret, 'y')
 
@@ -53,12 +53,12 @@ class TestAsk(unittest.TestCase):
         question = 'My question'
 
         set_input('n')
-        ret = ff.ask(question, 'YN')
+        ret = utils.ask(question, 'YN')
         self.assertEqual(_set_input__prompt, question + ' (n,y) ')
         self.assertEqual(ret, 'n')
 
         set_input('y')
-        ret = ff.ask(question, 'YN')
+        ret = utils.ask(question, 'YN')
         self.assertEqual(_set_input__prompt, question + ' (n,y) ')
         self.assertEqual(ret, 'y')
 
@@ -66,12 +66,12 @@ class TestAsk(unittest.TestCase):
         question = 'My question'
 
         set_input('N')
-        ret = ff.ask(question, 'yn')
+        ret = utils.ask(question, 'yn')
         self.assertEqual(_set_input__prompt, question + ' (n,y) ')
         self.assertEqual(ret, 'n')
 
         set_input('Y')
-        ret = ff.ask(question, 'yn')
+        ret = utils.ask(question, 'yn')
         self.assertEqual(_set_input__prompt, question + ' (n,y) ')
         self.assertEqual(ret, 'y')
 
@@ -79,12 +79,12 @@ class TestAsk(unittest.TestCase):
         question = 'My question'
 
         set_input('y')
-        ret = ff.ask(question, 'yn', 'y')
+        ret = utils.ask(question, 'yn', 'y')
         self.assertEqual(_set_input__prompt, question + ' (n,Y) ')
         self.assertEqual(ret, 'y')
 
         set_input('N')
-        ret = ff.ask(question, 'YN', 'n')
+        ret = utils.ask(question, 'YN', 'n')
         self.assertEqual(_set_input__prompt, question + ' (N,y) ')
         self.assertEqual(ret, 'n')
 
@@ -92,7 +92,7 @@ class TestAsk(unittest.TestCase):
         question = 'My question'
 
         set_input('')
-        ret = ff.ask(question, 'yn', 'y')
+        ret = utils.ask(question, 'yn', 'y')
         self.assertEqual(_set_input__prompt, question + ' (n,Y) ')
         self.assertEqual(ret, 'y')
 
@@ -100,7 +100,7 @@ class TestAsk(unittest.TestCase):
         question = 'My question'
 
         set_input('')
-        ret = ff.ask(question, 'yny', 'y')
+        ret = utils.ask(question, 'yny', 'y')
         self.assertEqual(_set_input__prompt, question + ' (n,Y) ')
         self.assertEqual(ret, 'y')
 
@@ -108,7 +108,7 @@ class TestAsk(unittest.TestCase):
         question = 'My question'
 
         set_input('')
-        ret = ff.ask(question, 'yn', 'w')
+        ret = utils.ask(question, 'yn', 'w')
         self.assertEqual(_set_input__prompt, question + ' (n,W,y) ')
         self.assertEqual(ret, 'w')
 

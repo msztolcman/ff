@@ -18,7 +18,7 @@ except ImportError:
 
 from test_manager import *
 
-import ff
+from ff import plugin
 
 
 def clear_ffplugins_paths(f):
@@ -27,7 +27,7 @@ def clear_ffplugins_paths(f):
         try:
             f(*a, **b)
         finally:
-            ff.FFPlugins._paths = set()
+            plugin.FFPlugins._paths = set()
     return _
 
 def clear_sys_path(f):
@@ -77,80 +77,80 @@ class TestFFPlugins(unittest.TestCase):
             os.unlink(file_)
 
     def test_init(self):
-        p = ff.FFPlugins()
-        self.assertIsInstance(p, ff.FFPlugins)
+        p = plugin.FFPlugins()
+        self.assertIsInstance(p, plugin.FFPlugins)
         self.assertIsInstance(p, list)
 
     @clear_ffplugins_paths
     def test_paths(self):
-        self.assertTrue(hasattr(ff.FFPlugins, '_paths'))
-        self.assertIsInstance(ff.FFPlugins._paths, set, 'FFPlugins._paths should be of type: set()')
-        self.assertFalse(ff.FFPlugins._paths, 'There should be no paths at start')
+        self.assertTrue(hasattr(plugin.FFPlugins, '_paths'))
+        self.assertIsInstance(plugin.FFPlugins._paths, set, 'FFPlugins._paths should be of type: set()')
+        self.assertFalse(plugin.FFPlugins._paths, 'There should be no paths at start')
 
         ## PLAYGROUND_PATH should not be in FFPlugins._paths yet...
-        self.assertNotIn(PLAYGROUND_PATH, ff.FFPlugins._paths)
+        self.assertNotIn(PLAYGROUND_PATH, plugin.FFPlugins._paths)
 
         cur = sys.path.count(PLAYGROUND_PATH)
-        ff.FFPlugins.path_add(PLAYGROUND_PATH)
+        plugin.FFPlugins.path_add(PLAYGROUND_PATH)
         self.assertEqual(sys.path.count(PLAYGROUND_PATH), cur + 1)
 
         ## and now should be
-        self.assertIn(PLAYGROUND_PATH, ff.FFPlugins._paths)
+        self.assertIn(PLAYGROUND_PATH, plugin.FFPlugins._paths)
 
     @clear_ffplugins_paths
     @clear_sys_path
     def test_find_all_plugins_names(self):
-        ff.FFPlugins.path_add(PLAYGROUND_PATH)
+        plugin.FFPlugins.path_add(PLAYGROUND_PATH)
         self.assertIn(PLAYGROUND_PATH, sys.path)
 
-        ret = ff.FFPlugins._find_all_plugins('test')
+        ret = plugin.FFPlugins._find_all_plugins('test')
         expected = ['mod1_empty', 'mod2_action', 'mod3_action_descr_help', 'mod4_action_descr_help_callable']
         self.assertTrue(ret == expected, 'Incorrect set of loaded modules')
 
     @clear_ffplugins_paths
     @clear_sys_path
     def test_find_all(self):
-        ff.FFPlugins.path_add(PLAYGROUND_PATH)
+        plugin.FFPlugins.path_add(PLAYGROUND_PATH)
         self.assertIn(PLAYGROUND_PATH, sys.path)
 
-        self.assertRaises(AttributeError, lambda: ff.FFPlugins.find_all('test'))
+        self.assertRaises(AttributeError, lambda: plugin.FFPlugins.find_all('test'))
 
         ## remove invalid plugin
         os.unlink(os.path.join(PLAYGROUND_PATH, 'ffplugin_test_mod1_empty.py'))
 
-        plugins = ff.FFPlugins.find_all('test')
+        plugins = plugin.FFPlugins.find_all('test')
 
-        self.assertIsInstance(plugins, ff.FFPlugins)
+        self.assertIsInstance(plugins, plugin.FFPlugins)
         self.assertTrue(len(plugins), 3)
-        for plugin in plugins:
-            self.assertIsInstance(plugin, ff.FFPlugin)
+        for plug in plugins:
+            self.assertIsInstance(plug, plugin.FFPlugin)
 
     @clear_ffplugins_paths
     @clear_sys_path
     def test_find(self):
-        ff.FFPlugins.path_add(PLAYGROUND_PATH)
+        plugin.FFPlugins.path_add(PLAYGROUND_PATH)
         self.assertIn(PLAYGROUND_PATH, sys.path)
 
-        self.assertRaises(ImportError, lambda: ff.FFPlugins.find(['non_existant'], 'test'))
+        self.assertRaises(ImportError, lambda: plugin.FFPlugins.find(['non_existant'], 'test'))
 
-        plugins = ff.FFPlugins.find(['mod2_action'], 'test')
+        plugins = plugin.FFPlugins.find(['mod2_action'], 'test')
 
-        self.assertIsInstance(plugins, ff.FFPlugins)
+        self.assertIsInstance(plugins, plugin.FFPlugins)
         self.assertTrue(len(plugins), 1)
-        for plugin in plugins:
-            self.assertIsInstance(plugin, ff.FFPlugin)
+        for plug in plugins:
+            self.assertIsInstance(plug, plugin.FFPlugin)
 
     @clear_ffplugins_paths
     @clear_sys_path
     def test_print_list(self):
-        ff.FFPlugins.path_add(PLAYGROUND_PATH)
+        plugin.FFPlugins.path_add(PLAYGROUND_PATH)
         self.assertIn(PLAYGROUND_PATH, sys.path)
 
         ## remove invalid plugin
         os.unlink(os.path.join(PLAYGROUND_PATH, 'ffplugin_test_mod1_empty.py'))
 
-        p = ff.FFPlugins.find_all('test')
-        self.assertIsInstance(p, ff.FFPlugins)
+        p = plugin.FFPlugins.find_all('test')
+        self.assertIsInstance(p, plugin.FFPlugins)
 
         self.assertEqual(len(p), 3)
 
@@ -172,14 +172,14 @@ class TestFFPlugins(unittest.TestCase):
     @clear_ffplugins_paths
     @clear_sys_path
     def test_print_help(self):
-        ff.FFPlugins.path_add(PLAYGROUND_PATH)
+        plugin.FFPlugins.path_add(PLAYGROUND_PATH)
         self.assertIn(PLAYGROUND_PATH, sys.path)
 
         ## remove invalid plugin
         os.unlink(os.path.join(PLAYGROUND_PATH, 'ffplugin_test_mod1_empty.py'))
 
-        p = ff.FFPlugins.find(['mod2_action', 'mod3_action_descr_help'], 'test')
-        self.assertIsInstance(p, ff.FFPlugins)
+        p = plugin.FFPlugins.find(['mod2_action', 'mod3_action_descr_help'], 'test')
+        self.assertIsInstance(p, plugin.FFPlugins)
 
         self.assertEqual(len(p), 2)
 

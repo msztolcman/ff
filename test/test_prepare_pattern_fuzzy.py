@@ -7,7 +7,7 @@ import re
 
 from test_manager import *
 
-import ff
+from ff import pattern
 
 
 class MockArgParse(object):
@@ -20,9 +20,9 @@ class MockArgParse(object):
 class TestPatternCompileFuzzy(unittest.TestCase):
     def test_empty(self):
         cfg = MockArgParse()
-        pattern = r''
+        pat = r''
 
-        result = ff._prepare_pattern__compile_fuzzy(cfg)
+        result = pattern._prepare_pattern__compile_fuzzy(cfg)
 
         expected_type = re.compile('')
         self.assertIsInstance(result, type(expected_type))
@@ -33,14 +33,14 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertFalse(cfg.fnmatch_begin)
         self.assertFalse(cfg.fnmatch_end)
         self.assertFalse(cfg.ignorecase)
-        self.assertEqual(cfg.pattern, pattern)
+        self.assertEqual(cfg.pattern, pat)
 
     def test_empty_pattern_fnmatch_begin(self):
         cfg = MockArgParse()
-        pattern = r''
+        pat = r''
         cfg.fnmatch_begin = True
 
-        result = ff._prepare_pattern__compile_fuzzy(cfg)
+        result = pattern._prepare_pattern__compile_fuzzy(cfg)
 
         expected_type = re.compile('')
         self.assertIsInstance(result, type(expected_type))
@@ -51,14 +51,14 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertTrue(cfg.fnmatch_begin)
         self.assertFalse(cfg.fnmatch_end)
         self.assertFalse(cfg.ignorecase)
-        self.assertEqual(cfg.pattern, pattern)
+        self.assertEqual(cfg.pattern, pat)
 
     def test_empty_pattern_fnmatch_end(self):
         cfg = MockArgParse()
-        pattern = r''
+        pat = r''
         cfg.fnmatch_end = True
 
-        result = ff._prepare_pattern__compile_fuzzy(cfg)
+        result = pattern._prepare_pattern__compile_fuzzy(cfg)
 
         expected_type = re.compile('')
         self.assertIsInstance(result, type(expected_type))
@@ -69,14 +69,14 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertFalse(cfg.fnmatch_begin)
         self.assertTrue(cfg.fnmatch_end)
         self.assertFalse(cfg.ignorecase)
-        self.assertEqual(cfg.pattern, pattern)
+        self.assertEqual(cfg.pattern, pat)
 
     def test_empty_pattern_ignorecase(self):
         cfg = MockArgParse()
-        pattern = r''
+        pat = r''
         cfg.ignorecase = True
 
-        result = ff._prepare_pattern__compile_fuzzy(cfg)
+        result = pattern._prepare_pattern__compile_fuzzy(cfg)
 
         expected_type = re.compile('')
         self.assertIsInstance(result, type(expected_type))
@@ -87,14 +87,14 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertFalse(cfg.fnmatch_begin)
         self.assertFalse(cfg.fnmatch_end)
         self.assertTrue(cfg.ignorecase)
-        self.assertEqual(cfg.pattern, pattern)
+        self.assertEqual(cfg.pattern, pat)
 
     def test_simple_pattern(self):
         cfg = MockArgParse()
-        pattern = r'asd'
-        cfg.pattern = pattern
+        pat = r'asd'
+        cfg.pattern = pat
 
-        result = ff._prepare_pattern__compile_fuzzy(cfg)
+        result = pattern._prepare_pattern__compile_fuzzy(cfg)
 
         expected_type = re.compile('')
         self.assertIsInstance(result, type(expected_type))
@@ -105,14 +105,14 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertFalse(cfg.fnmatch_begin)
         self.assertFalse(cfg.fnmatch_end)
         self.assertFalse(cfg.ignorecase)
-        self.assertEqual(cfg.pattern, pattern)
+        self.assertEqual(cfg.pattern, pat)
 
     def test_pattern_with_regexp(self):
         cfg = MockArgParse()
-        pattern = r'^asd$'
-        cfg.pattern = pattern
+        pat = r'^asd$'
+        cfg.pattern = pat
 
-        result = ff._prepare_pattern__compile_fuzzy(cfg)
+        result = pattern._prepare_pattern__compile_fuzzy(cfg)
 
         expected_type = re.compile('')
         self.assertIsInstance(result, type(expected_type))
@@ -123,15 +123,15 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertFalse(cfg.fnmatch_begin)
         self.assertFalse(cfg.fnmatch_end)
         self.assertFalse(cfg.ignorecase)
-        self.assertEqual(cfg.pattern, pattern)
+        self.assertEqual(cfg.pattern, pat)
 
     def test_pattern_with_regexp_and_fnmatch_begin(self):
         cfg = MockArgParse()
-        pattern = r'^asd$'
-        cfg.pattern = pattern
+        pat = r'^asd$'
+        cfg.pattern = pat
         cfg.fnmatch_begin = True
 
-        result = ff._prepare_pattern__compile_fuzzy(cfg)
+        result = pattern._prepare_pattern__compile_fuzzy(cfg)
 
         expected_type = re.compile('')
         self.assertIsInstance(result, type(expected_type))
@@ -142,17 +142,17 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertTrue(cfg.fnmatch_begin)
         self.assertFalse(cfg.fnmatch_end)
         self.assertFalse(cfg.ignorecase)
-        self.assertEqual(cfg.pattern, pattern)
+        self.assertEqual(cfg.pattern, pat)
 
     def test_full_options(self):
         cfg = MockArgParse()
-        pattern = r'^asd$'
-        cfg.pattern = pattern
+        pat = r'^asd$'
+        cfg.pattern = pat
         cfg.fnmatch_begin = True
         cfg.fnmatch_end = True
         cfg.ignorecase = True
 
-        result = ff._prepare_pattern__compile_fuzzy(cfg)
+        result = pattern._prepare_pattern__compile_fuzzy(cfg)
 
         expected_type = re.compile('')
         self.assertIsInstance(result, type(expected_type))
@@ -163,7 +163,7 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertTrue(cfg.fnmatch_begin)
         self.assertTrue(cfg.fnmatch_end)
         self.assertTrue(cfg.ignorecase)
-        self.assertEqual(cfg.pattern, pattern)
+        self.assertEqual(cfg.pattern, pat)
 
 if __name__ == '__main__':
     unittest.main()

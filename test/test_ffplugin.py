@@ -10,8 +10,8 @@ import os
 import os.path
 import types
 from test_manager import *
-import ff
 
+from ff import plugin
 
 class TestFFPlugin(unittest.TestCase):
     def setUp(self):
@@ -46,24 +46,24 @@ class TestFFPlugin(unittest.TestCase):
             os.unlink(file_)
 
     def test_import_success(self):
-        _mod = ff.FFPlugin._import('test', 'mod4_action_descr_help_callable')
+        _mod = plugin.FFPlugin._import('test', 'mod4_action_descr_help_callable')
         self.assertTrue(type(_mod) is types.ModuleType)
         self.assertTrue(hasattr(_mod, 'plugin_action'))
         self.assertTrue(hasattr(_mod, 'PLUGIN_DESCR'))
         self.assertTrue(hasattr(_mod, 'PLUGIN_HELP'))
         self.assertTrue(hasattr(_mod, 'FFPluginError'))
-        self.assertTrue(_mod.FFPluginError is ff.FFPluginError)
+        self.assertTrue(_mod.FFPluginError is plugin.FFPluginError)
 
     def test_import_non_existant(self):
-        self.assertRaises(ImportError, lambda: ff.FFPlugin._import('test', 'mod_non_existent'))
+        self.assertRaises(ImportError, lambda: plugin.FFPlugin._import('test', 'mod_non_existent'))
 
     def test_init_empty(self):
-        self.assertRaises(TypeError, lambda: ff.FFPlugin())
-        self.assertRaises(AttributeError, lambda: ff.FFPlugin('mod1_empty', 'test'))
+        self.assertRaises(TypeError, lambda: plugin.FFPlugin())
+        self.assertRaises(AttributeError, lambda: plugin.FFPlugin('mod1_empty', 'test'))
 
     def test_init_action(self):
-        p = ff.FFPlugin('mod2_action', 'test')
-        self.assertIsInstance(p, ff.FFPlugin)
+        p = plugin.FFPlugin('mod2_action', 'test')
+        self.assertIsInstance(p, plugin.FFPlugin)
         self.assertEqual(p.name, 'mod2_action')
         self.assertEqual(p.type, 'test')
         self.assertIsInstance(p.action, types.FunctionType)
@@ -74,8 +74,8 @@ class TestFFPlugin(unittest.TestCase):
         self.assertIsNone(p.argument)
 
     def test_init_descr_help(self):
-        p = ff.FFPlugin('mod3_action_descr_help', 'test')
-        self.assertIsInstance(p, ff.FFPlugin)
+        p = plugin.FFPlugin('mod3_action_descr_help', 'test')
+        self.assertIsInstance(p, plugin.FFPlugin)
         self.assertEqual(p.name, 'mod3_action_descr_help')
         self.assertEqual(p.type, 'test')
         self.assertIsInstance(p.action, types.FunctionType)
@@ -86,8 +86,8 @@ class TestFFPlugin(unittest.TestCase):
         self.assertIsNone(p.argument)
 
     def test_init_descr_help_callable(self):
-        p = ff.FFPlugin('mod4_action_descr_help_callable', 'test')
-        self.assertIsInstance(p, ff.FFPlugin)
+        p = plugin.FFPlugin('mod4_action_descr_help_callable', 'test')
+        self.assertIsInstance(p, plugin.FFPlugin)
         self.assertEqual(p.name, 'mod4_action_descr_help_callable')
         self.assertEqual(p.type, 'test')
         self.assertIsInstance(p.action, types.FunctionType)
@@ -101,8 +101,8 @@ class TestFFPlugin(unittest.TestCase):
         path = 'asd'
         arg = 'ARG'
 
-        p = ff.FFPlugin('mod4_action_descr_help_callable', 'test', argument=arg)
-        self.assertIsInstance(p, ff.FFPlugin)
+        p = plugin.FFPlugin('mod4_action_descr_help_callable', 'test', argument=arg)
+        self.assertIsInstance(p, plugin.FFPlugin)
 
         result = 'mod4_action_descr_help_callable'.upper() + '!' + arg.lower() + '!' + path.upper()
         self.assertEqual(p.run(path), result)
