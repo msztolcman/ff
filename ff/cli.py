@@ -60,35 +60,35 @@ def parse_input_args(args):
     p = argparse.ArgumentParser(description=args_description, epilog=args_epilog,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    p.add_argument('-0', '--print0', action='store_true', default=False,
+    p.add_argument('--print0', '-0', action='store_true', default=False,
                    help='split results by binary zero instead of new line (useful to work with xargs)')
-    p.add_argument('-i', '--ignorecase', '--ignore-case', action='store_true', default=False,
+    p.add_argument('--ignorecase', '-i', '--ignore-case', action='store_true', default=False,
                    help='ignore case when match pattern to paths')
-    p.add_argument('-s', '--source', action='append', type=str, default=[],
+    p.add_argument('--source', '-s', action='append', type=str, default=[],
                    help='optional, see: source above')
-    p.add_argument('-p', '--pattern', type=str,
+    p.add_argument('--pattern', '-p', type=str,
                    help='optional, see: pattern above')
-    p.add_argument('-g', '--regexp', action='store_true', default=False,
+    p.add_argument('--regexp', '-g', action='store_true', default=False,
                    help='treat pattern as regular expression (uses Python regexp engine)')
-    p.add_argument('-f', '--fuzzy', action='store_true', default=False,
+    p.add_argument('--fuzzy', '-f', action='store_true', default=False,
                    help='pattern defines only set and order of characters used in filename')
-    p.add_argument('-D', '--depth', type=int, default=-1, help='how deep we should search (default: -1, means infinite)')
-    p.add_argument('-q', '--path-search', action='store_true', default=False,
+    p.add_argument('--depth', '-D', type=int, default=-1, help='how deep we should search (default: -1, means infinite)')
+    p.add_argument('--path-search', '-q', action='store_true', default=False,
                    help='search in full path, instead of bare name of item')
-    p.add_argument('-l', '--regex-multiline', action='store_true', default=False,
+    p.add_argument('--regex-multiline', '-l', action='store_true', default=False,
                    help='modify meta characters: "^" and "$" behaviour when pattern is regular expression. '
                    'See: http://docs.python.org/2/library/re.html#re.MULTILINE')
-    p.add_argument('-d', '--regex-dotall', action='store_true', default=False,
+    p.add_argument('--regex-dotall', '-d', action='store_true', default=False,
                    help='modify meta character: "." behaviour when pattern is regular expression. '
                    'See: http://docs.python.org/2/library/re.html#re.DOTALL')
-    p.add_argument('-B', '--begin', dest='fnmatch_begin', action='store_true', default=False,
+    p.add_argument('--begin', '-B', dest='fnmatch_begin', action='store_true', default=False,
                    help='match pattern to begin of item name (ignored in regexp mode)')
-    p.add_argument('-E', '--end', dest='fnmatch_end', action='store_true', default=False,
+    p.add_argument('--end', '-E', dest='fnmatch_end', action='store_true', default=False,
                    help='match pattern to end of item name (ignored in regexp mode)')
-    p.add_argument('-v', '-r', '--invert-match', action='store_true', default=False,
+    p.add_argument('--invert-match', '-v', '-r', action='store_true', default=False,
                    help='find objects that do *not* match pattern')
-    p.add_argument('-m', '--mode', default='all', help='allow to choose to search for "files" only, "dirs", or "all"')
-    p.add_argument('-x', '--exec', metavar='COMMAND', dest='execute', type=str,
+    p.add_argument('--mode', '-m', default='all', help='allow to choose to search for "files" only, "dirs", or "all"')
+    p.add_argument('--exec', '-x', metavar='COMMAND', dest='execute', type=str,
                    help='execute some command on every found item. In command, placeholders: {path}, '
                    '{dirname}, {basename} are replaced with correct value')
     p.add_argument('--prefix', action='store_true', default=False,
@@ -102,9 +102,9 @@ def parse_input_args(args):
     p.add_argument('--shell-exec', action='store_true', default=False,
                    help='execute command from --exec argument in shell (with shell expansion etc)')
     p.add_argument('--vcs', action='store_true', default=False, help='do not skip VCS directories (.git, .svn etc)')
-    p.add_argument('-c', '--exclude-path', metavar='EXCLUDED_PATH', dest='excluded_paths', action='append', type=str, default=[],
+    p.add_argument('--exclude-path', '-c', metavar='EXCLUDED_PATH', dest='excluded_paths', action='append', type=str, default=[],
                    help='skip given paths from scanning')
-    p.add_argument('-t', '--test', dest='tests', action='append', default=[],
+    p.add_argument('--test', '-t', dest='tests', action='append', default=[],
                    help='additional tests, available by plugins (see annotations below or --help-test-plugins)')
     p.add_argument('--plugins-path', type=str,
                    help='additional path where to search plugins (see annotations below)')
@@ -119,7 +119,7 @@ def parse_input_args(args):
     args = p.parse_args(args)
     del args_description, args_epilog
 
-    ## where to search for plugins
+    # where to search for plugins
     if args.plugins_path:
         try:
             plugins_path = u(args.plugins_path)
@@ -133,15 +133,15 @@ def parse_input_args(args):
     FFPlugins.path_add(os.path.expanduser('~/.ff/plugins'))
     FFPlugins.path_add(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ff_plugins'))
 
-    ## show info about testing plugins
+    # show info about testing plugins
     if args.help_test_plugins:
-        ## None means: show me the list of plugins
+        # None means: show me the list of plugins
         if None in args.help_test_plugins:
             plugins = FFPlugins.find_all('test')
             plugins.print_list()
 
         else:
-            ## plugins names can be separated with comma
+            # plugins names can be separated with comma
             args.help_test_plugins = itertools.chain(*[ plugin.split(',') for plugin in args.help_test_plugins])
 
             try:
@@ -153,7 +153,7 @@ def parse_input_args(args):
 
         sys.exit()
 
-    ## find all requested test plugins
+    # find all requested test plugins
     plugins = FFPlugins()
     for plugin in args.tests:
         if ':' in plugin:
@@ -171,7 +171,7 @@ def parse_input_args(args):
             sys.exit(1)
     args.tests = plugins
 
-    ## mode
+    # mode
     if args.mode in ('file', 'f'):
         args.mode = 'files'
     elif args.mode in ('dir', 'd'):
@@ -179,12 +179,12 @@ def parse_input_args(args):
     elif args.mode not in ('all', 'files', 'dirs'):
         p.error("argument -m/--mode: invalid choice: '%s' (choose from 'files', 'dirs', 'all')" % args.mode)
 
-    ## prepare pattern
+    # prepare pattern
     err_msg = prepare_pattern(args)
     if err_msg:
         raise p.error(err_msg)
 
-    ## prepare sources
+    # prepare sources
     args.source += args.anon_sources
     if not args.source:
         args.source.append('.')
@@ -201,13 +201,13 @@ def parse_input_args(args):
         src = os.path.abspath(src)
         args.source[i] = unicodedata.normalize('NFKC', src)
 
-    ## prepare exec
+    # prepare exec
     if args.shell_exec:
         args.execute = [u(args.execute)]
     elif args.execute:
         args.execute = [ u(part) for part in shlex.split(args.execute) ]
 
-    ## prepare excluded paths
+    # prepare excluded paths
     for i, ex_path in enumerate(args.excluded_paths):
         ex_path = u(ex_path)
         ex_path = unicodedata.normalize('NFKC', ex_path)
