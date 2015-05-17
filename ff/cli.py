@@ -173,11 +173,11 @@ def parse_input_args(args):
     args.tests = plugins
 
     # mode
-    if args.mode in ('file', 'f'):
+    if args.mode.lower() in ('file', 'f'):
         args.mode = 'files'
-    elif args.mode in ('dir', 'd'):
+    elif args.mode.lower() in ('dir', 'd'):
         args.mode = 'dirs'
-    elif args.mode not in ('all', 'files', 'dirs'):
+    elif args.mode.lower() not in ('all', 'files', 'dirs'):
         p.error("argument -m/--mode: invalid choice: '%s' (choose from 'files', 'dirs', 'all')" % args.mode)
 
     # prepare pattern
