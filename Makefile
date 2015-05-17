@@ -6,6 +6,7 @@ clean:
 	rm -fr __pycache__ || true
 	rm -fr ff/__pycache__ || true
 	rm -fr build || true
+	find . -iname '*.pyc' -delete || true
 
 build:
 	python setup.py sdist
