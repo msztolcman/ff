@@ -33,5 +33,5 @@ nosetests.xml
 
 /test/playground/*
 /.idea
-/venv27
-/venv34
+/venv
+/venv-*
