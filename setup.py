@@ -40,7 +40,7 @@ setup(
     py_modules=['ff'],
     entry_points={
         'console_scripts': [
-            'ff=ff:main',
+            'ff=ff.__main__:main',
         ],
     },
 )
