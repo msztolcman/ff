@@ -107,7 +107,7 @@ def parse_input_args(args):
                    help='skip given paths from scanning')
     p.add_argument('--test', '-t', dest='tests', action='append', default=[],
                    help='additional tests, available by plugins (see annotations below or --help-test-plugins)')
-    p.add_argument('--plugins-path', type=str,
+    p.add_argument('--plugins-path', type=str, action='append',
                    help='additional path where to search plugins (see annotations below)')
     p.add_argument('--version', action='version', version="%s %s\n%s" % (os.path.basename(sys.argv[0]), ff.__version__, args_description))
     p.add_argument('--help-test-plugins', metavar='TEST_NAME[,TEST2_NAME]', nargs='?', action='append', default=[],
@@ -122,14 +122,15 @@ def parse_input_args(args):
 
     # where to search for plugins
     if args.plugins_path:
-        try:
-            plugins_path = u(args.plugins_path)
-        except UnicodeDecodeError as ex:
-            disp('ERROR: ', args.plugins_path, ': ', ex, sep='', file=sys.stderr)
-            sys.exit(1)
-        else:
-            plugins_path = os.path.expanduser(plugins_path)
-            FFPlugins.path_add(plugins_path)
+        for plugins_path in args.plugins_path:
+            try:
+                plugins_path = u(plugins_path)
+            except UnicodeDecodeError as ex:
+                disp('ERROR: ', plugins_path, ': ', ex, sep='', file=sys.stderr)
+                sys.exit(1)
+            else:
+                plugins_path = os.path.expanduser(plugins_path)
+                FFPlugins.path_add(plugins_path)
 
     FFPlugins.path_add(os.path.expanduser('~/.ff/plugins'))
     plugins_path = os.path.dirname(os.path.abspath(__file__))
