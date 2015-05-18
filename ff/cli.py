@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+    Parse and prepare CLI arguments
+"""
+
 from __future__ import print_function, unicode_literals, division
 
 import argparse
@@ -17,6 +21,11 @@ from ff.utils import disp, u
 
 
 def _detect_plugins_paths(args):
+    """
+    Detect and collect plugins paths
+    :param args:
+    :return:
+    """
     plugins_path = os.path.dirname(os.path.abspath(__file__))
     plugins_path = os.path.join(plugins_path, '..', 'ff_plugins')
     FFPlugins.path_add(os.path.abspath(plugins_path))
@@ -34,6 +43,11 @@ def _detect_plugins_paths(args):
 
 
 def _help_test_plugins(args):
+    """
+    Display plugins list or help
+    :param args:
+    :return:
+    """
     try:
         # None means: show me the list of plugins
         if None in args.help_test_plugins:
@@ -51,6 +65,11 @@ def _help_test_plugins(args):
 
 
 def _find_plugins(args):
+    """
+    Find and prepare plugins for use
+    :param args:
+    :return:
+    """
     plugins = FFPlugins()
     for plugin in args.tests:
         if ':' in plugin:

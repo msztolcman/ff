@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+    Utils for ff
+"""
+
 from __future__ import print_function, unicode_literals, division
 
 import sys

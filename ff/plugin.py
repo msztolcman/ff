@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+    Plugins engine
+"""
+
 from __future__ import print_function, unicode_literals, division
 
 import collections
@@ -18,12 +22,16 @@ class FFPluginError(Exception):
 
 
 class InvalidPluginsPath(FFPluginError):
+    """ Exception for invalid plugins paths
+    """
     def __init__(self, msg, path):
         super(InvalidPluginsPath, self).__init__(msg)
         self.path = path
 
 
 class PluginImportError(FFPluginError):
+    """ Exception for importing plugin error
+    """
     def __init__(self, msg):
         super(PluginImportError, self).__init__(msg)
 

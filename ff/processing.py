@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+    Process input
+"""
+
 from __future__ import print_function, unicode_literals, division
 
 import copy

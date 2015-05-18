@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+    Prepare and compile pattern
+"""
+
 from __future__ import print_function, unicode_literals, division
 
 import re
