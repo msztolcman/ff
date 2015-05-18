@@ -187,7 +187,7 @@ def parse_input_args(args):
     _find_plugins(args)
 
     # mode
-    args.mode = args.mode.lowe()
+    args.mode = args.mode.lower()
     if args.mode in ('file', 'f'):
         args.mode = 'files'
     elif args.mode in ('dir', 'd'):
