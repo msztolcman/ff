@@ -12,44 +12,42 @@ import unicodedata
 
 import ff
 from ff.pattern import prepare_pattern
-from ff.plugin import FFPlugins, FFPlugin
+from ff.plugin import FFPlugins, FFPlugin, InvalidPluginsPath, PluginImportError, FFPluginError
 from ff.utils import disp, u
 
 
 def _detect_plugins_paths(args):
+    plugins_path = os.path.dirname(os.path.abspath(__file__))
+    plugins_path = os.path.join(plugins_path, '..', 'ff_plugins')
+    FFPlugins.path_add(os.path.abspath(plugins_path))
+    FFPlugins.path_add(os.path.expanduser('~/.ff/plugins'))
+
     if args.plugins_path:
         for plugins_path in args.plugins_path:
             try:
                 plugins_path = u(plugins_path)
             except UnicodeDecodeError as ex:
-                disp('ERROR: ', plugins_path, ': ', ex, sep='', file=sys.stderr)
-                sys.exit(1)
+                raise InvalidPluginsPath(str(ex), plugins_path)
             else:
                 plugins_path = os.path.expanduser(plugins_path)
                 FFPlugins.path_add(plugins_path)
 
-    FFPlugins.path_add(os.path.expanduser('~/.ff/plugins'))
-    plugins_path = os.path.dirname(os.path.abspath(__file__))
-    plugins_path = os.path.join(plugins_path, '..', 'ff_plugins')
-    FFPlugins.path_add(os.path.abspath(plugins_path))
-
 
 def _help_test_plugins(args):
-    # None means: show me the list of plugins
-    if None in args.help_test_plugins:
-        plugins = FFPlugins.find_all('test')
-        plugins.print_list()
+    try:
+        # None means: show me the list of plugins
+        if None in args.help_test_plugins:
+            plugins = FFPlugins.find_all('test')
+            plugins.print_list()
+        else:
+            # plugins names can be separated with comma
+            args.help_test_plugins = itertools.chain(*[plugin.split(',') for plugin in args.help_test_plugins])
 
-    else:
-        # plugins names can be separated with comma
-        args.help_test_plugins = itertools.chain(*[plugin.split(',') for plugin in args.help_test_plugins])
-
-        try:
             plugins = FFPlugins.find(args.help_test_plugins, 'test')
-        except ImportError as ex:
-            disp('ERROR: Unknown plugin: %s' % ex.message, file=sys.stderr)
-            sys.exit(1)
-        plugins.print_help()
+
+            plugins.print_help()
+    except ImportError as ex:
+        raise PluginImportError(ex.message)
 
 
 def _find_plugins(args):
@@ -63,11 +61,9 @@ def _find_plugins(args):
         try:
             plugins.append(FFPlugin(plugin_name, 'test', argument=plugin_argument))
         except ImportError:
-            disp('ERROR: unknown plugin: %s' % plugin_name, file=sys.stderr)
-            sys.exit(1)
+            raise FFPluginError('unknown plugin: %s' % plugin_name)
         except AttributeError:
-            disp('ERROR: broken plugin: %s' % plugin_name, file=sys.stderr)
-            sys.exit(1)
+            raise FFPluginError('broken plugin: %s' % plugin_name)
     args.tests = plugins
 
 
@@ -176,15 +172,28 @@ def parse_input_args(args):
     del args_description, args_epilog
 
     # where to search for plugins
-    _detect_plugins_paths(args)
+    try:
+        _detect_plugins_paths(args)
+    except InvalidPluginsPath as ex:
+        disp('ERROR: ', ex.path, ': ', str(ex), sep='', file=sys.stderr)
+        sys.exit(1)
 
     # show info about testing plugins
     if args.help_test_plugins:
-        _help_test_plugins(args)
+        try:
+            _help_test_plugins(args)
+        except PluginImportError as ex:
+            disp('ERROR: Unknown plugin: %s' % ex, file=sys.stderr)
+            sys.exit(1)
+
         sys.exit()
 
     # find all requested test plugins
-    _find_plugins(args)
+    try:
+        _find_plugins(args)
+    except FFPluginError as ex:
+        disp('ERROR: %s' % ex, file=sys.stderr)
+        sys.exit(1)
 
     # mode
     args.mode = args.mode.lower()

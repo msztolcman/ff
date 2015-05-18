@@ -17,6 +17,17 @@ class FFPluginError(Exception):
     pass
 
 
+class InvalidPluginsPath(FFPluginError):
+    def __init__(self, msg, path):
+        super(InvalidPluginsPath, self).__init__(msg)
+        self.path = path
+
+
+class PluginImportError(FFPluginError):
+    def __init__(self, msg):
+        super(PluginImportError, self).__init__(msg)
+
+
 class FFPlugin(object):
     """ Wrapper for custom plugin.
 
