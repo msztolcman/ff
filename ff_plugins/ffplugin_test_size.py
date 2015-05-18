@@ -36,7 +36,8 @@ _MULTI = {
     'g': 1024**3,
 }
 
-_cache = {} # pylint: disable-msg=invalid-name
+# pylint: disable=invalid-name
+_cache = {}
 
 def _action(__, argument, path):
     """ Test given path for being it's size match specified criteria.
@@ -47,7 +48,8 @@ def _action(__, argument, path):
     """
 
     if not argument:
-        raise FFPluginError('missing size') # pylint: disable=undefined-variable
+        # pylint: disable=undefined-variable
+        raise FFPluginError('missing size')
 
     if argument[0] in ('<', '>', '='):
         test = _TESTS[argument[0]]
@@ -71,12 +73,14 @@ def plugin_action(name, argument, path):
     """
     try:
         return _action(name, argument, path)
-    except FFPluginError: # pylint: disable=undefined-variable
+    # pylint: disable=undefined-variable
+    except FFPluginError:
         raise
     except:
         import sys
         ex = sys.exc_info()[1]
-        raise FFPluginError(ex.message) # pylint: disable=undefined-variable
+        # pylint: disable=undefined-variable
+        raise FFPluginError(ex.message)
 
 PLUGIN_DESCR = 'Filter files by their size.'
 PLUGIN_HELP = '''Size must be given as argument, and must follow pattern (without spaces):
