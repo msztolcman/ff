@@ -68,14 +68,12 @@ def disp(*args, **kwargs):
     """
     try:
         if IS_PY2:
-            data = [part.encode('utf-8') for part in args]
-        else:
-            data = args
-        print(*data, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
+            args = [part.encode('utf-8') for part in args]
+        print(*args, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
     except UnicodeEncodeError:
         try:
-            data = [part.encode(sys.stdout.encoding or sys.getdefaultencoding()) for part in args]
-            print(*data, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
+            args = [part.encode(sys.stdout.encoding or sys.getdefaultencoding()) for part in args]
+            print(*args, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
         except UnicodeEncodeError:
-            data = [part.encode('ascii', 'replace') for part in args]
-            print(*data, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
+            args = [part.encode('ascii', 'replace') for part in args]
+            print(*args, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
