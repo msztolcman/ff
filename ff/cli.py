@@ -17,7 +17,7 @@ import unicodedata
 import ff
 from ff.pattern import prepare_pattern
 from ff.plugin import FFPlugins, FFPlugin, InvalidPluginsPath, PluginImportError, FFPluginError
-from ff.utils import disp, u
+from ff.utils import disp, err, u
 
 
 def _detect_plugins_paths(args):
@@ -197,16 +197,14 @@ def parse_input_args(args):
     try:
         _detect_plugins_paths(args)
     except InvalidPluginsPath as ex:
-        disp('ERROR: %s: %s' % (ex.path, str(ex)), sep='', file=sys.stderr)
-        sys.exit(1)
+        err('%s: %s' % (ex.path, str(ex)), sep='', exit_code=1)
 
     # show info about testing plugins
     if args.help_test_plugins:
         try:
             _help_test_plugins(args)
         except PluginImportError as ex:
-            disp('ERROR: Unknown plugin: %s' % ex, file=sys.stderr)
-            sys.exit(1)
+            err('Unknown plugin: %s' % ex, exit_code=1)
 
         sys.exit()
 
@@ -214,8 +212,7 @@ def parse_input_args(args):
     try:
         _find_plugins(args)
     except FFPluginError as ex:
-        disp('ERROR: %s' % ex, file=sys.stderr)
-        sys.exit(1)
+        err(str(ex), exit_code=1)
 
     # mode
     modes = {
@@ -242,8 +239,7 @@ def parse_input_args(args):
         try:
             src = u(src)
         except UnicodeDecodeError as ex:
-            disp('ERROR: %s: %s' % (src, ex), sep='', file=sys.stderr)
-            sys.exit()
+            err('%s: %s' % (src, ex), sep='', exit_code=1)
 
         if not os.path.isdir(src):
             p.error('Source %s doesn\'t exists or is not a directory' % src)

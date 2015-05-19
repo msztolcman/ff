@@ -59,6 +59,30 @@ def u(string):
     return string
 
 
+def err(*args, **kwargs):
+    """
+    Display error message.
+
+    It's a wrapper for utils.disp, with additions:
+        * file - if not specified, use sys.stderr
+        * exit_code - if specified, calls sys.exit with given code. If None, do not exit.
+
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    args = list(args)
+    args.insert(0, 'ERROR:')
+
+    if not kwargs.get('file'):
+        kwargs['file'] = sys.stderr
+
+    disp(*args, **kwargs)
+
+    if kwargs.get('exit_code', None) is not None:
+        sys.exit(kwargs['exit_code'])
+
+
 def disp(*args, **kwargs):
     """ Print data in safe way.
 
