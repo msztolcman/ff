@@ -197,7 +197,7 @@ def parse_input_args(args):
     try:
         _detect_plugins_paths(args)
     except InvalidPluginsPath as ex:
-        disp('ERROR: ', ex.path, ': ', str(ex), sep='', file=sys.stderr)
+        disp('ERROR: %s: %s' % (ex.path, str(ex)), sep='', file=sys.stderr)
         sys.exit(1)
 
     # show info about testing plugins
@@ -240,7 +240,7 @@ def parse_input_args(args):
         try:
             src = u(src)
         except UnicodeDecodeError as ex:
-            disp('ERROR: ', src, ': ', ex, sep='', file=sys.stderr)
+            disp('ERROR: %s: %s' % (src, ex), sep='', file=sys.stderr)
             sys.exit()
 
         if not os.path.isdir(src):
