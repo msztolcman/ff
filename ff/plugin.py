@@ -29,13 +29,6 @@ class InvalidPluginsPath(FFPluginError):
         self.path = path
 
 
-class PluginImportError(FFPluginError):
-    """ Exception for importing plugin error
-    """
-    def __init__(self, msg):
-        super(PluginImportError, self).__init__(msg)
-
-
 class FFPlugin(object):
     """ Wrapper for custom plugin.
 
