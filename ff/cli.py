@@ -218,12 +218,14 @@ def parse_input_args(args):
         sys.exit(1)
 
     # mode
-    args.mode = args.mode.lower()
-    if args.mode in ('file', 'f'):
-        args.mode = 'files'
-    elif args.mode in ('dir', 'd'):
-        args.mode = 'dirs'
-    elif args.mode not in ('all', 'files', 'dirs'):
+    modes = {
+        'files': 'files', 'file': 'files', 'f': 'files',
+        'dirs': 'dirs', 'dir': 'dirs', 'd': 'dirs',
+        'all': 'all', 'a': 'all'
+    }
+    try:
+        args.mode = modes[args.mode.lower()]
+    except KeyError:
         p.error("argument -m/--mode: invalid choice: '%s' (choose from 'files', 'dirs', 'all')" % args.mode)
 
     # prepare pattern
