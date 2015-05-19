@@ -20,6 +20,7 @@ from ff.plugin import FFPlugins, FFPlugin, InvalidPluginsPath, FFPluginError
 from ff.processing import process_source
 from ff.utils import disp, err, u
 
+
 # pylint: disable=too-many-statements
 def parse_input_args(args):
     """ Parse input 'arguments' and return parsed.
@@ -183,6 +184,7 @@ def parse_input_args(args):
         args.delim = os.linesep
 
     return args
+
 
 def _detect_plugins_paths(args):
     """
