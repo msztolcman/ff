@@ -5,164 +5,107 @@ from __future__ import print_function, unicode_literals, absolute_import
 
 import re
 
+from test_helpers import get_opts, MockArgParse
 from test_manager import *
+
 from ff import pattern
 
 
-class MockArgParse(object):
-    def __init__(self):
-        self.ignorecase = False
-        self.pattern = ''
-        self.regex_dotall = False
-        self.regex_multiline = False
+RE_TYPE = type(re.compile(''))
+
 
 class TestPatternCompileRegexp(unittest.TestCase):
     def test_empty(self):
         cfg = MockArgParse()
-        pat = r''
 
-        result = pattern._prepare_pattern__compile_regexp(cfg)
+        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
 
-        expected_type = re.compile('')
-        self.assertIsInstance(result, type(expected_type))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertEqual(result.flags, re.UNICODE)
-        self.assertEqual(result.pattern, pat)
-
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertEqual(cfg.pattern, pat)
+        self.assertEqual(parsed_pat.flags, re.UNICODE)
+        self.assertEqual(parsed_pat.pattern, '')
 
     def test_empty_pattern_regex_dotall(self):
         cfg = MockArgParse()
-        pat = r''
         cfg.regex_dotall = True
 
-        result = pattern._prepare_pattern__compile_regexp(cfg)
+        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
 
-        expected_type = re.compile('')
-        self.assertIsInstance(result, type(expected_type))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertEqual(result.flags, re.UNICODE | re.DOTALL)
-        self.assertEqual(result.pattern, pat)
-
-        self.assertFalse(cfg.ignorecase)
-        self.assertTrue(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertEqual(cfg.pattern, pat)
+        self.assertEqual(parsed_pat.flags, re.UNICODE | re.DOTALL)
+        self.assertEqual(parsed_pat.pattern, '')
 
     def test_empty_pattern_regex_multiline(self):
         cfg = MockArgParse()
-        pat = r''
         cfg.regex_multiline = True
 
-        result = pattern._prepare_pattern__compile_regexp(cfg)
+        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
 
-        expected_type = re.compile('')
-        self.assertIsInstance(result, type(expected_type))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertEqual(result.flags, re.UNICODE | re.MULTILINE)
-        self.assertEqual(result.pattern, pat)
-
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.regex_dotall)
-        self.assertTrue(cfg.regex_multiline)
-        self.assertEqual(cfg.pattern, pat)
+        self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE)
+        self.assertEqual(parsed_pat.pattern, '')
 
     def test_empty_pattern_ignorecase(self):
         cfg = MockArgParse()
-        pat = r''
         cfg.ignorecase = True
 
-        result = pattern._prepare_pattern__compile_regexp(cfg)
+        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
 
-        expected_type = re.compile('')
-        self.assertIsInstance(result, type(expected_type))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertEqual(result.flags, re.UNICODE | re.IGNORECASE)
-        self.assertEqual(result.pattern, pat)
-
-        self.assertTrue(cfg.ignorecase)
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertEqual(cfg.pattern, pat)
+        self.assertEqual(parsed_pat.flags, re.UNICODE | re.IGNORECASE)
+        self.assertEqual(parsed_pat.pattern, '')
 
     def test_simple_pattern(self):
         cfg = MockArgParse()
-        pat = r'asd'
-        cfg.pattern = pat
+        cfg.pattern = r'asd'
 
-        result = pattern._prepare_pattern__compile_regexp(cfg)
+        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
 
-        expected_type = re.compile('')
-        self.assertIsInstance(result, type(expected_type))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertEqual(result.flags, re.UNICODE)
-        self.assertEqual(result.pattern, pat)
-
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertEqual(cfg.pattern, pat)
+        self.assertEqual(parsed_pat.flags, re.UNICODE)
+        self.assertEqual(parsed_pat.pattern, r'asd')
 
     def test_pattern_with_regexp(self):
         cfg = MockArgParse()
-        pat = r'^asd$'
-        cfg.pattern = pat
+        cfg.pattern = r'^asd$'
 
-        result = pattern._prepare_pattern__compile_regexp(cfg)
+        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
 
-        expected_type = re.compile('')
-        self.assertIsInstance(result, type(expected_type))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertEqual(result.flags, re.UNICODE)
-        self.assertEqual(result.pattern, pat)
-
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertEqual(cfg.pattern, pat)
+        self.assertEqual(parsed_pat.flags, re.UNICODE)
+        self.assertEqual(parsed_pat.pattern, r'^asd$')
 
     def test_pattern_with_regexp_and_regex_dotall(self):
         cfg = MockArgParse()
-        pat = r'^asd$'
-        cfg.pattern = pat
+        cfg.pattern = r'^asd$'
         cfg.regex_dotall = True
 
-        result = pattern._prepare_pattern__compile_regexp(cfg)
+        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
 
-        expected_type = re.compile('')
-        self.assertIsInstance(result, type(expected_type))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertEqual(result.flags, re.UNICODE | re.DOTALL)
-        self.assertEqual(result.pattern, pat)
-
-        self.assertFalse(cfg.ignorecase)
-        self.assertTrue(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertEqual(cfg.pattern, pat)
+        self.assertEqual(parsed_pat.flags, re.UNICODE | re.DOTALL)
+        self.assertEqual(parsed_pat.pattern, r'^asd$')
 
     def test_full_options(self):
         cfg = MockArgParse()
-        pat = r'^asd$'
-        cfg.pattern = pat
+        cfg.pattern = r'^asd$'
         cfg.ignorecase = True
         cfg.regex_dotall = True
         cfg.regex_multiline = True
 
-        result = pattern._prepare_pattern__compile_regexp(cfg)
+        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
 
-        expected_type = re.compile('')
-        self.assertIsInstance(result, type(expected_type))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertEqual(result.flags, re.UNICODE | re.MULTILINE | re.DOTALL | re.IGNORECASE)
-        self.assertEqual(result.pattern, pat)
+        self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL | re.IGNORECASE)
+        self.assertEqual(parsed_pat.pattern, r'^asd$')
 
-        self.assertTrue(cfg.ignorecase)
-        self.assertTrue(cfg.regex_dotall)
-        self.assertTrue(cfg.regex_multiline)
-        self.assertEqual(cfg.pattern, pat)
 
 if __name__ == '__main__':
     unittest.main()

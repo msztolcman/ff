@@ -6,19 +6,8 @@ from __future__ import print_function, unicode_literals, absolute_import
 import itertools
 
 from test_manager import *
+from test_helpers import MockArgParse
 from ff import pattern
-
-
-class MockArgParse(object):
-    def __init__(self):
-        self.fuzzy = False
-        self.ignorecase = False
-        self.invert_match = False
-        self.path_search = False
-        self.pattern = ''
-        self.regex_dotall = False
-        self.regex_multiline = False
-        self.regexp = False
 
 
 class TestMagicPatternInitial(unittest.TestCase):
@@ -26,155 +15,99 @@ class TestMagicPatternInitial(unittest.TestCase):
         cfg = MockArgParse()
         cfg.pattern = r''
 
-        result = pattern._prepare_pattern__magic(cfg)
+        parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-        self.assertIsNone(result)
-        self.assertFalse(cfg.fuzzy)
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.invert_match)
-        self.assertFalse(cfg.path_search)
-        self.assertEqual(cfg.pattern, r'')
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertFalse(cfg.regexp)
+        self.assertEqual(parsed_pat, r'')
+
+        expected = {}
+        self.assertDictEqual(expected, opts)
 
     def test_empty2(self):
         cfg = MockArgParse()
-        pat = r'//'
-        cfg.pattern = pat
+        cfg.pattern = r'//'
 
-        result = pattern._prepare_pattern__magic(cfg)
+        parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-        self.assertIsNone(result)
-        self.assertFalse(cfg.fuzzy)
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.invert_match)
-        self.assertFalse(cfg.path_search)
-        self.assertEqual(cfg.pattern, r'')
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertFalse(cfg.regexp)
+        self.assertEqual(parsed_pat, r'')
+
+        expected = {}
+        self.assertDictEqual(expected, opts)
 
     def test_pattern_simple_no_mode_modifiers(self):
         cfg = MockArgParse()
-        pat = r'asd'
-        cfg.pattern = '/' + pat + '/'
+        cfg.pattern = r'/asd/'
 
-        result = pattern._prepare_pattern__magic(cfg)
+        parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-        self.assertIsNone(result)
-        self.assertFalse(cfg.fuzzy)
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.invert_match)
-        self.assertFalse(cfg.path_search)
-        self.assertEqual(cfg.pattern, pat)
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertFalse(cfg.regexp)
+        self.assertEqual(parsed_pat, r'asd')
+
+        expected = {}
+        self.assertDictEqual(expected, opts)
 
     def test_pattern_regexp_no_mode_modifiers(self):
         cfg = MockArgParse()
         pat = r'^asd$'
         cfg.pattern = '/' + pat + '/'
 
-        result = pattern._prepare_pattern__magic(cfg)
+        parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-        self.assertIsNone(result)
-        self.assertFalse(cfg.fuzzy)
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.invert_match)
-        self.assertFalse(cfg.path_search)
-        self.assertEqual(cfg.pattern, pat)
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertFalse(cfg.regexp)
+        self.assertEqual(parsed_pat, r'^asd$')
+
+        expected = {}
+        self.assertDictEqual(expected, opts)
 
 
 class TestMagicPatternMode(unittest.TestCase):
     def test_mode_p(self):
         cfg = MockArgParse()
-        pat = r'asd'
-        cfg.pattern = r'p/' + pat + r'/'
+        cfg.pattern = r'p/asd/'
 
-        result = pattern._prepare_pattern__magic(cfg)
+        parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-        self.assertIsNone(result)
-        self.assertFalse(cfg.fuzzy)
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.invert_match)
-        self.assertFalse(cfg.path_search)
-        self.assertEqual(cfg.pattern, pat)
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertFalse(cfg.regexp)
+        self.assertEqual(parsed_pat, 'asd')
+
+        expected = {}
+        self.assertDictEqual(expected, opts)
 
     def test_mode_f(self):
         cfg = MockArgParse()
-        pat = r'asd'
-        cfg.pattern = r'f/' + pat + r'/'
+        cfg.pattern = r'f/asd/'
 
-        result = pattern._prepare_pattern__magic(cfg)
+        parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-        self.assertIsNone(result)
-        self.assertTrue(cfg.fuzzy)
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.invert_match)
-        self.assertFalse(cfg.path_search)
-        self.assertEqual(cfg.pattern, pat)
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertFalse(cfg.regexp)
+        self.assertEqual(parsed_pat, 'asd')
+
+        expected = {
+            'fuzzy': True,
+        }
+        self.assertDictEqual(expected, opts)
 
     def test_mode_g(self):
         cfg = MockArgParse()
-        pat = r'asd'
-        cfg.pattern = r'g/' + pat + r'/'
+        cfg.pattern = r'g/asd/'
 
-        result = pattern._prepare_pattern__magic(cfg)
+        parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-        self.assertIsNone(result)
-        self.assertFalse(cfg.fuzzy)
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.invert_match)
-        self.assertFalse(cfg.path_search)
-        self.assertEqual(cfg.pattern, pat)
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertTrue(cfg.regexp)
+        self.assertEqual(parsed_pat, 'asd')
+
+        expected = {
+            'regexp': True,
+        }
+        self.assertDictEqual(expected, opts)
 
     def test_mode_unknown_mode(self):
         cfg = MockArgParse()
-        pat = r'asd'
-        cfg.pattern = r'z/' + pat + r'/'
+        cfg.pattern = r'z/asd/'
 
-        result = pattern._prepare_pattern__magic(cfg)
-
-        self.assertTrue(result.startswith('Unknown mode in pattern:'))
-        self.assertFalse(cfg.fuzzy)
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.invert_match)
-        self.assertFalse(cfg.path_search)
-        self.assertEqual(cfg.pattern, pat)
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertFalse(cfg.regexp)
+        with self.assertRaisesRegexp(pattern.PatternError, r'^Unknown mode in pattern:'):
+            pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
     def test_mode_invalid_mode(self):
         cfg = MockArgParse()
-        pat = r'asd'
-        cfg.pattern = r'pg/' + pat + r'/'
+        cfg.pattern = r'pg/asd/'
 
-        result = pattern._prepare_pattern__magic(cfg)
-
-        self.assertTrue(result.startswith('Incorrect mode:'))
-        self.assertFalse(cfg.fuzzy)
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.invert_match)
-        self.assertFalse(cfg.path_search)
-        self.assertEqual(cfg.pattern, pat)
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertFalse(cfg.regexp)
+        with self.assertRaisesRegexp(pattern.PatternError, r'^Incorrect mode:'):
+            pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
 
 class TestMagicPatternModifier(unittest.TestCase):
@@ -189,24 +122,16 @@ class TestMagicPatternModifier(unittest.TestCase):
 
         for modifier, selected_option_name in modifier_to_option.items():
             cfg = MockArgParse()
-            pat = r'asd'
-            cfg.pattern = r'/' + pat + r'/' + modifier
+            cfg.pattern = r'/asd/' + modifier
 
-            result = pattern._prepare_pattern__magic(cfg)
+            parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-            self.assertIsNone(result)
+            self.assertEqual(parsed_pat, r'asd')
 
-            self.assertFalse(cfg.fuzzy)
-            self.assertEqual(cfg.pattern, pat)
-            self.assertFalse(cfg.regexp)
-
-            for option_name in modifier_to_option.values():
-                value = getattr(cfg, option_name)
-
-                if option_name == selected_option_name:
-                    self.assertTrue(value)
-                else:
-                    self.assertFalse(value)
+            expected = {
+                selected_option_name: True,
+            }
+            self.assertDictEqual(expected, opts)
 
     def test_modifiers_two_together_no_repeats(self):
         modifier_to_option = {
@@ -219,23 +144,14 @@ class TestMagicPatternModifier(unittest.TestCase):
 
         for modifiers in itertools.permutations(modifier_to_option.keys(), 2):
             cfg = MockArgParse()
-            pat = r'asd'
-            cfg.pattern = r'/' + pat + r'/' + ''.join(modifiers)
+            cfg.pattern = r'/asd/' + ''.join(modifiers)
 
-            result = pattern._prepare_pattern__magic(cfg)
+            parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-            self.assertIsNone(result)
+            self.assertEqual(parsed_pat, 'asd')
 
-            self.assertFalse(cfg.fuzzy)
-            self.assertEqual(cfg.pattern, pat)
-            self.assertFalse(cfg.regexp)
-
-            for modifier, option_name in modifier_to_option.items():
-                value = getattr(cfg, option_name)
-                if modifier in modifiers:
-                    self.assertTrue(value)
-                else:
-                    self.assertFalse(value)
+            expected = {modifier_to_option[modifier]: True for modifier in modifiers}
+            self.assertDictEqual(expected, opts)
 
     def test_modifiers_two_together_repeats(self):
         modifier_to_option = {
@@ -248,20 +164,10 @@ class TestMagicPatternModifier(unittest.TestCase):
 
         for modifier in modifier_to_option.keys():
             cfg = MockArgParse()
-            pat = r'asd'
-            cfg.pattern = r'/' + pat + r'/' + modifier * 2
+            cfg.pattern = r'/asd/' + modifier * 2
 
-            result = pattern._prepare_pattern__magic(cfg)
-
-            self.assertTrue(result.startswith('Incorrect modifiers in pattern:'))
-
-            self.assertFalse(cfg.fuzzy)
-            self.assertEqual(cfg.pattern, pat)
-            self.assertFalse(cfg.regexp)
-
-            for option_name in modifier_to_option.values():
-                value = getattr(cfg, option_name)
-                self.assertFalse(value)
+            with self.assertRaisesRegexp(pattern.PatternError, r'^Incorrect modifiers in pattern:'):
+                pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
     def test_modifiers_three_together_no_repeats(self):
         modifier_to_option = {
@@ -274,23 +180,14 @@ class TestMagicPatternModifier(unittest.TestCase):
 
         for modifiers in itertools.permutations(modifier_to_option.keys(), 3):
             cfg = MockArgParse()
-            pat = r'asd'
-            cfg.pattern = r'/' + pat + r'/' + ''.join(modifiers)
+            cfg.pattern = r'/asd/' + ''.join(modifiers)
 
-            result = pattern._prepare_pattern__magic(cfg)
+            parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-            self.assertIsNone(result)
+            self.assertEqual(parsed_pat, 'asd')
 
-            self.assertFalse(cfg.fuzzy)
-            self.assertEqual(cfg.pattern, pat)
-            self.assertFalse(cfg.regexp)
-
-            for modifier, option_name in modifier_to_option.items():
-                value = getattr(cfg, option_name)
-                if modifier in modifiers:
-                    self.assertTrue(value)
-                else:
-                    self.assertFalse(value)
+            expected = {modifier_to_option[modifier]: True for modifier in modifiers}
+            self.assertDictEqual(expected, opts)
 
     def test_modifiers_four_together_no_repeats(self):
         modifier_to_option = {
@@ -303,23 +200,14 @@ class TestMagicPatternModifier(unittest.TestCase):
 
         for modifiers in itertools.permutations(modifier_to_option.keys(), 4):
             cfg = MockArgParse()
-            pat = r'asd'
-            cfg.pattern = r'/' + pat + r'/' + ''.join(modifiers)
+            cfg.pattern = r'/asd/' + ''.join(modifiers)
 
-            result = pattern._prepare_pattern__magic(cfg)
+            parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-            self.assertIsNone(result)
+            self.assertEqual(parsed_pat, 'asd')
 
-            self.assertFalse(cfg.fuzzy)
-            self.assertEqual(cfg.pattern, pat)
-            self.assertFalse(cfg.regexp)
-
-            for modifier, option_name in modifier_to_option.items():
-                value = getattr(cfg, option_name)
-                if modifier in modifiers:
-                    self.assertTrue(value)
-                else:
-                    self.assertFalse(value)
+            expected = {modifier_to_option[modifier]: True for modifier in modifiers}
+            self.assertDictEqual(expected, opts)
 
     def test_modifiers_five_together_no_repeats(self):
         modifier_to_option = {
@@ -332,59 +220,32 @@ class TestMagicPatternModifier(unittest.TestCase):
 
         for modifiers in itertools.permutations(modifier_to_option.keys(), 5):
             cfg = MockArgParse()
-            pat = r'asd'
-            cfg.pattern = r'/' + pat + r'/' + ''.join(modifiers)
+            cfg.pattern = r'/asd/' + ''.join(modifiers)
 
-            result = pattern._prepare_pattern__magic(cfg)
+            parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-            self.assertIsNone(result)
+            self.assertEqual(parsed_pat, 'asd')
 
-            self.assertFalse(cfg.fuzzy)
-            self.assertEqual(cfg.pattern, pat)
-            self.assertFalse(cfg.regexp)
-
-            for modifier, option_name in modifier_to_option.items():
-                value = getattr(cfg, option_name)
-                if modifier in modifiers:
-                    self.assertTrue(value)
-                else:
-                    self.assertFalse(value)
+            expected = {modifier_to_option[modifier]: True for modifier in modifiers}
+            self.assertDictEqual(expected, opts)
 
     def test_modifier_ignored(self):
         cfg = MockArgParse()
-        pat = r'asd'
-        cfg.pattern = r'/' + pat + r'/v'
+        cfg.pattern = r'/asd/v'
 
-        result = pattern._prepare_pattern__magic(cfg)
+        parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-        self.assertIsNone(result)
+        self.assertEqual(parsed_pat, 'asd')
 
-        self.assertFalse(cfg.fuzzy)
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.invert_match)
-        self.assertFalse(cfg.path_search)
-        self.assertEqual(cfg.pattern, pat)
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertFalse(cfg.regexp)
+        expected = {}
+        self.assertDictEqual(expected, opts)
 
     def test_modifier_invalid(self):
         cfg = MockArgParse()
-        pat = r'asd'
-        cfg.pattern = r'/' + pat + r'/z'
+        cfg.pattern = r'/asd/z'
 
-        result = pattern._prepare_pattern__magic(cfg)
-
-        self.assertRegexpMatches(result, r'^Unknown modifier in pattern:')
-
-        self.assertFalse(cfg.fuzzy)
-        self.assertFalse(cfg.ignorecase)
-        self.assertFalse(cfg.invert_match)
-        self.assertFalse(cfg.path_search)
-        self.assertEqual(cfg.pattern, pat)
-        self.assertFalse(cfg.regex_dotall)
-        self.assertFalse(cfg.regex_multiline)
-        self.assertFalse(cfg.regexp)
+        with self.assertRaisesRegexp(pattern.PatternError, r'^Unknown modifier in pattern:'):
+            pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
 
 class TestMagicPatternDelims(unittest.TestCase):
@@ -401,51 +262,46 @@ class TestMagicPatternDelims(unittest.TestCase):
         for delim_close, delim_open in itertools.product(delims, repeat=2):
             cfg = MockArgParse()
 
-            pat = 'a'
-            cfg.pattern = delim_open + pat + delim_close
-
-            result = pattern._prepare_pattern__magic(cfg)
+            cfg.pattern = delim_open + 'a' + delim_close
 
             if delim_close in delim_closed and delim_closed[delim_close] == delim_open:
-                self.assertIsNone(result)
+                parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
+                self.assertEqual(parsed_pat, 'a')
             else:
-                self.assertRegexpMatches(result, r'^Inappropriate delimiters:', str(result))
+                with self.assertRaisesRegexp(pattern.PatternError, r'^Inappropriate delimiters:'):
+                    pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
     def test_matching_delims(self):
         delims = { '}': '{', '>': '<', ']': '[', ')': '(' }
         for delim_close, delim_open in delims.items():
             cfg = MockArgParse()
 
-            pat = 'a'
-            cfg.pattern = delim_open + pat + delim_close
+            cfg.pattern = delim_open + 'a' + delim_close
 
-            result = pattern._prepare_pattern__magic(cfg)
+            parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-            self.assertIsNone(result)
+            self.assertEqual(parsed_pat, 'a')
 
     def test_same_delims(self):
         delims = '/!@#%|?+'
         for delim in delims:
             cfg = MockArgParse()
 
-            pat = 'a'
-            cfg.pattern = delim + pat + delim
+            cfg.pattern = delim + 'a' + delim
 
-            result = pattern._prepare_pattern__magic(cfg)
+            parsed_pat, opts = pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
-            self.assertIsNone(result)
+            self.assertEqual(parsed_pat, 'a')
 
     def test_same_delims_unpaired(self):
         delims = { '!': '<', '>': '[', ']': '(', ')': '{' }
         for delim_close, delim_open in delims.items():
             cfg = MockArgParse()
 
-            pat = 'a'
-            cfg.pattern = delim_open + pat + delim_close
+            cfg.pattern = delim_open + 'a' + delim_close
 
-            result = pattern._prepare_pattern__magic(cfg)
-
-            self.assertRegexpMatches(result, r'^Inappropriate delimiters:')
+            with self.assertRaises(pattern.PatternError):
+                pattern._prepare_pattern__decompile_magic_pattern(cfg.pattern)
 
 
 if __name__ == '__main__':
