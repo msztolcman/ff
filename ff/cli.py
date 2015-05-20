@@ -144,6 +144,16 @@ def parse_input_args(args):
         p.error("argument -m/--mode: invalid choice: '%s' (choose from 'files', 'dirs', 'all')" % args.mode)
 
     # prepare pattern
+    if args.pattern is not None:
+        args.anon_sources.insert(0, args.anon_pattern)
+        args.magic_pattern = False
+    else:
+        args.pattern = args.anon_pattern
+        args.magic_pattern = True
+
+    if not args.pattern:
+        p.error('argument -p/--pattern is required')
+
     # FIXME: bad architecture
     err_msg = prepare_pattern(args)
     if err_msg:

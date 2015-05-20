@@ -12,8 +12,12 @@ import unicodedata
 from ff.utils import u
 
 
+class PatternError(Exception):
+    pass
+
+
 # pylint: disable=too-many-branches
-def _prepare_pattern__magic(args):
+def _prepare_pattern__decompile_magic_pattern(pattern):
     """ Parse pattern and try to recognize it is magic pattern.
         If so, parse magic pattern and set options for argparse
         result as in magic pattern is set.
@@ -29,9 +33,9 @@ def _prepare_pattern__magic(args):
         $
     ''', re.UNICODE | re.VERBOSE)
 
-    match = rxp_pattern.match(args.pattern)
+    match = rxp_pattern.match(pattern)
     if not match:
-        return
+        return pattern, {}
 
     pattern_parts = match.groupdict()
 
@@ -43,61 +47,63 @@ def _prepare_pattern__magic(args):
     }
     if pattern_parts['delim_close'] not in delim_closed or \
             delim_closed[pattern_parts['delim_close']] != pattern_parts['delim_open']:
-        return 'Inappropriate delimiters: %(delim_open)s %(delim_close)s' % pattern_parts
+        raise PatternError('Inappropriate delimiters: %(delim_open)s %(delim_close)s' % pattern_parts)
 
-    args.pattern = pattern_parts['pattern']
+    pat = pattern_parts['pattern']
+    opts = {}
 
     # pylint: disable=superfluous-parens
     for item in (pattern_parts['modifier'] or ''):
         if len(set(pattern_parts['modifier'])) != len(pattern_parts['modifier']):
-            return 'Incorrect modifiers in pattern: %s. Allowed modifiers: i, m, s, v, r.' % item
+            raise PatternError('Incorrect modifiers in pattern: %s. Allowed modifiers: i, m, s, v, r.' % item)
 
         # pylint: disable=multiple-statements
-        if item == 'i': args.ignorecase = True
-        elif item == 'm': args.regex_multiline = True
-        elif item == 's': args.regex_dotall = True
+        if item == 'i': opts['ignorecase'] = True
+        elif item == 'm': opts['regex_multiline'] = True
+        elif item == 's': opts['regex_dotall'] = True
         elif item == 'v': pass
-        elif item == 'r': args.invert_match = True
-        elif item == 'q': args.path_search = True
+        elif item == 'r': opts['invert_match'] = True
+        elif item == 'q': opts['path_search'] = True
         else:
-            return 'Unknown modifier in pattern: %s. Allowed modifiers: i, m, s, v, r.' % item
+            raise PatternError('Unknown modifier in pattern: %s. Allowed modifiers: i, m, s, v, r.' % item)
 
     if pattern_parts['mode'] is not None:
         if len(pattern_parts['mode']) > 1:
-            return 'Incorrect mode: %s. Allowed modes: p, g, f.' % pattern_parts['mode']
+            raise PatternError('Incorrect mode: %s. Allowed modes: p, g, f.' % pattern_parts['mode'])
 
         # pylint: disable=multiple-statements
-        if pattern_parts['mode'] == 'g': args.regexp = True
+        if pattern_parts['mode'] == 'g': opts['regexp'] = True
         elif pattern_parts['mode'] == 'p': pass
-        elif pattern_parts['mode'] == 'f': args.fuzzy = True
+        elif pattern_parts['mode'] == 'f': opts['fuzzy'] = True
         else:
-            return 'Unknown mode in pattern: %s. Allowed modes: p, g, f.' % pattern_parts['mode']
+            raise PatternError('Unknown mode in pattern: %s. Allowed modes: p, g, f.' % pattern_parts['mode'])
+
+    return pat, opts
 
 
-def _prepare_pattern__compile_fuzzy(cfg):
+def _prepare_pattern__compile_fuzzy(pattern, opts):
     """ Compile pattern to compiled regular expression using fuzzy syntax.
 
         fuzzy syntax mean that we search for name where are all given characters
         in given order, but there can be anything between them.
     """
 
-    pattern = ''
-    if cfg.fnmatch_begin:
-        pattern += r'\A'
-    for char in cfg.pattern:
-        pattern += '.*' + re.escape(char)
-    if cfg.fnmatch_end:
-        pattern += r'\Z'
+    pat = ''
+    if opts['fnmatch_begin']:
+        pat += r'\A'
+    for char in pattern:
+        pat += '.*' + re.escape(char)
+    if opts['fnmatch_end']:
+        pat += r'\Z'
 
     flags = re.UNICODE | re.DOTALL | re.MULTILINE
-    if cfg.ignorecase:
+    if opts['ignorecase']:
         flags = flags | re.IGNORECASE
 
-    return re.compile(pattern, flags)
+    return re.compile(pat, flags)
 
 
-# pylint: disable=invalid-name
-def _prepare_pattern__compile_regexp(cfg):
+def _prepare_pattern__compile_regexp(pattern, opts):
     """ Compile pattern to compiled regular expression using regexp syntax.
 
         We found that pattern is regular expression, and just pass there
@@ -105,18 +111,17 @@ def _prepare_pattern__compile_regexp(cfg):
     """
 
     flags = re.UNICODE
-    if cfg.ignorecase:
+    if opts['ignorecase']:
         flags = flags | re.IGNORECASE
-    if cfg.regex_dotall:
+    if opts['regex_dotall']:
         flags = flags | re.DOTALL
-    if cfg.regex_multiline:
+    if opts['regex_multiline']:
         flags = flags | re.MULTILINE
 
-    return re.compile(cfg.pattern, flags)
+    return re.compile(pattern, flags)
 
 
-# pylint: disable=invalid-name
-def _prepare_pattern__compile_fnmatch(cfg):
+def _prepare_pattern__compile_fnmatch(pattern, opts):
     """ Compile pattern to compiled regular expression using fnmatch syntax.
 
         See: http://docs.python.org/library/fnmatch.html
@@ -124,18 +129,18 @@ def _prepare_pattern__compile_fnmatch(cfg):
     import fnmatch
 
     flags = re.UNICODE
-    if cfg.ignorecase:
+    if opts['ignorecase']:
         flags = flags | re.IGNORECASE
 
-    pattern = fnmatch.translate(cfg.pattern)
-    if cfg.fnmatch_begin:
-        pattern = r'\A' + pattern
+    pat = fnmatch.translate(pattern)
+    if opts['fnmatch_begin']:
+        pat = r'\A' + pat
 
     ## our behaviour is in the opposite to fnmatch: by default *do not* match end of string
-    if not cfg.fnmatch_end:
-        pattern = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pattern, flags=re.UNICODE | re.VERBOSE)
+    if not opts['fnmatch_end']:
+        pat = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pat, flags=re.UNICODE | re.VERBOSE)
 
-    return re.compile(pattern, flags)
+    return re.compile(pat, flags)
 
 
 def prepare_pattern(cfg):
@@ -147,27 +152,25 @@ def prepare_pattern(cfg):
         Returns always compiled regexp, ready to use.
     """
 
-    parse_magic_pattern = False
-    if cfg.pattern is not None:
-        cfg.anon_sources.insert(0, cfg.anon_pattern)
-    else:
-        parse_magic_pattern = True
-        cfg.pattern = cfg.anon_pattern
-
-    if cfg.pattern is None:
-        return 'argument -p/--pattern is required'
-
     cfg.pattern = u(cfg.pattern)
     cfg.pattern = unicodedata.normalize('NFKC', cfg.pattern)
 
-    if parse_magic_pattern:
-        err_msg = _prepare_pattern__magic(cfg)
-        if err_msg:
-            return err_msg
+    if cfg.magic_pattern:
+        cfg.pattern, opts = _prepare_pattern__decompile_magic_pattern(cfg.pattern)
+        for opt, val in opts.items():
+            setattr(cfg, opt, val)
+
+    opts = {
+        'fnmatch_begin': cfg.fnmatch_begin,
+        'fnmatch_end': cfg.fnmatch_end,
+        'ignorecase': cfg.ignorecase,
+        'regex_dotall': cfg.regex_dotall,
+        'regex_multiline': cfg.regex_multiline,
+    }
 
     if cfg.fuzzy:
-        cfg.pattern = _prepare_pattern__compile_fuzzy(cfg)
+        cfg.pattern = _prepare_pattern__compile_fuzzy(cfg.pattern, opts)
     elif cfg.regexp:
-        cfg.pattern = _prepare_pattern__compile_regexp(cfg)
+        cfg.pattern = _prepare_pattern__compile_regexp(cfg.pattern, opts)
     else:
-        cfg.pattern = _prepare_pattern__compile_fnmatch(cfg)
+        cfg.pattern = _prepare_pattern__compile_fnmatch(cfg.pattern, opts)
