@@ -144,7 +144,8 @@ def parse_input_args(args):
 
     # prepare pattern
     if args.pattern is not None:
-        args.anon_sources.insert(0, args.anon_pattern)
+        if args.anon_pattern:
+            args.anon_sources.insert(0, args.anon_pattern)
         args.magic_pattern = False
     else:
         args.pattern = args.anon_pattern
