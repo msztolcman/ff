@@ -21,7 +21,7 @@ from ff.processing import process_source
 from ff.utils import disp, err, u
 
 
-# pylint: disable=too-many-statements
+# pylint: disable=too-many-statements,too-many-branches
 def parse_input_args(args):
     """ Parse input 'arguments' and return parsed.
     """

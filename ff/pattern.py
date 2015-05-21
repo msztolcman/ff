@@ -40,6 +40,9 @@ _VALID_MODES = sorted(_MODES.keys())
 
 
 class PatternError(Exception):
+    """
+        Pattern error exception
+    """
     pass
 
 
