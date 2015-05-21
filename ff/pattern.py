@@ -45,29 +45,6 @@ class PatternError(Exception):
     pass
 
 
-def prepare_pattern(cfg):
-    """
-    Parse and compile pattern
-    :param cfg:
-    :return: Pattern
-    """
-    pat = Pattern()
-
-    opts_list = ('fnmatch_begin', 'fnmatch_end', 'ignorecase', 'regex_dotall', 'regex_multiline',
-    'invert_match', 'regexp', 'fuzzy', 'magic_pattern', 'pattern')
-
-    for opt in opts_list:
-        setattr(pat, opt, getattr(cfg, opt))
-
-    pat.compile()
-
-    opts = {}
-    for opt in opts_list:
-        opts[opt] = getattr(pat, opt)
-
-    return pat.pattern, opts
-
-
 # pylint: disable=too-many-instance-attributes
 class Pattern(object):
     """ Representation of pattern to search

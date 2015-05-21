@@ -154,12 +154,20 @@ def parse_input_args(args):
         p.error('argument -p/--pattern is required')
 
     try:
-        args.pattern, pat_opts = pattern.prepare_pattern(args)
+        pat = pattern.Pattern()
+
+        opts_list = ('fnmatch_begin', 'fnmatch_end', 'ignorecase', 'regex_dotall', 'regex_multiline',
+        'invert_match', 'regexp', 'fuzzy', 'magic_pattern', 'pattern')
+
+        for opt in opts_list:
+            setattr(pat, opt, getattr(args, opt))
+
+        pat.compile()
+        args.pattern = pat
+
+        del pat, opts_list, opt
     except pattern.PatternError as ex:
         raise p.error(str(ex))
-    else:
-        for opt, val in pat_opts.items():
-            setattr(args, opt, val)
 
     # prepare sources
     args.source += args.anon_sources

@@ -43,9 +43,9 @@ def process_item(cfg, path):
     """
 
     if cfg.path_search:
-        is_name_match = cfg.pattern.search(path)
+        is_name_match = cfg.pattern.pattern.search(path)
     else:
-        is_name_match = cfg.pattern.search(os.path.basename(path))
+        is_name_match = cfg.pattern.pattern.search(os.path.basename(path))
 
     to_show = False
     if not cfg.invert_match and is_name_match:
