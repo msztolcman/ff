@@ -5,7 +5,6 @@ from __future__ import print_function, unicode_literals, absolute_import
 
 import re
 
-from test_helpers import get_opts, MockArgParse
 from test_manager import *
 
 from ff import pattern
@@ -16,9 +15,9 @@ RE_TYPE = type(re.compile(''))
 
 class TestPatternCompileRegexp(unittest.TestCase):
     def test_empty(self):
-        cfg = MockArgParse()
-
-        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
+        pat = pattern.Pattern()
+        pat.pattern = ''
+        parsed_pat = pat._prepare_pattern__compile_regexp()
 
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
@@ -26,10 +25,10 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertEqual(parsed_pat.pattern, '')
 
     def test_empty_pattern_regex_dotall(self):
-        cfg = MockArgParse()
-        cfg.regex_dotall = True
-
-        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
+        pat = pattern.Pattern()
+        pat.pattern = ''
+        pat.regex_dotall = True
+        parsed_pat = pat._prepare_pattern__compile_regexp()
 
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
@@ -37,10 +36,10 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertEqual(parsed_pat.pattern, '')
 
     def test_empty_pattern_regex_multiline(self):
-        cfg = MockArgParse()
-        cfg.regex_multiline = True
-
-        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
+        pat = pattern.Pattern()
+        pat.pattern = ''
+        pat.regex_multiline = True
+        parsed_pat = pat._prepare_pattern__compile_regexp()
 
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
@@ -48,10 +47,10 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertEqual(parsed_pat.pattern, '')
 
     def test_empty_pattern_ignorecase(self):
-        cfg = MockArgParse()
-        cfg.ignorecase = True
-
-        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
+        pat = pattern.Pattern()
+        pat.pattern = ''
+        pat.ignorecase = True
+        parsed_pat = pat._prepare_pattern__compile_regexp()
 
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
@@ -59,10 +58,10 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertEqual(parsed_pat.pattern, '')
 
     def test_simple_pattern(self):
-        cfg = MockArgParse()
-        cfg.pattern = r'asd'
-
-        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
+        pat = pattern.Pattern()
+        pat.pattern = ''
+        pat.pattern = r'asd'
+        parsed_pat = pat._prepare_pattern__compile_regexp()
 
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
@@ -70,10 +69,10 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertEqual(parsed_pat.pattern, r'asd')
 
     def test_pattern_with_regexp(self):
-        cfg = MockArgParse()
-        cfg.pattern = r'^asd$'
-
-        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
+        pat = pattern.Pattern()
+        pat.pattern = ''
+        pat.pattern = r'^asd$'
+        parsed_pat = pat._prepare_pattern__compile_regexp()
 
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
@@ -81,11 +80,11 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertEqual(parsed_pat.pattern, r'^asd$')
 
     def test_pattern_with_regexp_and_regex_dotall(self):
-        cfg = MockArgParse()
-        cfg.pattern = r'^asd$'
-        cfg.regex_dotall = True
-
-        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
+        pat = pattern.Pattern()
+        pat.pattern = ''
+        pat.pattern = r'^asd$'
+        pat.regex_dotall = True
+        parsed_pat = pat._prepare_pattern__compile_regexp()
 
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
@@ -93,13 +92,12 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertEqual(parsed_pat.pattern, r'^asd$')
 
     def test_full_options(self):
-        cfg = MockArgParse()
-        cfg.pattern = r'^asd$'
-        cfg.ignorecase = True
-        cfg.regex_dotall = True
-        cfg.regex_multiline = True
-
-        parsed_pat = pattern._prepare_pattern__compile_regexp(cfg.pattern, get_opts(cfg))
+        pat = pattern.Pattern()
+        pat.pattern = r'^asd$'
+        pat.ignorecase = True
+        pat.regex_dotall = True
+        pat.regex_multiline = True
+        parsed_pat = pat._prepare_pattern__compile_regexp()
 
         self.assertIsInstance(parsed_pat, RE_TYPE)
 

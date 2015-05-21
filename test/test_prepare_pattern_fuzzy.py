@@ -5,7 +5,6 @@ from __future__ import print_function, unicode_literals, absolute_import
 
 import re
 
-from test_helpers import get_opts, MockArgParse
 from test_manager import *
 
 from ff import pattern
@@ -16,95 +15,91 @@ RE_TYPE = type(re.compile(''))
 
 class TestPatternCompileFuzzy(unittest.TestCase):
     def test_empty(self):
-        cfg = MockArgParse()
+        pat = pattern.Pattern()
+        pat.pattern = ''
+        parsed_pat = pat._prepare_pattern__compile_fuzzy()
 
-        result = pattern._prepare_pattern__compile_fuzzy(cfg.pattern, get_opts(cfg))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertIsInstance(result, RE_TYPE)
-
-        self.assertEqual(result.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
-        self.assertEqual(result.pattern, r'')
+        self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
+        self.assertEqual(parsed_pat.pattern, r'')
 
     def test_empty_pattern_fnmatch_begin(self):
-        cfg = MockArgParse()
-        cfg.fnmatch_begin = True
+        pat = pattern.Pattern()
+        pat.pattern = ''
+        pat.fnmatch_begin = True
+        parsed_pat = pat._prepare_pattern__compile_fuzzy()
 
-        result = pattern._prepare_pattern__compile_fuzzy(cfg.pattern, get_opts(cfg))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertIsInstance(result, RE_TYPE)
-
-        self.assertEqual(result.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
-        self.assertEqual(result.pattern, r'\A')
+        self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
+        self.assertEqual(parsed_pat.pattern, r'\A')
 
     def test_empty_pattern_fnmatch_end(self):
-        cfg = MockArgParse()
-        cfg.fnmatch_end = True
+        pat = pattern.Pattern()
+        pat.pattern = ''
+        pat.fnmatch_end = True
+        parsed_pat = pat._prepare_pattern__compile_fuzzy()
 
-        result = pattern._prepare_pattern__compile_fuzzy(cfg.pattern, get_opts(cfg))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertIsInstance(result, RE_TYPE)
-
-        self.assertEqual(result.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
-        self.assertEqual(result.pattern, r'\Z')
+        self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
+        self.assertEqual(parsed_pat.pattern, r'\Z')
 
     def test_empty_pattern_ignorecase(self):
-        cfg = MockArgParse()
-        cfg.ignorecase = True
+        pat = pattern.Pattern()
+        pat.pattern = ''
+        pat.ignorecase = True
+        parsed_pat = pat._prepare_pattern__compile_fuzzy()
 
-        result = pattern._prepare_pattern__compile_fuzzy(cfg.pattern, get_opts(cfg))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertIsInstance(result, RE_TYPE)
-
-        self.assertEqual(result.flags, re.UNICODE | re.MULTILINE | re.DOTALL | re.IGNORECASE)
-        self.assertEqual(result.pattern, r'')
+        self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL | re.IGNORECASE)
+        self.assertEqual(parsed_pat.pattern, r'')
 
     def test_simple_pattern(self):
-        cfg = MockArgParse()
-        cfg.pattern = r'asd'
+        pat = pattern.Pattern()
+        pat.pattern = r'asd'
+        parsed_pat = pat._prepare_pattern__compile_fuzzy()
 
-        result = pattern._prepare_pattern__compile_fuzzy(cfg.pattern, get_opts(cfg))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertIsInstance(result, RE_TYPE)
-
-        self.assertEqual(result.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
-        self.assertEqual(result.pattern, r'.*a.*s.*d')
+        self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
+        self.assertEqual(parsed_pat.pattern, r'.*a.*s.*d')
 
     def test_pattern_with_regexp(self):
-        cfg = MockArgParse()
-        cfg.pattern = r'^asd$'
+        pat = pattern.Pattern()
+        pat.pattern = r'^asd$'
+        parsed_pat = pat._prepare_pattern__compile_fuzzy()
 
-        result = pattern._prepare_pattern__compile_fuzzy(cfg.pattern, get_opts(cfg))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertIsInstance(result, RE_TYPE)
-
-        self.assertEqual(result.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
-        self.assertEqual(result.pattern, r'.*\^.*a.*s.*d.*\$')
+        self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
+        self.assertEqual(parsed_pat.pattern, r'.*\^.*a.*s.*d.*\$')
 
     def test_pattern_with_regexp_and_fnmatch_begin(self):
-        cfg = MockArgParse()
-        cfg.pattern = r'^asd$'
-        cfg.fnmatch_begin = True
+        pat = pattern.Pattern()
+        pat.pattern = r'^asd$'
+        pat.fnmatch_begin = True
+        parsed_pat = pat._prepare_pattern__compile_fuzzy()
 
-        result = pattern._prepare_pattern__compile_fuzzy(cfg.pattern, get_opts(cfg))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertIsInstance(result, RE_TYPE)
-
-        self.assertEqual(result.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
-        self.assertEqual(result.pattern, r'\A.*\^.*a.*s.*d.*\$')
+        self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
+        self.assertEqual(parsed_pat.pattern, r'\A.*\^.*a.*s.*d.*\$')
 
     def test_full_options(self):
-        cfg = MockArgParse()
-        cfg.pattern = r'^asd$'
-        cfg.fnmatch_begin = True
-        cfg.fnmatch_end = True
-        cfg.ignorecase = True
+        pat = pattern.Pattern()
+        pat.pattern = r'^asd$'
+        pat.fnmatch_begin = True
+        pat.fnmatch_end = True
+        pat.ignorecase = True
+        parsed_pat = pat._prepare_pattern__compile_fuzzy()
 
-        result = pattern._prepare_pattern__compile_fuzzy(cfg.pattern, get_opts(cfg))
+        self.assertIsInstance(parsed_pat, RE_TYPE)
 
-        self.assertIsInstance(result, RE_TYPE)
-
-        self.assertEqual(result.flags, re.UNICODE | re.MULTILINE | re.DOTALL | re.IGNORECASE)
-        self.assertEqual(result.pattern, r'\A.*\^.*a.*s.*d.*\$\Z')
+        self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL | re.IGNORECASE)
+        self.assertEqual(parsed_pat.pattern, r'\A.*\^.*a.*s.*d.*\$\Z')
 
 
 if __name__ == '__main__':
