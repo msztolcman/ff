@@ -184,7 +184,10 @@ def prepare_pattern(cfg):
 
     opts_list = ('fnmatch_begin', 'fnmatch_end', 'ignorecase', 'regex_dotall', 'regex_multiline',
         'invert_match', 'path_search')
-    opts = {opt: pat_opts.get(opt, getattr(cfg, opt)) for opt in opts_list}
+    opts = {
+        opt: pat_opts.get(opt, getattr(cfg, opt))
+        for opt in opts_list
+    }
 
     if pat_opts.get('fuzzy'):
         pat = _prepare_pattern__compile_fuzzy(pat, opts)
