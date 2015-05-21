@@ -11,6 +11,7 @@ import unicodedata
 
 from ff.utils import u
 
+__all__ = ['Pattern', 'PatternError']
 
 _DELIM_CLOSED = {
     ## match same
