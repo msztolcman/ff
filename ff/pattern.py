@@ -12,6 +12,13 @@ import unicodedata
 from ff.utils import u
 
 
+_DELIM_CLOSED = {
+    ## match same
+    '/': '/', '!': '!', '@': '@', '#': '#', '%': '%', '|': '|', '?': '?', '+': '+',
+    ## match pair
+    '}': '{', ']': '[', ')': '(', '>': '<'
+}
+
 class PatternError(Exception):
     pass
 
@@ -39,14 +46,8 @@ def _prepare_pattern__decompile_magic_pattern(pattern):
 
     pattern_parts = match.groupdict()
 
-    delim_closed = {
-        ## match same
-        '/': '/', '!': '!', '@': '@', '#': '#', '%': '%', '|': '|', '?': '?', '+': '+',
-        ## match pair
-        '}': '{', ']': '[', ')': '(', '>': '<'
-    }
-    if pattern_parts['delim_close'] not in delim_closed or \
-            delim_closed[pattern_parts['delim_close']] != pattern_parts['delim_open']:
+    if pattern_parts['delim_close'] not in _DELIM_CLOSED or \
+            _DELIM_CLOSED[pattern_parts['delim_close']] != pattern_parts['delim_open']:
         raise PatternError('Inappropriate delimiters: %(delim_open)s %(delim_close)s' % pattern_parts)
 
     pat = pattern_parts['pattern']
