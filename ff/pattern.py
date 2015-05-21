@@ -400,7 +400,9 @@ class Pattern(object):
         elif self._regexp:
             ret += 'g'
 
-        ret += '/' + self._pattern.pattern + '/'
+        # pylint: disable=no-member
+        pat = self._pattern if isinstance(self._pattern, (str, unicode)) else self._pattern.pattern
+        ret += '/' + pat + '/'
 
         for mod, name in _MODIFIERS.items():
             if not name:
