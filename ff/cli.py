@@ -15,7 +15,7 @@ import textwrap
 import unicodedata
 
 import ff
-from ff.pattern import prepare_pattern
+from ff import pattern
 from ff.plugin import FFPlugins, FFPlugin, InvalidPluginsPath, FFPluginError
 from ff.processing import process_source
 from ff.utils import disp, err, u
@@ -154,10 +154,13 @@ def parse_input_args(args):
     if not args.pattern:
         p.error('argument -p/--pattern is required')
 
-    # FIXME: bad architecture
-    err_msg = prepare_pattern(args)
-    if err_msg:
-        raise p.error(err_msg)
+    try:
+        args.pattern, pat_opts = pattern.prepare_pattern(args)
+    except pattern.PatternError as ex:
+        raise p.error(str(ex))
+    else:
+        for opt, val in pat_opts.items():
+            setattr(args, opt, val)
 
     # prepare sources
     args.source += args.anon_sources

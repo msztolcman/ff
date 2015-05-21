@@ -27,6 +27,7 @@ _MODIFIERS = {
     'r': 'invert_match',
     'q': 'path_search',
 }
+
 _VALID_MODIFIERS = sorted(_MODIFIERS.keys())
 
 _MODES = {
@@ -34,7 +35,9 @@ _MODES = {
     'p': None,
     'f': 'fuzzy',
 }
+
 _VALID_MODES = sorted(_MODES.keys())
+
 
 class PatternError(Exception):
     pass
@@ -171,25 +174,23 @@ def prepare_pattern(cfg):
         Returns always compiled regexp, ready to use.
     """
 
-    cfg.pattern = u(cfg.pattern)
-    cfg.pattern = unicodedata.normalize('NFKC', cfg.pattern)
+    pat = u(cfg.pattern)
+    pat = unicodedata.normalize('NFKC', pat)
 
     if cfg.magic_pattern:
-        cfg.pattern, opts = _prepare_pattern__decompile_magic_pattern(cfg.pattern)
-        for opt, val in opts.items():
-            setattr(cfg, opt, val)
-
-    opts = {
-        'fnmatch_begin': cfg.fnmatch_begin,
-        'fnmatch_end': cfg.fnmatch_end,
-        'ignorecase': cfg.ignorecase,
-        'regex_dotall': cfg.regex_dotall,
-        'regex_multiline': cfg.regex_multiline,
-    }
-
-    if cfg.fuzzy:
-        cfg.pattern = _prepare_pattern__compile_fuzzy(cfg.pattern, opts)
-    elif cfg.regexp:
-        cfg.pattern = _prepare_pattern__compile_regexp(cfg.pattern, opts)
+        pat, pat_opts = _prepare_pattern__decompile_magic_pattern(pat)
     else:
-        cfg.pattern = _prepare_pattern__compile_fnmatch(cfg.pattern, opts)
+        pat_opts = {}
+
+    opts_list = ('fnmatch_begin', 'fnmatch_end', 'ignorecase', 'regex_dotall', 'regex_multiline',
+        'invert_match', 'path_search')
+    opts = {opt: pat_opts.get(opt, getattr(cfg, opt)) for opt in opts_list}
+
+    if pat_opts.get('fuzzy'):
+        pat = _prepare_pattern__compile_fuzzy(pat, opts)
+    elif pat_opts.get('regexp'):
+        pat = _prepare_pattern__compile_regexp(pat, opts)
+    else:
+        pat = _prepare_pattern__compile_fnmatch(pat, opts)
+
+    return pat, pat_opts
