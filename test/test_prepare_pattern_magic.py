@@ -117,7 +117,6 @@ class TestMagicPatternModifier(unittest.TestCase):
             'm': 'regex_multiline',
             's': 'regex_dotall',
             'r': 'invert_match',
-            'q': 'path_search'
         }
 
         for modifier, selected_option_name in modifier_to_option.items():
@@ -139,7 +138,6 @@ class TestMagicPatternModifier(unittest.TestCase):
             'm': 'regex_multiline',
             's': 'regex_dotall',
             'r': 'invert_match',
-            'q': 'path_search'
         }
 
         for modifiers in itertools.permutations(modifier_to_option.keys(), 2):
@@ -159,7 +157,6 @@ class TestMagicPatternModifier(unittest.TestCase):
             'm': 'regex_multiline',
             's': 'regex_dotall',
             'r': 'invert_match',
-            'q': 'path_search'
         }
 
         for modifier in modifier_to_option.keys():
@@ -175,7 +172,6 @@ class TestMagicPatternModifier(unittest.TestCase):
             'm': 'regex_multiline',
             's': 'regex_dotall',
             'r': 'invert_match',
-            'q': 'path_search'
         }
 
         for modifiers in itertools.permutations(modifier_to_option.keys(), 3):
@@ -195,7 +191,6 @@ class TestMagicPatternModifier(unittest.TestCase):
             'm': 'regex_multiline',
             's': 'regex_dotall',
             'r': 'invert_match',
-            'q': 'path_search'
         }
 
         for modifiers in itertools.permutations(modifier_to_option.keys(), 4):
@@ -215,7 +210,6 @@ class TestMagicPatternModifier(unittest.TestCase):
             'm': 'regex_multiline',
             's': 'regex_dotall',
             'r': 'invert_match',
-            'q': 'path_search'
         }
 
         for modifiers in itertools.permutations(modifier_to_option.keys(), 5):

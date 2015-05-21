@@ -25,7 +25,6 @@ _MODIFIERS = {
     's': 'regex_dotall',
     'v': None,
     'r': 'invert_match',
-    'q': 'path_search',
 }
 
 _VALID_MODIFIERS = sorted(_MODIFIERS.keys())
