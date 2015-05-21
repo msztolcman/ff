@@ -19,6 +19,23 @@ _DELIM_CLOSED = {
     '}': '{', ']': '[', ')': '(', '>': '<'
 }
 
+_MODIFIERS = {
+    'i': 'ignorecase',
+    'm': 'regex_multiline',
+    's': 'regex_dotall',
+    'v': None,
+    'r': 'invert_match',
+    'q': 'path_search',
+}
+_VALID_MODIFIERS = sorted(_MODIFIERS.keys())
+
+_MODES = {
+    'g': 'regexp',
+    'p': None,
+    'f': 'fuzzy',
+}
+_VALID_MODES = sorted(_MODES.keys())
+
 class PatternError(Exception):
     pass
 
@@ -56,28 +73,29 @@ def _prepare_pattern__decompile_magic_pattern(pattern):
     # pylint: disable=superfluous-parens
     for item in (pattern_parts['modifier'] or ''):
         if len(set(pattern_parts['modifier'])) != len(pattern_parts['modifier']):
-            raise PatternError('Incorrect modifiers in pattern: %s. Allowed modifiers: i, m, s, v, r.' % item)
+            raise PatternError('Incorrect modifiers in pattern: %s. Allowed modifiers: %s.' %
+               (item, ', '.join(_VALID_MODIFIERS)))
 
         # pylint: disable=multiple-statements
-        if item == 'i': opts['ignorecase'] = True
-        elif item == 'm': opts['regex_multiline'] = True
-        elif item == 's': opts['regex_dotall'] = True
-        elif item == 'v': pass
-        elif item == 'r': opts['invert_match'] = True
-        elif item == 'q': opts['path_search'] = True
-        else:
-            raise PatternError('Unknown modifier in pattern: %s. Allowed modifiers: i, m, s, v, r.' % item)
+        try:
+            if _MODIFIERS[item]:
+                opts[_MODIFIERS[item]] = True
+        except KeyError:
+            raise PatternError('Unknown modifier in pattern: %s. Allowed modifiers: %s.' %
+               (item, ', '.join(_VALID_MODIFIERS)))
 
     if pattern_parts['mode'] is not None:
         if len(pattern_parts['mode']) > 1:
-            raise PatternError('Incorrect mode: %s. Allowed modes: p, g, f.' % pattern_parts['mode'])
+            raise PatternError('Incorrect mode: %s. Allowed modes: %s.' %
+               (pattern_parts['mode'], ', '.join(_VALID_MODES)))
 
         # pylint: disable=multiple-statements
-        if pattern_parts['mode'] == 'g': opts['regexp'] = True
-        elif pattern_parts['mode'] == 'p': pass
-        elif pattern_parts['mode'] == 'f': opts['fuzzy'] = True
-        else:
-            raise PatternError('Unknown mode in pattern: %s. Allowed modes: p, g, f.' % pattern_parts['mode'])
+        try:
+            if _MODES[pattern_parts['mode']]:
+                opts[_MODES[pattern_parts['mode']]] = True
+        except KeyError:
+            raise PatternError('Unknown mode in pattern: %s. Allowed modes: %s.' %
+                (pattern_parts['mode'], ', '.join(_VALID_MODES)))
 
     return pat, opts
 
