@@ -49,6 +49,11 @@ class PatternError(Exception):
 class Pattern(object):
     """ Representation of pattern to search
     """
+    __slots__ = ('_pattern', '_fnmatch_begin', '_fnmatch_end', '_ignorecase',
+        '_regex_dotall', '_regex_multiline', '_invert_match', '_regexp',
+        '_fuzzy', '_magic_pattern', '_compilation_status',
+    )
+
     STATUS_NEW = 1
     STATUS_IN_PROGRESS = 2
     STATUS_COMPLETED = 3
@@ -386,3 +391,33 @@ class Pattern(object):
         if self._compilation_status == self.STATUS_COMPLETED:
             raise PatternError('Pattern instance cannot be modified after compiling')
         self._magic_pattern = bool(value)
+
+    def __str__(self):
+        ret = ''
+
+        if self._fuzzy:
+            ret += 'f'
+        elif self._regexp:
+            ret += 'g'
+
+        ret += '/' + self._pattern.pattern + '/'
+
+        for mod, name in _MODIFIERS.items():
+            if not name:
+                continue
+            if getattr(self, name):
+                ret += mod
+
+        return ret
+
+    def __repr__(self):
+        properties = []
+        for prop in self.__slots__:
+            prop = prop[1:]
+            if not hasattr(self, prop):
+                continue
+
+            val = getattr(self, prop)
+            if val:
+                properties.append('%s=%s' % (prop, val))
+        return '<Pattern(%s)>' % ', '.join(properties)
