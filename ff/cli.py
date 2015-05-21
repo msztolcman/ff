@@ -166,7 +166,7 @@ def parse_input_args(args):
         pat.compile()
         args.pattern = pat
 
-        del pat, opts_list, opt
+        del pat, opts_list
     except pattern.PatternError as ex:
         raise p.error(str(ex))
 
