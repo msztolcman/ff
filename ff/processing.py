@@ -9,11 +9,10 @@ from __future__ import print_function, unicode_literals, division
 import copy
 import os, os.path
 import subprocess
-import sys
 import unicodedata
 
 from ff.plugin import FFPluginError
-from ff.utils import ask, disp
+from ff.utils import ask, disp, err
 
 
 _IS_VCS__NAMES = {'.git': 1, '.svn': 1, 'CVS': 1, '.hg': 1, '_MTN': 1, 'RCS': 1, 'SCCS': 1, '_darcs': 1, '_sgbak': 1}
@@ -61,8 +60,7 @@ def process_item(cfg, path):
             try:
                 to_show = test.run(path)
             except FFPluginError as ex:
-                disp('Plugin "%s" error: %s' % (test.name, ex), file=sys.stderr)
-                sys.exit(1)
+                err('Plugin "%s" error: %s' % (test.name, ex), exit_code=1)
             else:
                 if not to_show:
                     return
