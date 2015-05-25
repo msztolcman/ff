@@ -8,6 +8,7 @@ from __future__ import print_function, unicode_literals, division
 
 import copy
 import os, os.path
+import shlex
 import subprocess
 import unicodedata
 
@@ -76,11 +77,16 @@ def process_item(cfg, path):
         disp(prefix, path, sep='', end=cfg.delim)
 
     if cfg.execute:
-        exe = prepare_execute(cfg.execute, path, os.path.dirname(path), os.path.basename(path))
+        if cfg.shell_exec:
+            execute = [cfg.execute]
+        else:
+            execute = shlex.split(cfg.execute)
+
+        execute = prepare_execute(execute, path, os.path.dirname(path), os.path.basename(path))
         if cfg.verbose_exec:
-            disp(*exe)
+            disp(*execute)
         if not cfg.interactive_exec or ask('Execute command on %s?' % path, 'yn', 'n') == 'y':
-            subprocess.call(exe, shell=cfg.shell_exec)
+            subprocess.call(execute, shell=cfg.shell_exec)
 
 
 def is_path_excluded(excluded_paths, path):

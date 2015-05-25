@@ -9,7 +9,6 @@ from __future__ import print_function, unicode_literals, division
 import argparse
 import itertools
 import os, os.path
-import shlex
 import sys
 import textwrap
 import unicodedata
@@ -188,10 +187,7 @@ def parse_input_args(args):
         args.source[i] = unicodedata.normalize('NFKC', src)
 
     # prepare exec
-    if args.shell_exec:
-        args.execute = [u(args.execute)]
-    elif args.execute:
-        args.execute = [u(part) for part in shlex.split(args.execute)]
+    args.execute = u(args.execute)
 
     # prepare excluded paths
     for i, ex_path in enumerate(args.excluded_paths):
