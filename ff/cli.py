@@ -253,27 +253,27 @@ def main():
     """ Run program
     """
     try:
-        config = parse_input_args(sys.argv[1:])
+        args = parse_input_args(sys.argv[1:])
     except argparse.ArgumentError as ex:
         err(str(ex), exit_code=1)
 
     # where to search for plugins
     try:
-        _detect_plugins_paths(config)
+        _detect_plugins_paths(args)
     except InvalidPluginsPath as ex:
         err('%s: %s' % (ex.path, str(ex)), sep='', exit_code=1)
 
     try:
         # None means: show me the list of plugins
-        if None in config.help_test_plugins:
+        if None in args.help_test_plugins:
             plugins = FFPlugins.find_all('test')
             plugins.print_list()
 
             sys.exit()
         # show info about testing plugins
-        elif config.help_test_plugins:
+        elif args.help_test_plugins:
             # plugins names can be separated with comma
-            plugins = [plugin.split(',') for plugin in config.help_test_plugins]
+            plugins = [plugin.split(',') for plugin in args.help_test_plugins]
             plugins = itertools.chain(*plugins)
 
             plugins = FFPlugins.find(plugins, 'test')
@@ -285,12 +285,12 @@ def main():
 
     # find all requested test plugins
     try:
-        config.tests = _initialize_plugins(config)
+        args.tests = _initialize_plugins(args)
     except FFPluginError as ex:
         err(str(ex), exit_code=1)
 
     try:
-        for source in config.source:
-            process_source(source, config)
+        for source in args.source:
+            process_source(source, args)
     except KeyboardInterrupt:
         disp('Interrupted by CTRL-C, aborting', file=sys.stderr)
