@@ -70,6 +70,7 @@ def parse_input_args(args):
        help='split results by binary zero instead of new line (useful to work with xargs)')
     p.add_argument('--ignorecase', '-i', '--ignore-case', action='store_true', default=False,
        help='ignore case when match pattern to paths')
+    # TODO: dest='sources'
     p.add_argument('--source', '-s', action='append', type=str, default=[],
        help='optional, see: source above')
     p.add_argument('--pattern', '-p', type=str,
@@ -109,6 +110,7 @@ def parse_input_args(args):
        help='ask before execute command on every item')
     p.add_argument('--shell-exec', action='store_true', default=False,
        help='execute command from --exec argument in shell (with shell expansion etc)')
+    # TODO: dest=include_vcs
     p.add_argument('--vcs', action='store_true', default=False,
         help='do not skip VCS directories (.git, .svn etc)')
     p.add_argument('--exclude-path', '-c', metavar='EXCLUDED_PATH', dest='excluded_paths', action='append', type=str, default=[],
@@ -144,6 +146,7 @@ def parse_input_args(args):
         p.error("argument -m/--mode: invalid choice: '%s' (choose from 'files', 'dirs', 'all')" % args.mode)
 
     # prepare pattern
+    # TODO: should be converted to UTF8 in this place?
     if args.pattern is not None:
         if args.anon_pattern:
             args.anon_sources.insert(0, args.anon_pattern)
@@ -162,6 +165,7 @@ def parse_input_args(args):
         'invert_match', 'regexp', 'fuzzy', 'magic_pattern', 'pattern')
 
         for opt in opts_list:
+            # TODO: should be converted to UTF8 in this place?
             setattr(pat, opt, getattr(args, opt))
 
         pat.compile()

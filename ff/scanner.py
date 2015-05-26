@@ -99,6 +99,7 @@ class Scanner(object):
 
             if self.tests:
                 for test in self.tests:
+                    # TODO: test should have passed to_show argument to decide to fail or not (usualy: yes)
                     to_show = test.run(item)
 
             if not to_show:
