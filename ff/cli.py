@@ -7,17 +7,19 @@
 from __future__ import print_function, unicode_literals, division
 
 import argparse
+import copy
 import itertools
 import os, os.path
+import shlex
+import subprocess
 import sys
 import textwrap
-import unicodedata
 
 import ff
 from ff import pattern
 from ff.plugin import FFPlugins, FFPlugin, InvalidPluginsPath, FFPluginError
-from ff.processing import process_source
-from ff.utils import disp, err, u
+from ff import scanner
+from ff.utils import disp, err, u, ask, normalize
 
 
 # pylint: disable=too-many-statements,too-many-branches
@@ -132,9 +134,9 @@ def parse_input_args(args):
 
     # mode
     modes = {
-        'files': 'files', 'file': 'files', 'f': 'files',
-        'dirs': 'dirs', 'dir': 'dirs', 'd': 'dirs',
-        'all': 'all', 'a': 'all'
+        'files': scanner.MODE_FILES, 'file': scanner.MODE_FILES, 'f': scanner.MODE_FILES,
+        'dirs': scanner.MODE_DIRS, 'dir': scanner.MODE_DIRS, 'd': scanner.MODE_DIRS,
+        'all': scanner.MODE_ALL, 'a': scanner.MODE_ALL
     }
     try:
         args.mode = modes[args.mode.lower()]
@@ -184,7 +186,7 @@ def parse_input_args(args):
             p.error('Source %s doesn\'t exists or is not a directory' % src)
 
         src = os.path.abspath(src)
-        args.source[i] = unicodedata.normalize('NFKC', src)
+        args.source[i] = normalize(src)
 
     # prepare exec
     args.execute = u(args.execute)
@@ -192,7 +194,7 @@ def parse_input_args(args):
     # prepare excluded paths
     for i, ex_path in enumerate(args.excluded_paths):
         ex_path = u(ex_path)
-        ex_path = unicodedata.normalize('NFKC', ex_path)
+        ex_path = normalize(ex_path)
         args.excluded_paths[i] = os.path.abspath(ex_path).rstrip(os.sep)
 
     if args.print0:
@@ -203,7 +205,7 @@ def parse_input_args(args):
     return args
 
 
-def _detect_plugins_paths(args):
+def detect_plugins_paths(args):
     """
     Detect and collect plugins paths
     :param args:
@@ -225,7 +227,7 @@ def _detect_plugins_paths(args):
                 FFPlugins.path_add(plugins_path)
 
 
-def _initialize_plugins(args):
+def initialize_plugins(args):
     """
     Find and prepare plugins for use
     :param args:
@@ -249,6 +251,51 @@ def _initialize_plugins(args):
     return plugins
 
 
+def prepare_execute(exe, path, dirname, basename):
+    """ Replace keywords and env variables in 'exe' with values.
+        Recognized keywords:
+        {path} - full file path
+        {dirname} - parent directory for file
+        {basename} - filename without path
+    """
+
+    exe = copy.copy(exe)
+    for i, elem in enumerate(exe):
+        elem = elem.replace('{path}', path)
+        elem = elem.replace('{dirname}', dirname)
+        elem = elem.replace('{basename}', basename)
+        exe[i] = elem
+
+    return exe
+
+
+def process_item(cfg, path):
+    """ Print item and/or execute command if given.
+    """
+
+    if cfg.display:
+        if not cfg.prefix:
+            prefix = ''
+        elif os.path.isdir(path):
+            prefix = 'd: '
+        else:
+            prefix = 'f: '
+
+        disp(prefix, path, sep='', end=cfg.delim)
+
+    if cfg.execute:
+        if cfg.shell_exec:
+            execute = [cfg.execute]
+        else:
+            execute = shlex.split(cfg.execute)
+
+        execute = prepare_execute(execute, path, os.path.dirname(path), os.path.basename(path))
+        if cfg.verbose_exec:
+            disp(*execute)
+        if not cfg.interactive_exec or ask('Execute command on %s?' % path, 'yn', 'n') == 'y':
+            subprocess.call(execute, shell=cfg.shell_exec)
+
+
 def main():
     """ Run program
     """
@@ -259,7 +306,7 @@ def main():
 
     # where to search for plugins
     try:
-        _detect_plugins_paths(args)
+        detect_plugins_paths(args)
     except InvalidPluginsPath as ex:
         err('%s: %s' % (ex.path, str(ex)), sep='', exit_code=1)
 
@@ -285,12 +332,15 @@ def main():
 
     # find all requested test plugins
     try:
-        args.tests = _initialize_plugins(args)
+        args.tests = initialize_plugins(args)
     except FFPluginError as ex:
         err(str(ex), exit_code=1)
 
     try:
-        for source in args.source:
-            process_source(source, args)
+        for item in scanner.Scanner(args):
+            process_item(args,item)
+    except FFPluginError as ex:
+        # TODO: failed plugin name
+        err('Plugin error: %s' % ex, exit_code=1)
     except KeyboardInterrupt:
         disp('Interrupted by CTRL-C, aborting', file=sys.stderr)

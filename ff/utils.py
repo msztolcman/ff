@@ -6,10 +6,13 @@
 
 from __future__ import print_function, unicode_literals, division
 
+import functools
 import sys
+import unicodedata
 
 
 IS_PY2 = sys.version_info[0] < 3
+NORMALIZE_FORM = 'NFKC'
 
 
 def ask(question, replies, default=None):
@@ -101,3 +104,6 @@ def disp(*args, **kwargs):
         except UnicodeEncodeError:
             args = [part.encode('ascii', 'replace') for part in args]
             print(*args, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
+
+
+normalize = functools.partial(unicodedata.normalize, NORMALIZE_FORM)
