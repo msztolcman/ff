@@ -14,15 +14,13 @@ from ff.utils import normalize
 MODE_ALL = 'all'
 MODE_FILES = 'files'
 MODE_DIRS = 'dirs'
-
+VCS_NAMES = {
+    '.git': 1, '.svn': 1, 'CVS': 1, '.hg': 1,
+    '_MTN': 1, 'RCS': 1, 'SCCS': 1, '_darcs': 1,
+    '_sgbak': 1
+}
 
 class Scanner(object):
-    _IS_VCS__NAMES = {
-        '.git': 1, '.svn': 1, 'CVS': 1, '.hg': 1,
-        '_MTN': 1, 'RCS': 1, 'SCCS': 1, '_darcs': 1,
-        '_sgbak': 1
-    }
-
     def __init__(self, cfg):
         self.sources = cfg.source
 
@@ -51,7 +49,7 @@ class Scanner(object):
     def _is_not_vcs(self, item):
         """ Check if `item` is VCS
         """
-        return item not in self._IS_VCS__NAMES
+        return item not in VCS_NAMES
 
     def _walk(self, path):
         src_len = len(path)
