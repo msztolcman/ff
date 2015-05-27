@@ -153,81 +153,88 @@ Voila!
 Usage
 -----
 
-    usage: ff [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-f] [-q] [-l] [-d]
-                [-B] [-E] [-v] [-m MODE] [-x COMMAND] [--prefix] [--no-display]
-                [--verbose-exec] [--interactive-exec] [--shell-exec] [--vcs]
-                [-c EXCLUDED_PATH] [-t TESTS] [--plugins-path PLUGINS_PATH]
-                [--version] [--help-test-plugins [TEST_NAME[,TEST2_NAME]]]
-                [pattern] [sources [sources ...]]
-
+    usage: ff [-h] [--print0] [--ignorecase] [--source SOURCE] [--pattern PATTERN]
+              [--regexp] [--fuzzy] [--depth DEPTH] [--path-search]
+              [--regex-multiline] [--regex-dotall] [--begin] [--end]
+              [--invert-match] [--mode MODE] [--exec COMMAND] [--prefix]
+              [--no-display] [--colorize] [--verbose-exec] [--interactive-exec]
+              [--shell-exec] [--vcs] [--exclude-path EXCLUDED_PATH] [--test TESTS]
+              [--plugins-path PLUGINS_PATH] [--version]
+              [--help-test-plugins [TEST_NAME[,TEST2_NAME]]]
+              [pattern] [sources [sources ...]]
+    
     Easily search and process files.
-
+    
     positional arguments:
-    pattern               pattern to search
-    sources               optional source (if missing, use current directory)
-
+      pattern               pattern to search
+      sources               optional source (if missing, use current directory)
+    
     optional arguments:
-    -h, --help            show this help message and exit
-    -0, --print0          split results by binary zero instead of new line
-                          (useful to work with xargs)
-    -i, --ignorecase, --ignore-case
-                          ignore case when match pattern to paths
-    -s SOURCE, --source SOURCE
-                          optional, see: source above
-    -p PATTERN, --pattern PATTERN
-                          optional, see: pattern above
-    -g, --regexp          treat pattern as regular expression (uses Python
-                          regexp engine)
-    -f, --fuzzy           pattern defines only set and order of characters used
-                          in filename
-    -q, --path-search     search in full path, instead of bare name of item
-    -l, --regex-multiline
-                          modify meta characters: "^" and "$" behaviour when
-                          pattern is regular expression. See:
-                          http://docs.python.org/2/library/re.html#re.MULTILINE
-    -d, --regex-dotall    modify meta character: "." behaviour when pattern is
-                          regular expression. See:
-                          http://docs.python.org/2/library/re.html#re.DOTALL
-    -B, --begin           match pattern to begin of item name (ignored in regexp
-                          mode)
-    -E, --end             match pattern to end of item name (ignored in regexp
-                          mode)
-    -v, -r, --invert-match
-                          find objects that do *not* match pattern
-    -m MODE, --mode MODE  allow to choose to search for "files" only, "dirs", or
-                          "all"
-    -x COMMAND, --exec COMMAND
-                          execute some command on every found item. In command,
-                          placeholders: {path}, {dirname}, {basename} are
-                          replaced with correct value
-    --prefix              add prefix "d: " (directory) or "f: " (file) to every
-                          found item
-    --no-display          don't display element (useful with --exec argument)
-    --verbose-exec        show command before execute it
-    --interactive-exec    ask before execute command on every item
-    --shell-exec          execute command from --exec argument in shell (with
-                          shell expansion etc)
-    --vcs                 do not skip VCS directories (.git, .svn etc)
-    -c EXCLUDED_PATH, --exclude-path EXCLUDED_PATH
-                          skip given paths from scanning
-    -t TESTS, --test TESTS
-                          additional tests, available by plugins (see
-                          annotations below or --help-test-plugins)
-    --plugins-path PLUGINS_PATH
-                          additional path where to search plugins (see
-                          annotations below)
-    --version             show program's version number and exit
-    --help-test-plugins [TEST_NAME[,TEST2_NAME]]
-                          display help for installed test plugins
-
+      -h, --help            show this help message and exit
+      --print0, -0          split results by binary zero instead of new line
+                            (useful to work with xargs)
+      --ignorecase, -i, --ignore-case
+                            ignore case when match pattern to paths
+      --source SOURCE, -s SOURCE
+                            optional, see: source above
+      --pattern PATTERN, -p PATTERN
+                            optional, see: pattern above
+      --regexp, -g          treat pattern as regular expression (uses Python
+                            regexp engine)
+      --fuzzy, -f           pattern defines only set and order of characters used
+                            in filename
+      --depth DEPTH, -D DEPTH
+                            how deep we should search (default: -1, means
+                            infinite)
+      --path-search, -q     search in full path, instead of bare name of item
+      --regex-multiline, -l
+                            modify meta characters: "^" and "$" behaviour when
+                            pattern is regular expression. See:
+                            http://docs.python.org/2/library/re.html#re.MULTILINE
+      --regex-dotall, -d    modify meta character: "." behaviour when pattern is
+                            regular expression. See:
+                            http://docs.python.org/2/library/re.html#re.DOTALL
+      --begin, -B           match pattern to begin of item name (ignored in regexp
+                            mode)
+      --end, -E             match pattern to end of item name (ignored in regexp
+                            mode)
+      --invert-match, -v, -r
+                            find objects that do *not* match pattern
+      --mode MODE, -m MODE  allow to choose to search for "files" only, "dirs", or
+                            "all"
+      --exec COMMAND, -x COMMAND
+                            execute some command on every found item. In command,
+                            placeholders: {path}, {dirname}, {basename} are
+                            replaced with correct value
+      --prefix              add prefix "d: " (directory) or "f: " (file) to every
+                            found item
+      --no-display          don't display element (useful with --exec argument)
+      --colorize            Colorize output
+      --verbose-exec        show command before execute it
+      --interactive-exec    ask before execute command on every item
+      --shell-exec          execute command from --exec argument in shell (with
+                            shell expansion etc)
+      --vcs                 do not skip VCS directories (.git, .svn etc)
+      --exclude-path EXCLUDED_PATH, -c EXCLUDED_PATH
+                            skip given paths from scanning
+      --test TESTS, -t TESTS
+                            additional tests, available by plugins (see
+                            annotations below or --help-test-plugins)
+      --plugins-path PLUGINS_PATH
+                            additional path where to search plugins (see
+                            annotations below)
+      --version             show program's version number and exit
+      --help-test-plugins [TEST_NAME[,TEST2_NAME]]
+                            display help for installed test plugins
+    
     Pattern, provided as positional argument (not with --pattern) can be provided
     in special form (called: magic pattern). It allows to more "nerdish"
     (or "perlish" :) ) way to control `ff` behavior.
-
+    
     The general pattern for magic pattern is:
-
+    
         mode/pattern/modifier
-
+    
     where:
         mode - is one of 'p' (--pattern), 'g' - (--regexp) or 'f' (--fuzzy)
         / - is delimiter:
@@ -238,14 +245,19 @@ Usage
         pattern - any pattern, processed in a way specified with 'mode'
         modifier - one of: 'i' (--ignore-case), 'm' (--regex-multiline),
             's' (--regex-dotall), 'v' (not used currently), 'r' (--invert-match)
-            'q' (--path-search)
-
+    
     There is also ability to extend capabilities of `ff` by plugins. Plugins are
     run with switch --test and then plugin name with optional plugin argument:
-
+    
         --test plugin_name:plugin_arg
-
+    
     There can be used more then one plugin at once.
+    
+    Authors:
+        Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
+    
+    HomePage:
+        http://mysz.github.io/ff/
 
 Authors
 -------
