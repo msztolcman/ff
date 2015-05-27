@@ -28,7 +28,7 @@ And it's easier to me to enter:
 
     ff name
 
-Also, my ``find`` have sometimes problems with non ascii files:
+Also, my ``find`` have sometimes problems with non ascii names:
 
 ::
 
@@ -376,7 +376,8 @@ v0.6.0
 -  backward incompatible: magic pattern doesn't recognize 'q' flag for
    'path-search' mode, flag --path-search must be passed explicitly
 -  new option: --depth - limit searching to this depth
--  code cleanups and many refactorizations
+-  new option: --colorize
+-  code cleanups and many refactorizations/rewrites
 -  documentation improvements
 -  paths are now normalized before comparisons of excluded paths
 -  more tests
