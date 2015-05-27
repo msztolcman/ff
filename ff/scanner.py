@@ -22,6 +22,9 @@ VCS_NAMES = {
 
 # pylint: disable=too-many-instance-attributes,too-few-public-methods
 class Scanner(object):
+    """
+    Scan sources for matchinf items and iterate matched ones
+    """
     def __init__(self, cfg):
         self.sources = cfg.source
 
@@ -53,6 +56,11 @@ class Scanner(object):
         return item not in VCS_NAMES
 
     def _walk(self, path):
+        """
+        Walk through filesystem, find items.
+        :param path:str
+        :return:
+        """
         src_len = len(path)
         for root, dirs, files in os.walk(path):
             ## limit search depth to cfg.depth
@@ -81,6 +89,11 @@ class Scanner(object):
                     yield path
 
     def _scan_source(self, path):
+        """
+        Match found sources to given conditions
+        :param path:str
+        :return:
+        """
         for item in self._walk(path):
             if self.path_search:
                 is_name_match = self.pattern.pattern.search(item)
@@ -107,6 +120,10 @@ class Scanner(object):
             yield item
 
     def __iter__(self):
+        """
+        Iterator protocol
+        :return:
+        """
         for source in self.sources:
             for path in self._scan_source(source):
                 yield path
