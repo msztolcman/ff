@@ -71,8 +71,7 @@ def parse_input_args(args):
        help='split results by binary zero instead of new line (useful to work with xargs)')
     p.add_argument('--ignorecase', '-i', '--ignore-case', action='store_true', default=False,
        help='ignore case when match pattern to paths')
-    # TODO: dest='sources'
-    p.add_argument('--source', '-s', action='append', type=str, default=[],
+    p.add_argument('--source', '-s', dest='sources', metavar='source', action='append', type=str, default=[],
        help='optional, see: source above')
     p.add_argument('--pattern', '-p', type=str,
        help='optional, see: pattern above')
@@ -127,7 +126,7 @@ def parse_input_args(args):
        help='display help for installed test plugins')
     p.add_argument('anon_pattern', metavar='pattern', type=str, nargs=argparse.OPTIONAL,
        help='pattern to search')
-    p.add_argument('anon_sources', metavar='sources', type=str, nargs=argparse.ZERO_OR_MORE,
+    p.add_argument('anon_sources', metavar='source', type=str, nargs=argparse.ZERO_OR_MORE,
        help='optional source (if missing, use current directory)')
 
     args = p.parse_args(args)
@@ -179,11 +178,11 @@ def parse_input_args(args):
         raise p.error(str(ex))
 
     # prepare sources
-    args.source += args.anon_sources
-    if not args.source:
-        args.source.append('.')
+    args.sources += args.anon_sources
+    if not args.sources:
+        args.sources.append('.')
 
-    for i, src in enumerate(args.source):
+    for i, src in enumerate(args.sources):
         try:
             src = u(src)
         except UnicodeDecodeError as ex:
@@ -193,7 +192,7 @@ def parse_input_args(args):
             p.error('Source %s doesn\'t exists or is not a directory' % src)
 
         src = os.path.abspath(src)
-        args.source[i] = normalize(src)
+        args.sources[i] = normalize(src)
 
     # prepare exec
     args.execute = u(args.execute)

@@ -26,7 +26,7 @@ class Scanner(object):
     Scan sources for matchinf items and iterate matched ones
     """
     def __init__(self, cfg):
-        self.sources = cfg.source
+        self.sources = cfg.sources
 
         self.depth = cfg.depth
         self.excluded_paths = cfg.excluded_paths
