@@ -378,7 +378,7 @@ def main():
 
     try:
         for item in scanner.Scanner(args):
-            process_item(args,item)
+            process_item(args, item)
     except FFPluginError as ex:
         # TODO: failed plugin name
         err('Plugin error: %s' % ex, exit_code=1)
