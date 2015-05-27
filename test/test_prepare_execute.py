@@ -12,7 +12,7 @@ except ImportError:
 
 from test_manager import *
 
-from ff import processing
+from ff.cli import prepare_execute
 
 
 class TestPrepareExecute(unittest.TestCase):
@@ -25,7 +25,7 @@ class TestPrepareExecute(unittest.TestCase):
         )
         exe_copy = copy.deepcopy(args['exe'])
 
-        self.assertEqual(processing.prepare_execute(**args), args['exe'])
+        self.assertEqual(prepare_execute(**args), args['exe'])
         self.assertEqual(args['exe'], exe_copy)
 
     def test_replace_path(self):
@@ -37,7 +37,7 @@ class TestPrepareExecute(unittest.TestCase):
         )
         exe_copy = copy.deepcopy(args['exe'])
 
-        result = processing.prepare_execute(**args)
+        result = prepare_execute(**args)
         self.assertEqual(result, [args['exe'][0].replace('{path}', args['path'])])
         self.assertEqual(args['exe'], exe_copy)
 
@@ -54,7 +54,7 @@ class TestPrepareExecute(unittest.TestCase):
         for key in ('path', 'dirname', 'basename'):
             expected = expected.replace('{' + key + '}', args[key])
 
-        result = processing.prepare_execute(**args)
+        result = prepare_execute(**args)
         self.assertEqual(result, [expected])
         self.assertEqual(args['exe'], exe_copy)
 
@@ -76,8 +76,8 @@ class TestPrepareExecute(unittest.TestCase):
             for key in ('path', 'dirname', 'basename'):
                 expected[-1] = expected[-1].replace('{' + key + '}', args[key])
 
-        result = processing.prepare_execute(**args)
-        self.assertEqual(processing.prepare_execute(**args), expected)
+        result = prepare_execute(**args)
+        self.assertEqual(prepare_execute(**args), expected)
         self.assertEqual(args['exe'], exe_copy)
 
     def test_omit_unknown_keyword(self):
@@ -89,7 +89,7 @@ class TestPrepareExecute(unittest.TestCase):
         )
         exe_copy = copy.deepcopy(args['exe'])
 
-        self.assertEqual(processing.prepare_execute(**args), args['exe'])
+        self.assertEqual(prepare_execute(**args), args['exe'])
         self.assertEqual(args['exe'], exe_copy)
 
 if __name__ == '__main__':
