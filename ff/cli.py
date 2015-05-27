@@ -10,9 +10,11 @@ import argparse
 import copy
 import itertools
 import os, os.path
+import re
 import shlex
 import subprocess
 import sys
+import tmcolors
 import textwrap
 
 import ff
@@ -104,6 +106,8 @@ def parse_input_args(args):
        help='add prefix "d: " (directory) or "f: " (file) to every found item')
     p.add_argument('--no-display', dest='display', action='store_false', default=True,
        help='don\'t display element (useful with --exec argument)')
+    p.add_argument('--colorize', action="store_true",
+        help='Colorize output')
     p.add_argument('--verbose-exec', action='store_true', default=False,
        help='show command before execute it')
     p.add_argument('--interactive-exec', action='store_true', default=False,
@@ -273,9 +277,27 @@ def prepare_execute(exe, path, dirname, basename):
     return exe
 
 
+def colorize(cfg, path):
+    if not sys.stdout.isatty():
+        return path
+
+    repl = tmcolors.colorize(r'\1', fg='green')
+    if cfg.path_search:
+        path = cfg.pattern.pattern.sub(repl, path)
+    else:
+        dirname, basename = os.path.split(path)
+        basename = cfg.pattern.pattern.sub(repl, basename)
+        path = os.path.join(dirname, basename)
+
+    return path
+
+
 def process_item(cfg, path):
     """ Print item and/or execute command if given.
     """
+
+    if cfg.colorize:
+        path = colorize(cfg, path)
 
     if cfg.display:
         if not cfg.prefix:

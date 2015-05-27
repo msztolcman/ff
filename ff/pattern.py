@@ -165,6 +165,8 @@ class Pattern(object):
         if self.ignorecase:
             flags = flags | re.IGNORECASE
 
+        pat = '(%s)' % pat
+
         return re.compile(pat, flags)
 
     def _prepare_pattern__compile_regexp(self):
@@ -184,7 +186,9 @@ class Pattern(object):
         if self.regex_multiline:
             flags = flags | re.MULTILINE
 
-        return re.compile(self.pattern, flags)
+        pat = '(%s)' % self.pattern
+
+        return re.compile(pat, flags)
 
     def _prepare_pattern__compile_fnmatch(self):
         """ Compile pattern to compiled regular expression using fnmatch syntax.
@@ -206,6 +210,8 @@ class Pattern(object):
         ## our behaviour is in the opposite to fnmatch: by default *do not* match end of string
         if not self.fnmatch_end:
             pat = re.sub(r'\\Z (?: \( [^)]+ \) )? $', '', pat, flags=re.UNICODE | re.VERBOSE)
+
+        pat = '(%s)' % pat
 
         return re.compile(pat, flags)
 
