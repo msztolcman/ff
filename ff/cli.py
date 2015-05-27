@@ -265,6 +265,11 @@ def prepare_execute(exe, path, dirname, basename):
         {path} - full file path
         {dirname} - parent directory for file
         {basename} - filename without path
+        :param exe:list|tuple
+        :param path:str
+        :param dirname:str
+        :param basename:str
+        :return:list
     """
 
     exe = copy.copy(exe)
@@ -299,7 +304,10 @@ def colorize(cfg, path):
 
 
 def process_item(cfg, path):
-    """ Print item and/or execute command if given.
+    """
+    Print item and/or execute command if given.
+    :param cfg:argparse.Namespace
+    :param path:str
     """
 
     if cfg.colorize:
