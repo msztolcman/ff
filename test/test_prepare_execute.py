@@ -37,8 +37,7 @@ class TestPrepareExecute(unittest.TestCase):
         )
         exe_copy = copy.deepcopy(args['exe'])
 
-        result = prepare_execute(**args)
-        self.assertEqual(result, [args['exe'][0].replace('{path}', args['path'])])
+        self.assertEqual(prepare_execute(**args), [args['exe'][0].replace('{path}', args['path'])])
         self.assertEqual(args['exe'], exe_copy)
 
     def test_replace_all(self):
@@ -54,8 +53,7 @@ class TestPrepareExecute(unittest.TestCase):
         for key in ('path', 'dirname', 'basename'):
             expected = expected.replace('{' + key + '}', args[key])
 
-        result = prepare_execute(**args)
-        self.assertEqual(result, [expected])
+        self.assertEqual(prepare_execute(**args), [expected])
         self.assertEqual(args['exe'], exe_copy)
 
     def test_replace_few_lines(self):
@@ -76,7 +74,6 @@ class TestPrepareExecute(unittest.TestCase):
             for key in ('path', 'dirname', 'basename'):
                 expected[-1] = expected[-1].replace('{' + key + '}', args[key])
 
-        result = prepare_execute(**args)
         self.assertEqual(prepare_execute(**args), expected)
         self.assertEqual(args['exe'], exe_copy)
 
