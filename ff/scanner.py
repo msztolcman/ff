@@ -50,7 +50,8 @@ class Scanner(object):
                 for ex_path in self.excluded_paths
         )
 
-    def _is_not_vcs(self, item):
+    @staticmethod
+    def _is_not_vcs(item):
         """ Check if `item` is VCS
         """
         return item not in VCS_NAMES
