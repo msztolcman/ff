@@ -21,7 +21,7 @@ And it's easier to me to enter:
 
     ff name
 
-Also, my `find` have sometimes problems with non ascii files:
+Also, my `find` have sometimes problems with non ascii names:
 
     % find /tmp -name '*GÖS*'
     % 
