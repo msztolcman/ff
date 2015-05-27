@@ -30,7 +30,7 @@ class Scanner(object):
 
         self.depth = cfg.depth
         self.excluded_paths = cfg.excluded_paths
-        self.include_vcs = cfg.vcs
+        self.include_vcs = cfg.include_vcs
         self.mode = cfg.mode
         self.pattern = cfg.pattern
         self.path_search = cfg.path_search

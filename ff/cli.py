@@ -112,8 +112,7 @@ def parse_input_args(args):
        help='ask before execute command on every item')
     p.add_argument('--shell-exec', action='store_true', default=False,
        help='execute command from --exec argument in shell (with shell expansion etc)')
-    # TODO: dest=include_vcs
-    p.add_argument('--vcs', action='store_true', default=False,
+    p.add_argument('--vcs', dest='include_vcs', action='store_true', default=False,
         help='do not skip VCS directories (.git, .svn etc)')
     p.add_argument('--exclude-path', '-c', metavar='EXCLUDED_PATH', dest='excluded_paths', action='append', type=str, default=[],
        help='skip given paths from scanning')
