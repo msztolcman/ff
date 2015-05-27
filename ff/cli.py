@@ -10,7 +10,6 @@ import argparse
 import copy
 import itertools
 import os, os.path
-import re
 import shlex
 import subprocess
 import sys
