@@ -20,6 +20,7 @@ VCS_NAMES = {
     '_sgbak': 1
 }
 
+# pylint: disable=too-many-instance-attributes,too-few-public-methods
 class Scanner(object):
     def __init__(self, cfg):
         self.sources = cfg.source

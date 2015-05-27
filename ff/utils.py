@@ -106,4 +106,5 @@ def disp(*args, **kwargs):
             print(*args, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
 
 
+# pylint: disable=invalid-name
 normalize = functools.partial(unicodedata.normalize, NORMALIZE_FORM)
