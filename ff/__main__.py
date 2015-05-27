@@ -11,4 +11,5 @@
 
 from __future__ import print_function, unicode_literals, division
 
+# pylint: disable=unused-import
 from ff.cli import main
