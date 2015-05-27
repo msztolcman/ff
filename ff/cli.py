@@ -278,6 +278,12 @@ def prepare_execute(exe, path, dirname, basename):
 
 
 def colorize(cfg, path):
+    """
+    Colorize matched part of path
+    :param cfg:argparse.Namespace
+    :param path:str
+    :return:str
+    """
     if not sys.stdout.isatty():
         return path
 
