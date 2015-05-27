@@ -13,4 +13,5 @@ from __future__ import print_function, unicode_literals, division
 
 from ff import cli
 
-cli.main()
+def main():
+    cli.main()
