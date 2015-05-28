@@ -104,7 +104,7 @@ def parse_input_args(args):
        help='add prefix "d: " (directory) or "f: " (file) to every found item')
     p.add_argument('--no-display', dest='display', action='store_false', default=True,
        help='don\'t display element (useful with --exec argument)')
-    p.add_argument('--colorize', action="store_true",
+    p.add_argument('--no-colorize', action="store_false", dest='colorize',
         help='Colorize output')
     p.add_argument('--verbose-exec', action='store_true', default=False,
        help='show command before execute it')
