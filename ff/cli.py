@@ -17,6 +17,7 @@ import tmcolors
 import textwrap
 
 import ff
+from ff.config import Config
 from ff import pattern
 from ff.plugin import FFPlugins, FFPlugin, InvalidPluginsPath, FFPluginError
 from ff import scanner
@@ -24,7 +25,7 @@ from ff.utils import disp, err, u, ask, normalize
 
 
 # pylint: disable=too-many-statements,too-many-branches
-def parse_input_args(args):
+def parse_input_args(args, cfg):
     """ Parse input 'arguments' and return parsed.
     """
 
@@ -67,21 +68,21 @@ def parse_input_args(args):
     p = argparse.ArgumentParser(description=args_description, epilog=args_epilog,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    p.add_argument('--print0', '-0', action='store_true', default=False,
+    p.add_argument('--print0', '-0', action='store_true', default=cfg.print0,
        help='split results by binary zero instead of new line (useful to work with xargs)')
-    p.add_argument('--ignorecase', '-i', '--ignore-case', action='store_true', default=False,
+    p.add_argument('--ignorecase', '-i', '--ignore-case', action='store_true', default=cfg.ignorecase,
        help='ignore case when match pattern to paths')
     p.add_argument('--source', '-s', dest='sources', metavar='source', action='append', type=str, default=[],
        help='optional, see: source above')
     p.add_argument('--pattern', '-p', type=str,
        help='optional, see: pattern above')
-    p.add_argument('--regexp', '-g', action='store_true', default=False,
+    p.add_argument('--regexp', '-g', action='store_true', default=cfg.regexp,
        help='treat pattern as regular expression (uses Python regexp engine)')
-    p.add_argument('--fuzzy', '-f', action='store_true', default=False,
+    p.add_argument('--fuzzy', '-f', action='store_true', default=cfg.fuzzy,
        help='pattern defines only set and order of characters used in filename')
-    p.add_argument('--depth', '-D', type=int, default=-1,
+    p.add_argument('--depth', '-D', type=int, default=cfg.depth,
         help='how deep we should search (default: -1, means infinite)')
-    p.add_argument('--path-search', '-q', action='store_true', default=False,
+    p.add_argument('--path-search', '-q', action='store_true', default=cfg.path_search,
        help='search in full path, instead of bare name of item')
     p.add_argument('--regex-multiline', '-l', action='store_true', default=False,
        help='modify meta characters: "^" and "$" behaviour when pattern is regular expression. '
@@ -95,16 +96,20 @@ def parse_input_args(args):
        help='match pattern to end of item name (ignored in regexp mode)')
     p.add_argument('--invert-match', '-v', '-r', action='store_true', default=False,
        help='find objects that do *not* match pattern')
-    p.add_argument('--mode', '-m', default='all',
+    p.add_argument('--mode', '-m', default=cfg.mode,
         help='allow to choose to search for "files" only, "dirs", or "all"')
     p.add_argument('--exec', '-x', metavar='COMMAND', dest='execute', type=str,
        help='execute some command on every found item. In command, placeholders: {path}, '
            '{dirname}, {basename} are replaced with correct value')
-    p.add_argument('--prefix', action='store_true', default=False,
-       help='add prefix "d: " (directory) or "f: " (file) to every found item')
+    p.add_argument('--prefix', action='store_true', default=cfg.prefix,
+       help='add prefix "%s" (directory) or "%s" (file) to every found item' % (cfg.prefix_dirs, cfg.prefix_files))
+    p.add_argument('--prefix-dirs', type=str, default=cfg.prefix_dirs,
+        help="prefix for matched directories")
+    p.add_argument('--prefix-files', type=str, default=cfg.prefix_files,
+        help="prefix for matched files")
     p.add_argument('--no-display', dest='display', action='store_false', default=True,
        help='don\'t display element (useful with --exec argument)')
-    p.add_argument('--no-colorize', action="store_false", dest='colorize',
+    p.add_argument('--no-colorize', action="store_false", dest='colorize', default=cfg.colorize,
         help='Colorize output')
     p.add_argument('--verbose-exec', action='store_true', default=False,
        help='show command before execute it')
@@ -112,13 +117,13 @@ def parse_input_args(args):
        help='ask before execute command on every item')
     p.add_argument('--shell-exec', action='store_true', default=False,
        help='execute command from --exec argument in shell (with shell expansion etc)')
-    p.add_argument('--vcs', dest='include_vcs', action='store_true', default=False,
+    p.add_argument('--vcs', dest='include_vcs', action='store_true', default=cfg.include_vcs,
         help='do not skip VCS directories (.git, .svn etc)')
     p.add_argument('--exclude-path', '-c', metavar='EXCLUDED_PATH', dest='excluded_paths', action='append', type=str, default=[],
        help='skip given paths from scanning')
     p.add_argument('--test', '-t', dest='tests', action='append', default=[],
        help='additional tests, available by plugins (see annotations below or --help-test-plugins)')
-    p.add_argument('--plugins-path', type=str, action='append',
+    p.add_argument('--plugins-path', type=str, action='append', default=[],
        help='additional path where to search plugins (see annotations below)')
     p.add_argument('--version', action='version', version="%s %s\n%s" % (os.path.basename(sys.argv[0]), ff.__version__, args_description))
     p.add_argument('--help-test-plugins', metavar='TEST_NAME[,TEST2_NAME]', nargs=argparse.OPTIONAL, action='append', default=[],
@@ -197,10 +202,14 @@ def parse_input_args(args):
     args.execute = u(args.execute)
 
     # prepare excluded paths
+    args.excluded_paths.extend(cfg.excluded_paths)
     for i, ex_path in enumerate(args.excluded_paths):
         ex_path = u(ex_path)
         ex_path = normalize(ex_path)
         args.excluded_paths[i] = os.path.abspath(ex_path).rstrip(os.sep)
+
+    # append plugins_paths
+    args.plugins_path.extend(cfg.plugins_paths)
 
     if args.print0:
         args.delim = chr(0)
@@ -307,18 +316,16 @@ def process_item(cfg, path):
     :param path:str
     """
 
-    if cfg.colorize:
-        path = colorize(cfg, path)
 
     if cfg.display:
         if not cfg.prefix:
             prefix = ''
         elif os.path.isdir(path):
-            prefix = 'd: '
+            prefix = cfg.prefix_dirs
         else:
-            prefix = 'f: '
+            prefix = cfg.prefix_files
 
-        disp(prefix, path, sep='', end=cfg.delim)
+        disp(prefix, colorize(cfg, path) if cfg.colorize else path, sep='', end=cfg.delim)
 
     if cfg.execute:
         if cfg.shell_exec:
@@ -336,8 +343,11 @@ def process_item(cfg, path):
 def main():
     """ Run program
     """
+
+    cfg = Config.parse_config()
+
     try:
-        args = parse_input_args(sys.argv[1:])
+        args = parse_input_args(sys.argv[1:], cfg)
     except argparse.ArgumentError as ex:
         err(str(ex), exit_code=1)
 
