@@ -303,6 +303,7 @@ ChangeLog
 * backward incompatible: magic pattern doesn't recognize 'q' flag for 'path-search' mode, flag --path-search must be passed explicitly
 * new option: --depth - limit searching to this depth
 * new option: --colorize
+* parse and recognize configuration files
 * code cleanups and many refactorizations/rewrites
 * documentation improvements
 * paths are now normalized before comparisons of excluded paths
