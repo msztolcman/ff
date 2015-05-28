@@ -1,0 +1,28 @@
+# http://mysz.github.io/ff/
+# example config file for ff
+# should be placed in ~/.ff.rc or in [project-dir]/.ff.rc
+
+[ff]
+ignorecase = yes
+;smartcase = yes # not recognized yet
+print0 = no
+depth = 2
+mode = all
+regexp = no
+fuzzy = no
+path_search = no
+prefix = no
+prefix_dirs = "dr: "
+prefix_files = "fl: "
+colorize = yes
+include_vcs = yes
+
+[excluded_paths]
+data = yes
+test = yes
+/etc/init.d = no
+/var/log = yes
+
+[plugins_paths]
+c = yes
+d = no
