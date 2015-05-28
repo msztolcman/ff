@@ -237,6 +237,7 @@ def detect_plugins_paths(args):
             except UnicodeDecodeError as ex:
                 raise InvalidPluginsPath(str(ex), plugins_path)
             else:
+                plugins_path = normalize(plugins_path)
                 plugins_path = os.path.expanduser(plugins_path)
                 FFPlugins.path_add(plugins_path)
 
