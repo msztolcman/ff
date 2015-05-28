@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 
+"""
+Read and parse configration files
+"""
+
 import ConfigParser
 import os, os.path
 
 from ff import scanner
 
+
+# pylint: disable=too-many-instance-attributes,too-few-public-methods
 class Config(object):
+    """
+    Configuration of ff
+    """
     def __init__(self):
         self.ignorecase = False
         self.smartcase = False
@@ -29,7 +38,7 @@ class Config(object):
 
         items = (
             'ignorecase', 'smartcase', 'print0', 'regexp', 'fuzzy',
-            'path_search', 'prefix',  'colorize', 'include_vcs',
+            'path_search', 'prefix', 'colorize', 'include_vcs',
         )
         for item in items:
             if getattr(self, item):
@@ -48,8 +57,14 @@ class Config(object):
         return 'Config(%s)' % ','.join(ret)
 
 
+    # pylint: disable=too-many-branches
     @classmethod
     def parse_config(cls, sources=None):
+        """
+        Parse files, initialize Config instance and fill them with data
+        :param sources:[str]
+        :return:Config
+        """
         if not sources:
             sources = [
                 os.path.join(os.path.expanduser('~'), '.ff.rc'),
