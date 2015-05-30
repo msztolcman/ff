@@ -1,7 +1,7 @@
-#!/usr/bin/env python -tt
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function, unicode_literals
+from __future__ import print_function, unicode_literals, division
 
 from test_manager import *
 from ff import utils
