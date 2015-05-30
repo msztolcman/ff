@@ -80,7 +80,7 @@ def parse_input_args(args, cfg):
        help='treat pattern as regular expression (uses Python regexp engine)')
     p.add_argument('--fuzzy', '-f', action='store_true', default=cfg.fuzzy,
        help='pattern defines only set and order of characters used in filename')
-    p.add_argument('--depth', '-D', type=int, default=cfg.depth,
+    p.add_argument('--depth', '-D', type=str, default=cfg.depth,
         help='how deep we should search (default: -1, means infinite)')
     p.add_argument('--path-search', '-q', action='store_true', default=cfg.path_search,
        help='search in full path, instead of bare name of item')
@@ -139,6 +139,15 @@ def parse_input_args(args, cfg):
     # for displaying help we don't need to parse or validate nothing more
     if args.help_test_plugins:
         return args
+
+    # depth
+    # small hack - argaparse do not allow to pass '-' on beginning of value,
+    # but we need to recognize '-1' etc. So allow to pass \-1, and strip \ from it
+    # next convert data to int or show message, emulating original argparse error
+    try:
+        args.depth = int(args.depth.lstrip('\\'))
+    except ValueError:
+        p.error("argument --depth/-D: invalid int value: '%s'" % args.depth)
 
     # mode
     modes = {
