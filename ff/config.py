@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Read and parse configration files
+Read and parse configuration files
 """
 
 import ConfigParser
