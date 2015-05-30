@@ -107,8 +107,11 @@ class Config(object):
 
         self = cls()
 
-        parser = FFConfigParser()
-        parser.read(sources)
+        try:
+            parser = FFConfigParser()
+            parser.read(sources)
+        except ConfigParser.ParsingError as ex:
+            raise ConfigError(str(ex))
 
         if parser.sections() and not parser.has_section('ff'):
             raise ConfigError("Missing 'ff' section in config file")
