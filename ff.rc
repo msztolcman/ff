@@ -4,7 +4,7 @@
 
 [ff]
 ignorecase = yes
-;smartcase = yes # not recognized yet
+;smartcase = yes # not supported yet
 print0 = no
 depth = 2
 mode = all
