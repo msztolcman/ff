@@ -80,7 +80,7 @@ def parse_input_args(args, cfg):
        help='treat pattern as regular expression (uses Python regexp engine)')
     p.add_argument('--fuzzy', '-f', action='store_true', default=cfg.fuzzy,
        help='pattern defines only set and order of characters used in filename')
-    p.add_argument('--depth', '-D', type=str, default=cfg.depth,
+    p.add_argument('--depth', '-D', type=str, default=str(cfg.depth),
         help='how deep we should search (default: -1, means infinite)')
     p.add_argument('--path-search', '-q', action='store_true', default=cfg.path_search,
        help='search in full path, instead of bare name of item')
