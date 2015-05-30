@@ -14,3 +14,16 @@ class InputArgsMock:
         self.path_search = False
         self.invert_match = False
         self.tests = []
+
+        self.ignorecase = False
+        self.smartcase = False
+        self.print0 = False
+        self.regexp = False
+        self.fuzzy = False
+        self.prefix = False
+        self.prefix_dirs = 'd: '
+        self.prefix_files = 'f: '
+        self.colorize = True
+
+        self.excluded_paths = []
+        self.plugins_paths = []
