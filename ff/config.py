@@ -10,6 +10,15 @@ import os, os.path
 from ff import scanner
 
 
+def strip_quotes(value):
+    if value[0] == '"' and value[-1] == '"':
+        value = value[1:-1]
+    elif value[0] == "'" and value[-1] == "'":
+        value = value[1:-1]
+
+    return value
+
+
 # pylint: disable=too-many-instance-attributes,too-few-public-methods
 class Config(object):
     """
