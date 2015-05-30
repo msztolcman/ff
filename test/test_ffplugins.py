@@ -5,11 +5,9 @@ from __future__ import print_function, unicode_literals, division
 
 import functools
 import glob
-import sys
-
 import os
 import os.path
-
+import sys
 
 try:
     from StringIO import StringIO
