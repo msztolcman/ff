@@ -116,4 +116,3 @@ class Config(object):
                     self.plugins_paths.append(item)
 
         return self
-
