@@ -10,20 +10,6 @@ import os, os.path
 from ff import scanner
 
 
-def strip_quotes(value):
-    """
-    If value surrounds single or double quotes, strip them
-    :param value:str
-    :return:str
-    """
-    if value[0] == '"' and value[-1] == '"':
-        value = value[1:-1]
-    elif value[0] == "'" and value[-1] == "'":
-        value = value[1:-1]
-
-    return value
-
-
 class FFConfigParser(ConfigParser.ConfigParser):
     ''' Extended version of ConfigParser: strip quotes from values
     '''
@@ -33,9 +19,23 @@ class FFConfigParser(ConfigParser.ConfigParser):
         val = ConfigParser.ConfigParser.get(self, *a, **b)
 
         if isinstance(val, (str, unicode)):
-            val = strip_quotes(val)
+            val = self.strip_quotes(val)
 
         return val
+
+    @staticmethod
+    def strip_quotes(value):
+        """
+        If value surrounds single or double quotes, strip them
+        :param value:str
+        :return:str
+        """
+        if value[0] == '"' and value[-1] == '"':
+            value = value[1:-1]
+        elif value[0] == "'" and value[-1] == "'":
+            value = value[1:-1]
+
+        return value
 
 
 # pylint: disable=too-many-instance-attributes,too-few-public-methods

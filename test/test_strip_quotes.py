@@ -5,69 +5,69 @@ from __future__ import print_function, unicode_literals, division
 
 from test_manager import *
 
-from ff.config import strip_quotes
+from ff.config import FFConfigParser
 
 
 class TestStripQuotes(unittest.TestCase):
     def test_single_quotes(self):
         value = ''' 'asd' '''.strip()
-        ret = strip_quotes(value)
+        ret = FFConfigParser.strip_quotes(value)
 
         self.assertEqual(ret, ''' asd '''.strip())
 
     def test_single_quotes_doubled(self):
         value = ''' ''asd'' '''.strip()
-        ret = strip_quotes(value)
+        ret = FFConfigParser.strip_quotes(value)
 
         self.assertEqual(ret, ''' 'asd' '''.strip())
 
     def test_double_quotes(self):
         value = ''' "asd" '''.strip()
-        ret = strip_quotes(value)
+        ret = FFConfigParser.strip_quotes(value)
 
         self.assertEqual(ret, ''' asd '''.strip())
 
     def test_double_quotes_doubled(self):
         value = ''' ""asd"" '''.strip()
-        ret = strip_quotes(value)
+        ret = FFConfigParser.strip_quotes(value)
 
         self.assertEqual(ret, ''' "asd" '''.strip())
 
     def test_mixed_quotes(self):
         value = ''' 'asd" '''.strip()
-        ret = strip_quotes(value)
+        ret = FFConfigParser.strip_quotes(value)
 
         self.assertEqual(ret, ''' 'asd" '''.strip())
 
         value = ''' "asd' '''.strip()
-        ret = strip_quotes(value)
+        ret = FFConfigParser.strip_quotes(value)
 
         self.assertEqual(ret, ''' "asd' '''.strip())
 
     def test_one_side_quotes(self):
         value = ''' 'asd '''.strip()
-        ret = strip_quotes(value)
+        ret = FFConfigParser.strip_quotes(value)
 
         self.assertEqual(ret, ''' 'asd '''.strip())
 
         value = ''' asd' '''.strip()
-        ret = strip_quotes(value)
+        ret = FFConfigParser.strip_quotes(value)
 
         self.assertEqual(ret, ''' asd' '''.strip())
 
         value = ''' "asd '''.strip()
-        ret = strip_quotes(value)
+        ret = FFConfigParser.strip_quotes(value)
 
         self.assertEqual(ret, ''' "asd '''.strip())
 
         value = ''' asd" '''.strip()
-        ret = strip_quotes(value)
+        ret = FFConfigParser.strip_quotes(value)
 
         self.assertEqual(ret, ''' asd" '''.strip())
 
     def test_unquoted(self):
         value = ''' asd '''.strip()
-        ret = strip_quotes(value)
+        ret = FFConfigParser.strip_quotes(value)
 
         self.assertEqual(ret, ''' asd '''.strip())
 
