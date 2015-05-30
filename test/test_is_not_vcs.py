@@ -3,7 +3,7 @@
 
 from __future__ import print_function, unicode_literals, division
 
-from mocks.config import ConfigMock
+from mocks.input_args import InputArgsMock
 from test_manager import *
 
 from ff import scanner
@@ -11,7 +11,7 @@ from ff import scanner
 
 class TestIsNotVcs(unittest.TestCase):
     def setUp(self):
-        cfg = ConfigMock()
+        cfg = InputArgsMock()
         self.scanner = scanner.Scanner(cfg)
 
     def test_positives(self):

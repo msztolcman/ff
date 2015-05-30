@@ -6,7 +6,7 @@ from __future__ import print_function, unicode_literals, division
 import os
 import unicodedata
 
-from mocks.config import ConfigMock
+from mocks.input_args import InputArgsMock
 from test_manager import *
 
 from ff import scanner
@@ -15,7 +15,7 @@ from ff.utils import u, normalize
 
 class TestIsPathExcluded(unittest.TestCase):
     def setUp(self):
-        cfg = ConfigMock()
+        cfg = InputArgsMock()
         self.scanner = scanner.Scanner(cfg)
 
     def _set_excluded_paths(self, paths):

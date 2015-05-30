@@ -2,7 +2,7 @@
 
 from ff import scanner
 
-class ConfigMock:
+class InputArgsMock:
     def __init__(self):
         self.sources = []
 
