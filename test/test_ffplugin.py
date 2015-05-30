@@ -13,6 +13,7 @@ from test_manager import *
 
 from ff import plugin
 
+
 class TestFFPlugin(unittest.TestCase):
     def setUp(self):
         sys.path.append(PLAYGROUND_PATH)
@@ -106,6 +107,7 @@ class TestFFPlugin(unittest.TestCase):
 
         result = 'mod4_action_descr_help_callable'.upper() + '!' + arg.lower() + '!' + path.upper()
         self.assertEqual(p.run(path), result)
+
 
 if __name__ == '__main__':
     unittest.main()

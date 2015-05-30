@@ -13,6 +13,7 @@ else:
     type_bytes = bytes
     type_unicode = str
 
+
 class TestUFunction(unittest.TestCase):
     def test_ascii_bytes(self):
         in_ = b"asd"
@@ -38,6 +39,7 @@ class TestUFunction(unittest.TestCase):
         self.assertEqual(type(in_), type_unicode)
         out = utils.u(in_)
         self.assertEqual(type(out), type_unicode)
+
 
 if __name__ == '__main__':
     unittest.main()

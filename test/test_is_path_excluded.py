@@ -88,5 +88,6 @@ class TestIsPathExcluded(unittest.TestCase):
                  'Path "%s" should%s be excluded (excluded: %s)' % (
                      path, '' if test_paths[path] else ' not', self.scanner.excluded_paths))
 
+
 if __name__ == '__main__':
     unittest.main()

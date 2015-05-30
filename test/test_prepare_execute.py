@@ -89,5 +89,6 @@ class TestPrepareExecute(unittest.TestCase):
         self.assertEqual(prepare_execute(**args), args['exe'])
         self.assertEqual(args['exe'], exe_copy)
 
+
 if __name__ == '__main__':
     unittest.main()

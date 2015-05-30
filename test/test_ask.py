@@ -113,5 +113,6 @@ class TestAsk(unittest.TestCase):
         self.assertEqual(_set_input__prompt, question + ' (n,W,y) ')
         self.assertEqual(ret, 'w')
 
+
 if __name__ == '__main__':
     unittest.main()

@@ -30,6 +30,7 @@ def clear_ffplugins_paths(f):
             plugin.FFPlugins._paths = set()
     return _
 
+
 def clear_sys_path(f):
     @functools.wraps(f)
     def _(*a, **b):
@@ -195,6 +196,7 @@ class TestFFPlugins(unittest.TestCase):
 
         self.assertIn(TEST_MOD3_DESCR, data)
         self.assertIn(TEST_MOD3_HELP, data)
+
 
 if __name__ == '__main__':
     unittest.main()

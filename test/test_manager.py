@@ -23,4 +23,3 @@ if IS_PY2 and sys.version_info[1] < 7:
                 self.fail('Need unittest2 module for python older then 2.7!')
 else:
     import unittest
-
