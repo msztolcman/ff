@@ -22,7 +22,7 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
-        self.assertEqual(parsed_pat.pattern, r'')
+        self.assertEqual(parsed_pat.pattern, r'()')
 
     def test_empty_pattern_fnmatch_begin(self):
         pat = pattern.Pattern()
@@ -33,7 +33,7 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
-        self.assertEqual(parsed_pat.pattern, r'\A')
+        self.assertEqual(parsed_pat.pattern, r'(\A)')
 
     def test_empty_pattern_fnmatch_end(self):
         pat = pattern.Pattern()
@@ -44,7 +44,7 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
-        self.assertEqual(parsed_pat.pattern, r'\Z')
+        self.assertEqual(parsed_pat.pattern, r'(\Z)')
 
     def test_empty_pattern_ignorecase(self):
         pat = pattern.Pattern()
@@ -55,7 +55,7 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL | re.IGNORECASE)
-        self.assertEqual(parsed_pat.pattern, r'')
+        self.assertEqual(parsed_pat.pattern, r'()')
 
     def test_simple_pattern(self):
         pat = pattern.Pattern()
@@ -65,7 +65,7 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
-        self.assertEqual(parsed_pat.pattern, r'.*a.*s.*d')
+        self.assertEqual(parsed_pat.pattern, r'(.*a.*s.*d)')
 
     def test_pattern_with_regexp(self):
         pat = pattern.Pattern()
@@ -75,7 +75,7 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
-        self.assertEqual(parsed_pat.pattern, r'.*\^.*a.*s.*d.*\$')
+        self.assertEqual(parsed_pat.pattern, r'(.*\^.*a.*s.*d.*\$)')
 
     def test_pattern_with_regexp_and_fnmatch_begin(self):
         pat = pattern.Pattern()
@@ -86,7 +86,7 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
-        self.assertEqual(parsed_pat.pattern, r'\A.*\^.*a.*s.*d.*\$')
+        self.assertEqual(parsed_pat.pattern, r'(\A.*\^.*a.*s.*d.*\$)')
 
     def test_full_options(self):
         pat = pattern.Pattern()
@@ -99,7 +99,7 @@ class TestPatternCompileFuzzy(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL | re.IGNORECASE)
-        self.assertEqual(parsed_pat.pattern, r'\A.*\^.*a.*s.*d.*\$\Z')
+        self.assertEqual(parsed_pat.pattern, r'(\A.*\^.*a.*s.*d.*\$\Z)')
 
 
 if __name__ == '__main__':

@@ -22,7 +22,7 @@ class TestPatternCompileFnmatch(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE)
-        self.assertEqual(parsed_pat.pattern, r'')
+        self.assertEqual(parsed_pat.pattern, r'()')
 
     def test_empty_pattern_fnmatch_begin(self):
         pat = pattern.Pattern()
@@ -33,7 +33,7 @@ class TestPatternCompileFnmatch(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE)
-        self.assertEqual(parsed_pat.pattern, r'\A')
+        self.assertEqual(parsed_pat.pattern, r'(\A)')
 
     def test_empty_pattern_fnmatch_end(self):
         pat = pattern.Pattern()
@@ -44,7 +44,7 @@ class TestPatternCompileFnmatch(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.DOTALL | re.MULTILINE)
-        self.assertTrue(re.match(r'\\Z (?: \( \? [a-z]+ \) )?$', parsed_pat.pattern, re.VERBOSE), 'Pattern doesn\'t match: %s' % parsed_pat.pattern)
+        self.assertTrue(re.match(r'\( \\Z (?: \( \? [a-z]+ \) )? \)$', parsed_pat.pattern, re.VERBOSE), 'Pattern doesn\'t match: %s' % parsed_pat.pattern)
 
     def test_empty_pattern_ignorecase(self):
         pat = pattern.Pattern()
@@ -55,7 +55,7 @@ class TestPatternCompileFnmatch(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.IGNORECASE)
-        self.assertEqual(parsed_pat.pattern, r'')
+        self.assertEqual(parsed_pat.pattern, r'()')
 
     def test_simple_pattern(self):
         pat = pattern.Pattern()
@@ -65,7 +65,7 @@ class TestPatternCompileFnmatch(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE)
-        self.assertEqual(parsed_pat.pattern, r'asd')
+        self.assertEqual(parsed_pat.pattern, r'(asd)')
 
     def test_pattern_with_regexp(self):
         pat = pattern.Pattern()
@@ -75,7 +75,7 @@ class TestPatternCompileFnmatch(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE)
-        self.assertEqual(parsed_pat.pattern, r'\^asd\$')
+        self.assertEqual(parsed_pat.pattern, r'(\^asd\$)')
 
     def test_pattern_with_wildcard_single(self):
         pat = pattern.Pattern()
@@ -85,7 +85,7 @@ class TestPatternCompileFnmatch(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE)
-        self.assertEqual(parsed_pat.pattern, r'asd.asd')
+        self.assertEqual(parsed_pat.pattern, r'(asd.asd)')
 
     def test_pattern_with_wildcard_multi(self):
         pat = pattern.Pattern()
@@ -95,7 +95,7 @@ class TestPatternCompileFnmatch(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE)
-        self.assertEqual(parsed_pat.pattern, r'asd.*asd')
+        self.assertEqual(parsed_pat.pattern, r'(asd.*asd)')
 
     def test_pattern_with_wildcard_multi_and_fnmatch_end(self):
         pat = pattern.Pattern()
@@ -106,7 +106,7 @@ class TestPatternCompileFnmatch(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL)
-        self.assertTrue(re.match(r'^ asd \. \* asd \\Z ( \( \?[a-z]+ \) )? $', parsed_pat.pattern, re.VERBOSE), 'Pattern doesn\'t match: %s' % parsed_pat.pattern)
+        self.assertTrue(re.match(r'^ \( asd \. \* asd \\Z ( \( \?[a-z]+ \) )? \) $', parsed_pat.pattern, re.VERBOSE), 'Pattern doesn\'t match: %s' % parsed_pat.pattern)
 
     def test_full_options(self):
         pat = pattern.Pattern()
@@ -119,7 +119,7 @@ class TestPatternCompileFnmatch(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL | re.IGNORECASE)
-        self.assertTrue(re.match(r'^ \\A asd \. \* asd \\Z ( \( \?[a-z]+ \) )? $', parsed_pat.pattern, re.VERBOSE), 'Pattern doesn\'t match: %s' % parsed_pat.pattern)
+        self.assertTrue(re.match(r'^ \( \\A asd \. \* asd \\Z ( \( \?[a-z]+ \) )? \) $', parsed_pat.pattern, re.VERBOSE), 'Pattern doesn\'t match: %s' % parsed_pat.pattern)
 
 
 if __name__ == '__main__':

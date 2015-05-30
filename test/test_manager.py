@@ -5,8 +5,6 @@ from __future__ import print_function, unicode_literals, division
 
 import os, os.path
 import sys
-import re
-from pprint import pprint, pformat
 
 __all__ = ['PLAYGROUND_PATH', 'IS_PY2', 'unittest']
 

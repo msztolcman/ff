@@ -29,5 +29,6 @@ class TestIsNotVcs(unittest.TestCase):
             result = self.scanner._is_not_vcs(item.swapcase())
             self.assertTrue(result)
 
+
 if __name__ == '__main__':
     unittest.main()

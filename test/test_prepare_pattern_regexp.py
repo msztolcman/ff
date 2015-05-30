@@ -22,7 +22,7 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE)
-        self.assertEqual(parsed_pat.pattern, '')
+        self.assertEqual(parsed_pat.pattern, '()')
 
     def test_empty_pattern_regex_dotall(self):
         pat = pattern.Pattern()
@@ -33,7 +33,7 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.DOTALL)
-        self.assertEqual(parsed_pat.pattern, '')
+        self.assertEqual(parsed_pat.pattern, '()')
 
     def test_empty_pattern_regex_multiline(self):
         pat = pattern.Pattern()
@@ -44,7 +44,7 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE)
-        self.assertEqual(parsed_pat.pattern, '')
+        self.assertEqual(parsed_pat.pattern, '()')
 
     def test_empty_pattern_ignorecase(self):
         pat = pattern.Pattern()
@@ -55,7 +55,7 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.IGNORECASE)
-        self.assertEqual(parsed_pat.pattern, '')
+        self.assertEqual(parsed_pat.pattern, '()')
 
     def test_simple_pattern(self):
         pat = pattern.Pattern()
@@ -66,7 +66,7 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE)
-        self.assertEqual(parsed_pat.pattern, r'asd')
+        self.assertEqual(parsed_pat.pattern, r'(asd)')
 
     def test_pattern_with_regexp(self):
         pat = pattern.Pattern()
@@ -77,7 +77,7 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE)
-        self.assertEqual(parsed_pat.pattern, r'^asd$')
+        self.assertEqual(parsed_pat.pattern, r'(^asd$)')
 
     def test_pattern_with_regexp_and_regex_dotall(self):
         pat = pattern.Pattern()
@@ -89,7 +89,7 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.DOTALL)
-        self.assertEqual(parsed_pat.pattern, r'^asd$')
+        self.assertEqual(parsed_pat.pattern, r'(^asd$)')
 
     def test_full_options(self):
         pat = pattern.Pattern()
@@ -102,7 +102,7 @@ class TestPatternCompileRegexp(unittest.TestCase):
         self.assertIsInstance(parsed_pat, RE_TYPE)
 
         self.assertEqual(parsed_pat.flags, re.UNICODE | re.MULTILINE | re.DOTALL | re.IGNORECASE)
-        self.assertEqual(parsed_pat.pattern, r'^asd$')
+        self.assertEqual(parsed_pat.pattern, r'(^asd$)')
 
 
 if __name__ == '__main__':
