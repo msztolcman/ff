@@ -44,13 +44,6 @@ def validate_depth(val):
     return isinstance(val, int)
 
 
-@register_validator
-def validate_smartcase(obj, val=None):
-    val = _get_val(obj, 'ignsmartcaseorecase', val)
-
-    return isinstance(val, bool)
-
-
 @register_validator('prefix_files', 'prefix_dirs')
 def validate_prefix_for_mode(val):
     return isinstance(val, (str, unicode))
