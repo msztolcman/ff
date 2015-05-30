@@ -50,11 +50,11 @@ class Config(object):
 
         ret.sort()
 
-        if self.excluded_paths:
-            ret.append('excluded_paths:cnt:%d' % len(self.excluded_paths))
-
         if self.plugins_paths:
             ret.append('plugins_paths:cnt:%d' % len(self.plugins_paths))
+
+        if self.excluded_paths:
+            ret.append('excluded_paths:cnt:%d' % len(self.excluded_paths))
 
         return 'Config(%s)' % ','.join(ret)
 
