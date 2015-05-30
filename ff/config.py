@@ -22,7 +22,9 @@ def strip_quotes(value):
 class FFConfigParser(ConfigParser.ConfigParser):
     def get(self, *a, **b):
         val = ConfigParser.ConfigParser.get(self, *a, **b)
-        val = strip_quotes(val)
+
+        if isinstance(val, (str, unicode)):
+            val = strip_quotes(val)
 
         return val
 
