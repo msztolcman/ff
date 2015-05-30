@@ -48,6 +48,8 @@ class Config(object):
         for item in items:
             ret.append('%s="%s"' % (item, getattr(self, item)))
 
+        ret.sort()
+
         if self.excluded_paths:
             ret.append('excluded:cnt:%d' % len(self.excluded_paths))
 
