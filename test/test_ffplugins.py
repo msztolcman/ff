@@ -18,6 +18,9 @@ from test_manager import *
 
 from ff import plugin
 
+TEST_MOD3_DESCR = 'short descr'
+TEST_MOD3_HELP = 'some help'
+
 
 def clear_ffplugins_paths(f):
     @functools.wraps(f)
@@ -40,8 +43,6 @@ def clear_sys_path(f):
             sys.path = old_sys_path
     return _
 
-TEST_MOD3_DESCR = 'short descr'
-TEST_MOD3_HELP = 'some help'
 
 class TestFFPlugins(unittest.TestCase):
     def setUp(self):
