@@ -10,6 +10,10 @@ import os, os.path
 from ff import scanner
 
 
+class ConfigError(Exception):
+    pass
+
+
 class FFConfigParser(ConfigParser.ConfigParser):
     ''' Extended version of ConfigParser: strip quotes from values
     '''
@@ -105,6 +109,9 @@ class Config(object):
 
         parser = FFConfigParser()
         parser.read(sources)
+
+        if parser.sections() and not parser.has_section('ff'):
+            raise ConfigError("Missing 'ff' section in config file")
 
         if parser.has_option('ff', 'ignorecase'):
             self.ignorecase = parser.getboolean('ff', 'ignorecase')
