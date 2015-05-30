@@ -8,7 +8,7 @@ from __future__ import print_function, unicode_literals, division
 
 import os, os.path
 
-from ff.utils import normalize
+from ff.utils import normalize, err
 
 
 MODE_ALL = 'all'
@@ -126,5 +126,9 @@ class Scanner(object):
         :return:
         """
         for source in self.sources:
+            if not os.path.isdir(source):
+                err('Source %s doesn\'t exists or is not a directory' % source)
+                continue
+
             for path in self._scan_source(source):
                 yield path

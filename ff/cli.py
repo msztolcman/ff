@@ -192,9 +192,6 @@ def parse_input_args(args, cfg):
         except UnicodeDecodeError as ex:
             err('%s: %s' % (src, ex), sep='', exit_code=1)
 
-        if not os.path.isdir(src):
-            p.error('Source %s doesn\'t exists or is not a directory' % src)
-
         src = os.path.abspath(src)
         args.sources[i] = normalize(src)
 
