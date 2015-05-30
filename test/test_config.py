@@ -15,7 +15,6 @@ from ff import scanner
 from test_manager import *
 
 
-PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
 _validators = {}
 
 
