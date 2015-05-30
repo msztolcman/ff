@@ -4,13 +4,14 @@
 from __future__ import print_function, unicode_literals, division
 
 try:
-    from StringIO import StringIO
-except ImportError:
     from io import StringIO
+except ImportError:
+    from StringIO import StringIO
 
 from test_manager import *
 
 from ff import utils
+
 
 _set_input__prompt = None
 def set_input(*a):
