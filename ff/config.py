@@ -19,6 +19,14 @@ def strip_quotes(value):
     return value
 
 
+class FFConfigParser(ConfigParser.ConfigParser):
+    def get(self, *a, **b):
+        val = ConfigParser.ConfigParser.get(self, *a, **b)
+        val = strip_quotes(val)
+
+        return val
+
+
 # pylint: disable=too-many-instance-attributes,too-few-public-methods
 class Config(object):
     """
@@ -84,7 +92,7 @@ class Config(object):
 
         self = cls()
 
-        parser = ConfigParser.ConfigParser()
+        parser = FFConfigParser()
         parser.read(sources)
 
         if parser.has_option('ff', 'ignorecase'):
@@ -106,9 +114,9 @@ class Config(object):
         if parser.has_option('ff', 'prefix'):
             self.prefix = parser.getboolean('ff', 'prefix')
         if parser.has_option('ff', 'prefix_dirs'):
-            self.prefix_dirs = parser.get('ff', 'prefix_dirs').strip('"')
+            self.prefix_dirs = parser.get('ff', 'prefix_dirs')
         if parser.has_option('ff', 'prefix_files'):
-            self.prefix_files = parser.get('ff', 'prefix_files').strip('"')
+            self.prefix_files = parser.get('ff', 'prefix_files')
         if parser.has_option('ff', 'colorize'):
             self.colorize = parser.getboolean('ff', 'colorize')
         if parser.has_option('ff', 'include_vcs'):
