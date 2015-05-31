@@ -46,7 +46,7 @@ class TestParseInputArgs(unittest.TestCase):
 
         self.assertIsInstance(args, argparse.Namespace)
         self.assertIsInstance(args.pattern, pattern.Pattern)
-        self.assertEqual(args.sources, [TEST_ROOT])
+        self.assertEqual(args.sources, [os.path.abspath('.')])
 
     def test_explicit_pattern_no_sources(self):
         cfg = InputArgsMock()
@@ -56,7 +56,7 @@ class TestParseInputArgs(unittest.TestCase):
 
         self.assertIsInstance(args, argparse.Namespace)
         self.assertIsInstance(args.pattern, pattern.Pattern)
-        self.assertEqual(args.sources, [TEST_ROOT])
+        self.assertEqual(args.sources, [os.path.abspath('.')])
 
     def test_anonymous_pattern_anonymous_sources(self):
         cfg = InputArgsMock()
