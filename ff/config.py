@@ -4,26 +4,34 @@
 Read and parse configuration files
 """
 
-import ConfigParser
+try:
+    import configparser
+except ImportError:
+    import ConfigParser as configparser
 import os, os.path
 
 from ff import scanner
+from ff import utils
 
 
 class ConfigError(Exception):
     pass
 
 
-class FFConfigParser(ConfigParser.ConfigParser):
+class FFConfigParser(configparser.ConfigParser):
     ''' Extended version of ConfigParser: strip quotes from values
     '''
     def get(self, *a, **b):
         ''' Override ConfigParser.get and for string values strip surrounding quotes
         '''
-        val = ConfigParser.ConfigParser.get(self, *a, **b)
+        val = configparser.ConfigParser.get(self, *a, **b)
 
-        if isinstance(val, (str, unicode)):
-            val = self.strip_quotes(val)
+        if not utils.IS_PY2:
+            if isinstance(val, str):
+                val = self.strip_quotes(val)
+        else:
+            if isinstance(val, (str, unicode)):
+                val = self.strip_quotes(val)
 
         return val
 
@@ -110,7 +118,7 @@ class Config(object):
         try:
             parser = FFConfigParser()
             parser.read(sources)
-        except ConfigParser.ParsingError as ex:
+        except configparser.ParsingError as ex:
             raise ConfigError(str(ex))
 
         if parser.sections() and not parser.has_section('ff'):

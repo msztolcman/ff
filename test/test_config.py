@@ -3,7 +3,6 @@
 
 from __future__ import print_function, unicode_literals, division
 
-import ConfigParser
 import os
 import os.path
 import tempfile
@@ -11,6 +10,7 @@ import textwrap
 
 from ff.config import Config, ConfigError
 from ff import scanner
+from ff import utils
 
 from test_manager import *
 
@@ -45,12 +45,18 @@ def validate_depth(val):
 
 @register_validator('prefix_files', 'prefix_dirs')
 def validate_prefix_for_mode(val):
-    return isinstance(val, (str, unicode))
+    if not utils.IS_PY2:
+        return isinstance(val, str)
+    else:
+        return isinstance(val, (str, unicode))
 
 
 @register_validator('excluded_paths', 'plugins_paths')
 def validate_paths_sections(val):
-    return isinstance(val, (list, tuple)) and all(isinstance(path, (str, unicode)) for path in val)
+    if not utils.IS_PY2:
+        return isinstance(val, (list, tuple)) and all(isinstance(path, str) for path in val)
+    else:
+        return isinstance(val, (list, tuple)) and all(isinstance(path, (str, unicode)) for path in val)
 
 
 def validate(field, val):
@@ -90,7 +96,7 @@ class TestConfig(unittest.TestCase):
         asdassa
         ''')
         try:
-            tmp.write(data)
+            tmp.write(data.encode('utf-8'))
             tmp.close()
 
             with self.assertRaises(ConfigError):
@@ -104,7 +110,7 @@ class TestConfig(unittest.TestCase):
         [asd]
         ''')
         try:
-            tmp.write(data)
+            tmp.write(data.encode('utf-8'))
             tmp.close()
 
             with self.assertRaises(ConfigError):
@@ -120,7 +126,7 @@ class TestConfig(unittest.TestCase):
         tmp = tempfile.NamedTemporaryFile(prefix='ff_', delete=False)
         data = textwrap.dedent(data)
         try:
-            tmp.write(data)
+            tmp.write(data.encode('utf-8'))
             tmp.close()
 
             with self.assertRaises(ConfigError):

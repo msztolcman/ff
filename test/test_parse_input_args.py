@@ -21,6 +21,7 @@ import ff
 from ff.cli import parse_input_args
 from ff import pattern
 from ff import scanner
+from ff import utils
 
 
 class TestParseInputArgs(unittest.TestCase):
@@ -98,10 +99,16 @@ class TestParseInputArgs(unittest.TestCase):
         )
 
         for norm in ('NFC', 'NFKC', 'NFD', 'NFKD'):
-            iargs = ['--pattern', 'a',
-                '--source', unicodedata.normalize(norm, sources[0]).encode('utf-8'),
-                '--source', unicodedata.normalize(norm, sources[1]).encode('utf-8'),
-            ]
+            if not utils.IS_PY2:
+                iargs = ['--pattern', 'a',
+                    '--source', unicodedata.normalize(norm, sources[0]),
+                    '--source', unicodedata.normalize(norm, sources[1]),
+                ]
+            else:
+                iargs = ['--pattern', 'a',
+                    '--source', unicodedata.normalize(norm, sources[0]).encode('utf-8'),
+                    '--source', unicodedata.normalize(norm, sources[1]).encode('utf-8'),
+                ]
             args = parse_input_args(iargs, cfg)
 
             self.assertIsInstance(args, argparse.Namespace)
@@ -209,15 +216,21 @@ class TestParseInputArgs(unittest.TestCase):
         cfg = InputArgsMock()
 
         sources = (
-            '/etc/eee_GÖS_från',  # .encode('utf-8'),
-            '/tmp/förstår_pas',  # .encode('utf-8'),
+            '/etc/eee_GÖS_från',
+            '/tmp/förstår_pas',
         )
 
         for norm in ('NFC', 'NFKC', 'NFD', 'NFKD'):
-            iargs = ['--pattern', 'a',
-                '--exclude-path', unicodedata.normalize(norm, sources[0]).encode('utf-8'),
-                '--exclude-path', unicodedata.normalize(norm, sources[1]).encode('utf-8'),
-            ]
+            if not utils.IS_PY2:
+                iargs = ['--pattern', 'a',
+                    '--exclude-path', unicodedata.normalize(norm, sources[0]),
+                    '--exclude-path', unicodedata.normalize(norm, sources[1]),
+                ]
+            else:
+                iargs = ['--pattern', 'a',
+                    '--exclude-path', unicodedata.normalize(norm, sources[0]).encode('utf-8'),
+                    '--exclude-path', unicodedata.normalize(norm, sources[1]).encode('utf-8'),
+                ]
             args = parse_input_args(iargs, cfg)
 
             self.assertIsInstance(args, argparse.Namespace)
@@ -323,13 +336,22 @@ class TestParseInputArgs(unittest.TestCase):
 
         iargs = ['--version']
 
-        _org_stderr = sys.stderr
-        sys.stderr = StringIO()
-        with self.assertRaisesRegexp(SystemExit, '0'):
-            parse_input_args(iargs, cfg)
-        stderr = sys.stderr.getvalue()
-        sys.stderr = _org_stderr
-        self.assertRegexpMatches(stderr, r'^[\w.]+ %s\n' % re.escape(ff.__version__))
+        if not utils.IS_PY2:
+            _org_stdout = sys.stdout
+            sys.stdout = StringIO()
+            with self.assertRaisesRegexp(SystemExit, '0'):
+                parse_input_args(iargs, cfg)
+            stream = sys.stdout.getvalue()
+            sys.stdout = _org_stdout
+        else:
+            _org_stderr = sys.stderr
+            sys.stderr = StringIO()
+            with self.assertRaisesRegexp(SystemExit, '0'):
+                parse_input_args(iargs, cfg)
+            stream = sys.stderr.getvalue()
+            sys.stderr = _org_stderr
+
+        self.assertRegexpMatches(stream, r'^[\w.]+ %s\n' % re.escape(ff.__version__))
 
     def test_help(self):
         cfg = InputArgsMock()
