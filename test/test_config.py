@@ -93,7 +93,7 @@ class TestConfig(unittest.TestCase):
             tmp.write(data)
             tmp.close()
 
-            with self.assertRaises(ConfigParser.ParsingError):
+            with self.assertRaises(ConfigError):
                 Config.parse_config([tmp.name])
         finally:
             os.unlink(tmp.name)
@@ -123,7 +123,7 @@ class TestConfig(unittest.TestCase):
             tmp.write(data)
             tmp.close()
 
-            with self.assertRaises(ConfigParser.ParsingError):
+            with self.assertRaises(ConfigError):
                 Config.parse_config([tmp.name])
         finally:
             os.unlink(tmp.name)
