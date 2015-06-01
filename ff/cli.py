@@ -265,9 +265,9 @@ def initialize_plugins(args):
             plugin = FFPlugin(plugin_name, 'test', argument=plugin_argument)
             plugins.append(plugin)
         except ImportError:
-            raise FFPluginError('unknown plugin: %s' % plugin_name)
+            raise FFPluginError('unknown plugin: %s' % plugin_name, plugin_name)
         except AttributeError:
-            raise FFPluginError('broken plugin: %s' % plugin_name)
+            raise FFPluginError('broken plugin: %s' % plugin_name, plugin_name)
 
     return plugins
 
@@ -394,7 +394,6 @@ def main():
         for item in scanner.Scanner(args):
             process_item(args, item)
     except FFPluginError as ex:
-        # TODO: failed plugin name
-        err('Plugin error: %s' % ex, exit_code=1)
+        err('Plugin error (%s): %s' % (ex.plugin_name, ex), exit_code=1)
     except KeyboardInterrupt:
         disp('Interrupted by CTRL-C, aborting', file=sys.stderr)

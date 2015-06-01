@@ -18,7 +18,9 @@ from ff.utils import disp
 class FFPluginError(Exception):
     """ Exception class for plugins.
     """
-    pass
+    def __init__(self, msg, name=None):
+        super(FFPluginError, self).__init__(msg)
+        self.plugin_name = name
 
 
 class InvalidPluginsPath(FFPluginError):
