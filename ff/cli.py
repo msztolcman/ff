@@ -394,6 +394,6 @@ def main():
         for item in scanner.Scanner(args):
             process_item(args, item)
     except FFPluginError as ex:
-        err('Plugin error (%s): %s' % (ex.plugin_name, ex), exit_code=1)
+        err('Plugin error (%s): %s' % (ex.get_plugin_name(), ex), exit_code=1)
     except KeyboardInterrupt:
         disp('Interrupted by CTRL-C, aborting', file=sys.stderr)

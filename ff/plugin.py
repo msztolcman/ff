@@ -18,9 +18,28 @@ from ff.utils import disp
 class FFPluginError(Exception):
     """ Exception class for plugins.
     """
+    # TODO: do not hardocde 'test'
+    PREFIX = 'ffplugin_test_'
+
     def __init__(self, msg, name=None):
         super(FFPluginError, self).__init__(msg)
         self.plugin_name = name
+
+    @staticmethod
+    def _get_tb_filename(tb):
+        return os.path.splitext(os.path.basename(tb.tb_frame.f_code.co_filename))[0]
+
+    def get_plugin_name(self):
+        if not self.plugin_name:
+            tb = sys.exc_info()[2]
+            i = 7
+            while i > 0 and not self._get_tb_filename(tb).startswith(self.PREFIX):
+                i -= 1
+                tb = tb.tb_next
+
+            self.plugin_name = self._get_tb_filename(tb)[len(self.PREFIX):]
+
+        return self.plugin_name
 
 
 class InvalidPluginsPath(FFPluginError):

@@ -49,7 +49,7 @@ def _action(__, argument, path):
 
     if not argument:
         # pylint: disable=undefined-variable
-        raise FFPluginError('missing size', 'size')
+        raise FFPluginError('missing size')
 
     if argument[0] in ('<', '>', '='):
         test = _TESTS[argument[0]]
@@ -80,7 +80,7 @@ def plugin_action(name, argument, path):
         import sys
         ex = sys.exc_info()[1]
         # pylint: disable=undefined-variable
-        raise FFPluginError(ex.message, 'size')
+        raise FFPluginError(ex.message)
 
 PLUGIN_DESCR = 'Filter files by their size.'
 PLUGIN_HELP = '''Size must be given as argument, and must follow pattern (without spaces):
