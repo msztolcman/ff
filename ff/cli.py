@@ -141,7 +141,7 @@ def parse_input_args(args, cfg):
         return args
 
     # depth
-    # small hack - argaparse do not allow to pass '-' on beginning of value,
+    # dirty hack - argaparse do not allow to pass '-' on beginning of value,
     # but we need to recognize '-1' etc. So allow to pass \-1, and strip \ from it
     # next convert data to int or show message, emulating original argparse error
     try:
