@@ -15,6 +15,31 @@ import textwrap
 from ff.utils import disp
 
 
+PluginMetaData = collections.namedtuple('PluginMetaData', ('type', 'name'))
+
+
+def parse_plugin_filename(name):
+    """
+    Parse plugins filename and extract info from it.
+    As name can be passed even full path, basename would be extracted
+    and extension stripped.
+    :param name:str
+    :return:PluginMetaData:raise ValueError:
+    """
+    name = os.path.basename(name)
+    name = os.path.splitext(name)[0]
+
+    if not name.startswith('ffplugin_'):
+        raise ValueError("Incorrect value: %s. Should begins with \"ffplugin_\"" % name)
+
+    try:
+        _, plugin_type, plugin_name = name.split('_', 2)
+    except ValueError:
+        raise ValueError("Incorrect plugin name: %s" % name)
+
+    return PluginMetaData(plugin_type, plugin_name)
+
+
 class FFPluginError(Exception):
     """ Exception class for plugins.
     """
