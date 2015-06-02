@@ -366,8 +366,32 @@ class TestParseInputArgs(unittest.TestCase):
         sys.stdout = _org_stdout
         self.assertRegexpMatches(stdout, r'(?ms)^usage: .+\bHomePage:\n\s+http://mysz\.github\.io/ff/$')
 
+    def test_help_test_plugins_get_list(self):
+        cfg = InputArgsMock()
+        iargs = ['--help-test-plugins']
+
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.help_test_plugins, [None])
+
+    def test_help_test_plugins_get_help(self):
+        cfg = InputArgsMock()
+        iargs = ['--help-test-plugins', 'size']
+
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.help_test_plugins, ['size'])
+
+        iargs = ['--help-test-plugins', 'size,ext']
+
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.help_test_plugins, ['size,ext'])
+
+        iargs = ['--help-test-plugins', 'size', '--help-test-plugins', 'ext']
+
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.help_test_plugins, ['size' ,'ext'])
+
+
 if __name__ == '__main__':
     unittest.main()
 
 # TODO: modify default values by config
-# TODO: help-test-plugins
