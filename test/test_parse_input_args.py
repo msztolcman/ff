@@ -4,8 +4,6 @@
 from __future__ import print_function, unicode_literals, division
 
 import argparse
-import unicodedata
-
 try:
     from io import StringIO
 except ImportError:
@@ -13,6 +11,7 @@ except ImportError:
 import os.path
 import re
 import sys
+import unicodedata
 
 from test_manager import *
 from mocks.input_args import InputArgsMock
