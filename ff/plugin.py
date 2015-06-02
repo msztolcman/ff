@@ -207,23 +207,20 @@ class FFPlugins(list):
 
             Search for every plugin in specified paths and returns it's names.
         """
-        result = {}
-        prefix_len = len('ffplugin_') + len(type_) + 1
+        result = set()
+        plugin_name_glob = '_'.join(['ffplugin', type_, '*.py'])
         for path in cls._paths:
             if not os.path.isdir(path):
                 continue
 
-            for file_ in glob.glob(os.path.join(path, '_'.join(['ffplugin', type_, '*.py']))):
-                plugin_name = os.path.basename(file_)[prefix_len:-3]
-                ## paths order describe priority of plugins too (first found are most important)
-                if plugin_name in result:
+            for file_ in glob.glob(os.path.join(path, plugin_name_glob)):
+                plugin_name = parse_plugin_filename(file_)
+                # paths order describe priority of plugins too (first found are most important)
+                if plugin_name.name in result:
                     continue
-                result[plugin_name] = True
+                result.add(plugin_name.name)
 
-        order = list(result.keys())
-        order.sort()
-
-        return order
+        return sorted(result)
 
     @classmethod
     def find_all(cls, type_):
