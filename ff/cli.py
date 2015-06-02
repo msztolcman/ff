@@ -225,10 +225,10 @@ def parse_input_args(args, cfg):
     return args
 
 
-def detect_plugins_paths(args):
+def detect_plugins_paths(paths):
     """
     Detect and collect plugins paths
-    :param args:
+    :param paths:list
     :return:
     """
     plugins_path = os.path.dirname(os.path.abspath(__file__))
@@ -236,8 +236,8 @@ def detect_plugins_paths(args):
     FFPlugins.path_add(os.path.abspath(plugins_path))
     FFPlugins.path_add(os.path.expanduser('~/.ff/plugins'))
 
-    if args.plugins_path:
-        for plugins_path in args.plugins_path:
+    if paths:
+        for plugins_path in paths:
             try:
                 plugins_path = u(plugins_path)
             except UnicodeDecodeError as ex:
@@ -360,7 +360,7 @@ def main():
 
     # where to search for plugins
     try:
-        detect_plugins_paths(args)
+        detect_plugins_paths(args.plugins_path)
     except InvalidPluginsPath as ex:
         err('%s: %s' % (ex.path, str(ex)), sep='', exit_code=1)
 
