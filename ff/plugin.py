@@ -43,26 +43,41 @@ def parse_plugin_filename(name):
 class FFPluginError(Exception):
     """ Exception class for plugins.
     """
-    # TODO: do not hardocde 'test'
-    PREFIX = 'ffplugin_test_'
-
     def __init__(self, msg, name=None):
         super(FFPluginError, self).__init__(msg)
         self.plugin_name = name
 
     @staticmethod
     def _get_tb_filename(tb):
+        """
+        Extract filename from given traceback frame
+        :param tb:traceback
+        :return:str
+        """
         return os.path.splitext(os.path.basename(tb.tb_frame.f_code.co_filename))[0]
 
     def get_plugin_name(self):
+        """
+        Iterate through exception traceback and search for one
+        with filename that match plugin.
+        :return:str
+        """
         if not self.plugin_name:
             tb = sys.exc_info()[2]
-            i = 7
-            while i > 0 and not self._get_tb_filename(tb).startswith(self.PREFIX):
-                i -= 1
-                tb = tb.tb_next
+            i = 9
+            while i > 0:
+                plugin_name = self._get_tb_filename(tb)
+                try:
+                    plugin_name = parse_plugin_filename(plugin_name)
+                    break
+                except ValueError:
+                    i -= 1
+                    tb = tb.tb_next
 
-            self.plugin_name = self._get_tb_filename(tb)[len(self.PREFIX):]
+            if i == 0:
+                return
+
+            self.plugin_name = plugin_name.name
 
         return self.plugin_name
 
