@@ -12,7 +12,7 @@ import os
 import sys
 import textwrap
 
-from ff.utils import disp
+from ff.utils import disp, u, normalize
 
 
 PluginMetaData = collections.namedtuple('PluginMetaData', ('type', 'name'))
@@ -198,6 +198,8 @@ class FFPlugins(list):
         """ Append path to known plugins paths.
         """
         if path not in cls._paths:
+            path = u(path)
+            path = normalize(path)
             cls._paths.add(path)
             sys.path.append(path)
 
