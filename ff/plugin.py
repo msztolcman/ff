@@ -48,13 +48,13 @@ class FFPluginError(Exception):
         self.plugin_name = name
 
     @staticmethod
-    def _get_tb_filename(tb):
+    def _get_tb_filename(tback):
         """
         Extract filename from given traceback frame
-        :param tb:traceback
+        :param tback:traceback
         :return:str
         """
-        return os.path.splitext(os.path.basename(tb.tb_frame.f_code.co_filename))[0]
+        return os.path.splitext(os.path.basename(tback.tb_frame.f_code.co_filename))[0]
 
     def get_plugin_name(self):
         """
@@ -63,16 +63,16 @@ class FFPluginError(Exception):
         :return:str
         """
         if not self.plugin_name:
-            tb = sys.exc_info()[2]
+            tback = sys.exc_info()[2]
             i = 9
             while i > 0:
-                plugin_name = self._get_tb_filename(tb)
+                plugin_name = self._get_tb_filename(tback)
                 try:
                     plugin_name = parse_plugin_filename(plugin_name)
                     break
                 except ValueError:
                     i -= 1
-                    tb = tb.tb_next
+                    tback = tback.tb_next
 
             if i == 0:
                 return

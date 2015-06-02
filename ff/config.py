@@ -15,6 +15,8 @@ from ff import utils
 
 
 class ConfigError(Exception):
+    """ Configuration file error
+    """
     pass
 
 
