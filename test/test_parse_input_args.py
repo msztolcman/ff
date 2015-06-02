@@ -4,6 +4,9 @@
 from __future__ import print_function, unicode_literals, division
 
 import argparse
+import copy
+import pprint
+
 try:
     from io import StringIO
 except ImportError:
@@ -389,8 +392,128 @@ class TestParseInputArgs(unittest.TestCase):
         args = parse_input_args(iargs, cfg)
         self.assertEquals(args.help_test_plugins, ['size' ,'ext'])
 
+    def test_modify_defaults_via_config(self):
+        cfg = InputArgsMock()
+
+        iargs = ['--pattern', 'a']
+        org_args = parse_input_args(iargs, cfg)
+
+        options = vars(org_args).copy()
+        del options['print0']
+        del options['delim']
+        del options['pattern']
+        del options['ignorecase']
+        del options['regexp']
+        del options['fuzzy']
+        del options['path_search']
+        del options['prefix']
+        del options['colorize']
+        del options['include_vcs']
+        del options['mode']
+        del options['depth']
+        del options['prefix_dirs']
+        del options['prefix_files']
+        del options['excluded_paths']
+        del options['plugins_path']
+
+        iargs = ['--pattern', 'a', '--print0']
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.print0, not org_args.print0)
+        for option in options:
+            self.assertEquals(getattr(org_args, option), getattr(args, option), "%s shouldn't change" % option)
+
+        iargs = ['--pattern', 'a', '--ignorecase']
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.ignorecase, not org_args.ignorecase)
+        for option in options:
+            self.assertEquals(getattr(org_args, option), getattr(args, option), "%s shouldn't change" % option)
+
+        iargs = ['--pattern', 'a', '--regexp']
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.regexp, not org_args.regexp)
+        for option in options:
+            self.assertEquals(getattr(org_args, option), getattr(args, option), "%s shouldn't change" % option)
+
+        iargs = ['--pattern', 'a', '--fuzzy']
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.fuzzy, not org_args.fuzzy)
+        for option in options:
+            self.assertEquals(getattr(org_args, option), getattr(args, option), "%s shouldn't change" % option)
+
+        iargs = ['--pattern', 'a', '--path-search']
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.path_search, not org_args.path_search)
+        for option in options:
+            self.assertEquals(getattr(org_args, option), getattr(args, option), "%s shouldn't change" % option)
+
+        iargs = ['--pattern', 'a', '--prefix']
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.prefix, not org_args.prefix)
+        for option in options:
+            self.assertEquals(getattr(org_args, option), getattr(args, option), "%s shouldn't change" % option)
+
+        iargs = ['--pattern', 'a', '--no-colorize']
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.colorize, not org_args.colorize)
+        for option in options:
+            self.assertEquals(getattr(org_args, option), getattr(args, option), "%s shouldn't change" % option)
+
+        iargs = ['--pattern', 'a', '--vcs']
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.include_vcs, not org_args.include_vcs)
+        for option in options:
+            self.assertEquals(getattr(org_args, option), getattr(args, option), "%s shouldn't change" % option)
+
+        expected = scanner.MODE_DIRS if org_args.mode != scanner.MODE_DIRS else scanner.MODE_FILES
+        iargs = ['--pattern', 'a', '--mode', expected]
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.mode, expected)
+        for option in options:
+            self.assertEquals(getattr(org_args, option), getattr(args, option), "%s shouldn't change" % option)
+
+        expected = org_args.depth + 2
+        iargs = ['--pattern', 'a', '--depth', str(expected)]
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.depth, expected)
+        for option in options:
+            self.assertEquals(getattr(org_args, option), getattr(args, option), "%s shouldn't change" % option)
+
+        expected = org_args.prefix_dirs + 'a!'
+        iargs = ['--pattern', 'a', '--prefix-dirs', expected]
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.prefix_dirs, expected)
+        for option in options:
+            self.assertEquals(getattr(org_args, option), getattr(args, option), "%s shouldn't change" % option)
+
+        expected = org_args.prefix_files + 'a!'
+        iargs = ['--pattern', 'a', '--prefix-files', expected]
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.prefix_files, org_args.prefix_files + 'a!')
+        for option in options:
+            self.assertEquals(getattr(org_args, option), getattr(args, option), "%s shouldn't change" % option)
+
+        expected = copy.copy(org_args.excluded_paths)
+        expected.append('/q/w')
+        iargs = ['--pattern', 'a']
+        for item in expected:
+            iargs.append('--exclude-path')
+            iargs.append(item)
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.excluded_paths, expected)
+        for option in options:
+            self.assertEquals(getattr(org_args, option), getattr(args, option), "%s shouldn't change" % option)
+
+        expected = copy.copy(org_args.plugins_path)
+        expected.append('/q/w')
+        iargs = ['--pattern', 'a']
+        for item in expected:
+            iargs.append('--plugins-path')
+            iargs.append(item)
+        args = parse_input_args(iargs, cfg)
+        self.assertEquals(args.plugins_path, expected)
+        for option in options:
+            self.assertEquals(getattr(org_args, option), getattr(args, option), "%s shouldn't change" % option)
+
 
 if __name__ == '__main__':
     unittest.main()
-
-# TODO: modify default values by config
