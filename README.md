@@ -308,7 +308,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ChangeLog
 ---------
 
-### v0.6.0
+### v1.0.0
 
 * backward incompatible: magic pattern doesn't recognize 'q' flag for 'path-search' mode, flag --path-search must be passed explicitly
 * new option: --depth - limit searching to this depth

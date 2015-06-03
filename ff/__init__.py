@@ -6,4 +6,4 @@
 
 from __future__ import print_function, unicode_literals, division
 
-__version__ = '0.5.0'
+__version__ = '1.0.0'
