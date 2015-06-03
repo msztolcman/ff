@@ -91,20 +91,25 @@ Search for all files and directories in current directory and below, which name 
 
 Search for all files and directories in current directory and below, which name starts from 'chkpasswd' or 'passwd'.
 
+Configuration file
+------------------
+
+`ff` recognizes 2 configuration files: user-wide and project-wide. Both can specify the same things and have identical syntax (ini files). User-wide one is located in `$HOME/.ff.rc`, and project-wide is located in current directory (ie. projects root).
+Example file is located at (github)[https://github.com/mysz/ff/blob/master/ff.rc]. 
+
 Plugins
 -------
 
 Plugins are the way to easily extend capabilities of `ff`. Currently there is only support for plugins allowing to extend tests made on files list. In future, there is plan to add support for plugins allowing to make some actions on found files (currently is _built-in plugin_: `--shell`), for example modifying, copying or anything else).
 
-`ff` search for plugins in two places (by default), but there is posibility to tell him about third one.
-Automaticaly recognized paths are:
+`ff` search for plugins in user's home directory, but there is posibility to tell him about the other..
+By default, `ff` search for plugins in:
 
 * `~/.ff/plugins`
-* directory `ff_plugins` in programs root (if You have `ff` placed in `~/bin`, it will search for plugins in `~/bin/ff_plugins`)
 
-And using switch `--plugins-path` You can tell `ff` where the plugins must be searched.
+And using switch `--plugins-path` you can tell `ff` about other plugins location.
 
-You can also pass argument to plugins. For example, in `size` plugin (You can download it from [GitHub](https://github.com/mysz/ff/tree/master/ff_plugins)), You must to tell the plugin what size of file You expect:
+You can also pass argument to plugins. For example, in `size` plugin (bundled with `ff`), You must to tell the plugin what size of file You expect:
 
     `ff pas --test size:=5k`
 
@@ -133,9 +138,7 @@ Name of file is built with three parts, connected with underscore:
 And as Python module, must and with `.py` extension :)
 
 Plugin must validate input data (`argument`), and raise `PluginError` exception with approbiate message on any error. Plugin shouldn't raise any other exceptions.
-There is one caveat with this: `PluginError` exception is declared *inside* `ff`! When given plugin is imported, it is _monkeypatched_ and `PluginError` exception is injected into.
-
-This is made by one of goals I have: try to have whole `ff` program in single file. It's important to me that I can move it easy between servers.
+There is one caveat with this: `PluginError` exception is declared *inside* `ff`! When given plugin is imported, it is _monkeypatched_ and `PluginError` exception is injected into it.
 
 There is an example plugin, which allow us to search for files in specified size. Is in [project repository](https://github.com/mysz/ff/tree/master/ff_plugins) in directory plugins. You can use it as a base for your own plugins :)
 
@@ -153,21 +156,23 @@ Voila!
 Usage
 -----
 
-    usage: ff [-h] [--print0] [--ignorecase] [--source SOURCE] [--pattern PATTERN]
+    usage: ff [-h] [--print0] [--ignorecase] [--source source] [--pattern PATTERN]
               [--regexp] [--fuzzy] [--depth DEPTH] [--path-search]
               [--regex-multiline] [--regex-dotall] [--begin] [--end]
               [--invert-match] [--mode MODE] [--exec COMMAND] [--prefix]
-              [--no-display] [--colorize] [--verbose-exec] [--interactive-exec]
+              [--prefix-dirs PREFIX_DIRS] [--prefix-files PREFIX_FILES]
+              [--no-display] [--no-colorize] [--verbose-exec] [--interactive-exec]
               [--shell-exec] [--vcs] [--exclude-path EXCLUDED_PATH] [--test TESTS]
               [--plugins-path PLUGINS_PATH] [--version]
               [--help-test-plugins [TEST_NAME[,TEST2_NAME]]]
-              [pattern] [sources [sources ...]]
+              [--show-plugins-paths]
+              [pattern] [source [source ...]]
     
     Easily search and process files.
     
     positional arguments:
       pattern               pattern to search
-      sources               optional source (if missing, use current directory)
+      source                optional source (if missing, use current directory)
     
     optional arguments:
       -h, --help            show this help message and exit
@@ -175,7 +180,7 @@ Usage
                             (useful to work with xargs)
       --ignorecase, -i, --ignore-case
                             ignore case when match pattern to paths
-      --source SOURCE, -s SOURCE
+      --source source, -s source
                             optional, see: source above
       --pattern PATTERN, -p PATTERN
                             optional, see: pattern above
@@ -206,10 +211,14 @@ Usage
                             execute some command on every found item. In command,
                             placeholders: {path}, {dirname}, {basename} are
                             replaced with correct value
-      --prefix              add prefix "d: " (directory) or "f: " (file) to every
-                            found item
+      --prefix              add prefix "dr: " (directory) or "fl: " (file) to
+                            every found item
+      --prefix-dirs PREFIX_DIRS
+                            prefix for matched directories
+      --prefix-files PREFIX_FILES
+                            prefix for matched files
       --no-display          don't display element (useful with --exec argument)
-      --colorize            Colorize output
+      --no-colorize         Colorize output
       --verbose-exec        show command before execute it
       --interactive-exec    ask before execute command on every item
       --shell-exec          execute command from --exec argument in shell (with
@@ -226,6 +235,7 @@ Usage
       --version             show program's version number and exit
       --help-test-plugins [TEST_NAME[,TEST2_NAME]]
                             display help for installed test plugins
+      --show-plugins-paths  Show recognized plugins paths and exit
     
     Pattern, provided as positional argument (not with --pattern) can be provided
     in special form (called: magic pattern). It allows to more "nerdish"
