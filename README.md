@@ -308,6 +308,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ChangeLog
 ---------
 
+### v1.0.1
+
+* fixes for Pypi
+
 ### v1.0.0
 
 * backward incompatible: magic pattern doesn't recognize 'q' flag for 'path-search' mode, flag --path-search must be passed explicitly

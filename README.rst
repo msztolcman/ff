@@ -11,7 +11,7 @@ this kind of task.
 Current stable version
 ----------------------
 
-0.5.0
+1.0.1
 
 Why ``ff`` and not ``find``?
 ----------------------------
@@ -390,6 +390,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ChangeLog
 ---------
+
+v1.0.1
+~~~~~~
+
+-  fixes for Pypi
 
 v1.0.0
 ~~~~~~
