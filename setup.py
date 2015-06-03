@@ -35,7 +35,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Topic :: Utilities'
     ],
-    keywords='search find filesystem files directories',
+    keywords=['search', 'find', 'filesystem', 'files', 'directories'],
     install_requires=['argparse'],
     py_modules=['ff'],
     entry_points={
