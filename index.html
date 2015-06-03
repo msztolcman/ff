@@ -6,7 +6,7 @@
     <title>ff by mysz</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
     <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
@@ -31,19 +31,19 @@
       </header>
       <section>
         <h1>
-<a name="ff" class="anchor" href="#ff"><span class="octicon octicon-link"></span></a>ff</h1>
+<a id="ff" class="anchor" href="#ff" aria-hidden="true"><span class="octicon octicon-link"></span></a>ff</h1>
 
 <p>Easily search and process files.</p>
 
 <p>If you need to search files by their contents, <em>or</em> search for their contents, please look at <a href="https://github.com/petdance/ack2">ack</a> or <a href="https://github.com/eliben/pss">pss</a>. These are better suited for this kind of task.</p>
 
 <h2>
-<a name="current-stable-version" class="anchor" href="#current-stable-version"><span class="octicon octicon-link"></span></a>Current stable version</h2>
+<a id="current-stable-version" class="anchor" href="#current-stable-version" aria-hidden="true"><span class="octicon octicon-link"></span></a>Current stable version</h2>
 
-<p>0.5</p>
+<p>1.0.5</p>
 
 <h2>
-<a name="why-ff-and-not-find" class="anchor" href="#why-ff-and-not-find"><span class="octicon octicon-link"></span></a>Why <code>ff</code> and not <code>find</code>?</h2>
+<a id="why-ff-and-not-find" class="anchor" href="#why-ff-and-not-find" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why <code>ff</code> and not <code>find</code>?</h2>
 
 <p>Just because I find that most of my searches was:</p>
 
@@ -55,10 +55,25 @@
 <pre><code>ff name
 </code></pre>
 
-<p>:)</p>
+<p>Also, my <code>find</code> have sometimes problems with non ascii names:</p>
+
+<pre><code>% find /tmp -name '*GÖS*'
+% 
+</code></pre>
+
+<p>And with <code>ff</code>:</p>
+
+<pre><code>% ff '*GÖS*' /tmp
+/tmp/eee_GÖS_från_förstår_pas
+/tmp/eee_GÖS_från_pas_förstår_qq
+/tmp/pas_GÖS_från_förstår
+%
+</code></pre>
+
+<p>it just works! :)</p>
 
 <h2>
-<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic usage</h2>
+<a id="basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic usage</h2>
 
 <pre><code>ff passwd
 </code></pre>
@@ -79,17 +94,17 @@
 </code></pre>
 
 <h2>
-<a name="advanced-usage" class="anchor" href="#advanced-usage"><span class="octicon octicon-link"></span></a>Advanced usage</h2>
+<a id="advanced-usage" class="anchor" href="#advanced-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced usage</h2>
 
-<pre><code>./ff.py -p pa -s /etc --shell-exec -x '[ -f "{path}" ] &amp;&amp; mkdir -p /tmp{dirname}; cp -r "{path}" "/tmp{path}"'
+<pre><code>ff -p pa -s /tmp --shell-exec -x '[ -f "{path}" ] &amp;&amp; mkdir -p /tmp{dirname}; cp -r "{path}" "/tmp{path}"'
 </code></pre>
 
-<p>Find all files and directories in /etc that match expression: <code>*pa*</code>, and copy them (with original directories hierarchy!) to /tmp.</p>
+<p>Find all files and directories in /tmp that match expression: <code>*pa*</code>, and copy them (with original directories hierarchy!) to /tmp.</p>
 
 <p>So powerful!</p>
 
 <h2>
-<a name="magic-pattern" class="anchor" href="#magic-pattern"><span class="octicon octicon-link"></span></a>Magic pattern</h2>
+<a id="magic-pattern" class="anchor" href="#magic-pattern" aria-hidden="true"><span class="octicon octicon-link"></span></a>Magic pattern</h2>
 
 <p>It's form of pattern known good for Perl or AWK lovers :)</p>
 
@@ -121,19 +136,26 @@ described in Usage section.</p>
 <p>Search for all files and directories in current directory and below, which name starts from 'chkpasswd' or 'passwd'.</p>
 
 <h2>
-<a name="plugins" class="anchor" href="#plugins"><span class="octicon octicon-link"></span></a>Plugins</h2>
+<a id="configuration-file" class="anchor" href="#configuration-file" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration file</h2>
+
+<p><code>ff</code> recognizes 2 configuration files: user-wide and project-wide. Both can specify the same things and have identical syntax (ini files). User-wide one is located in <code>$HOME/.ff.rc</code>, and project-wide is located in current directory (ie. projects root).
+Example file is located at (github)[<a href="https://github.com/mysz/ff/blob/master/ff.rc">https://github.com/mysz/ff/blob/master/ff.rc</a>]. </p>
+
+<h2>
+<a id="plugins" class="anchor" href="#plugins" aria-hidden="true"><span class="octicon octicon-link"></span></a>Plugins</h2>
 
 <p>Plugins are the way to easily extend capabilities of <code>ff</code>. Currently there is only support for plugins allowing to extend tests made on files list. In future, there is plan to add support for plugins allowing to make some actions on found files (currently is <em>built-in plugin</em>: <code>--shell</code>), for example modifying, copying or anything else).</p>
 
-<p><code>ff</code> search for plugins in two places (by default), but there is posibility to tell him about third one.
-Automaticaly recognized paths are:</p>
+<p><code>ff</code> search for plugins in user's home directory, but there is posibility to tell him about the other..
+By default, <code>ff</code> search for plugins in:</p>
 
 <ul>
 <li><code>~/.ff/plugins</code></li>
-<li>directory <code>ff_plugins</code> in programs root (if You have <code>ff</code> placed in <code>~/bin</code>, it will search for plugins in <code>~/bin/ff_plugins</code>)</li>
-</ul><p>And using switch <code>--plugins-path</code> You can show <code>ff</code> where the plugins must be searched.</p>
+</ul>
 
-<p>You can also pass argument to plugins. For example, in <code>size</code> plugin (You can download it from <a href="https://github.com/mysz/ff/tree/master/ff_plugins">GitHub</a>), You must to tell the plugin what size of file You expect:</p>
+<p>And using switch <code>--plugins-path</code> you can tell <code>ff</code> about other plugins location.</p>
+
+<p>You can also pass argument to plugins. For example, in <code>size</code> plugin (bundled with <code>ff</code>), You must to tell the plugin what size of file You expect:</p>
 
 <pre><code>`ff pas --test size:=5k`
 </code></pre>
@@ -141,7 +163,7 @@ Automaticaly recognized paths are:</p>
 <p>Above example will find every file with <em>pas</em> part in its name, and its size is <em>exactly</em> 5 <a href="http://en.wikipedia.org/wiki/Binary_prefix#IEC_standard_prefixes">kibibytes</a>. More about <code>size</code> plugin in <a href="https://github.com/mysz/ff/wiki/">projects wiki</a>.</p>
 
 <h2>
-<a name="writing-plugins" class="anchor" href="#writing-plugins"><span class="octicon octicon-link"></span></a>Writing plugins</h2>
+<a id="writing-plugins" class="anchor" href="#writing-plugins" aria-hidden="true"><span class="octicon octicon-link"></span></a>Writing plugins</h2>
 
 <p>Plugins are written in <a href="http://python.org">Python</a>, and are simple Python modules with at least <code>plugin_action</code> callable specified. Plugins are imported, and <code>plugin_action</code> must return <code>True</code> or <code>False</code> to tell <code>ff</code> that given found object meets expectations, and should be returned.</p>
 
@@ -166,7 +188,9 @@ Automaticaly recognized paths are:</p>
 <li>
 <code>PLUGIN_HELP</code> - (OPTIONAL) [string or callable] full help for plugin, printed when <code>ff</code> is called with switch <code>--help-test-plugins TEST_NAME</code>
 </li>
-</ul><p>Plugin file also must have special name, and be placed in directory recognized by <code>ff</code> (see: [plugins][plugins]).
+</ul>
+
+<p>Plugin file also must have special name, and be placed in directory recognized by <code>ff</code> (see: [plugins][plugins]).
 Name of file is built with three parts, connected with underscore:</p>
 
 <ul>
@@ -176,96 +200,110 @@ Name of file is built with three parts, connected with underscore:</p>
 <code>test</code> - type of plugin (currently only <code>test</code> plugins are recignized)</li>
 <li>
 <code>NAME</code> - name of plugin</li>
-</ul><p>And as Python module, must and with <code>.py</code> extension :)</p>
+</ul>
 
-<p>Plugin must validate input data (<code>argument</code>), and raise <code>PluginError</code> exception with approbiate message on any error. Plugin shouldn't raise any other exceptions.
-There is one caveat with this: <code>PluginError</code> exception is declared <em>inside</em> <code>ff</code>! When given plugin is imported, it is <em>monkeypatched</em> and <code>PluginError</code> exception is injected into.</p>
+<p>And as Python module, must and with <code>.py</code> extension :)</p>
 
-<p>This is made by one of goals I have: try to have whole <code>ff</code> program in single file. It's important to me that I can move it easy between servers.</p>
+<p>Plugin must validate input data (<code>argument</code>), and raise <code>FFPluginError</code> exception with approbiate message on any error. Plugin shouldn't raise any other exceptions.
+There is one caveat with this: <code>FFPluginError</code> exception is declared <em>inside</em> <code>ff</code>! When given plugin is imported, it is <em>monkeypatched</em> and <code>FFPluginError</code> exception is injected into it.</p>
 
 <p>There is an example plugin, which allow us to search for files in specified size. Is in <a href="https://github.com/mysz/ff/tree/master/ff_plugins">project repository</a> in directory plugins. You can use it as a base for your own plugins :)</p>
 
 <h2>
-<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
 <p><code>ff</code> should work on any platform where <a href="http://python.org">Python</a> is available, it means Linux, Windows, MacOS X etc. There is no dependencies, plain Python power :) </p>
 
-<p>To install, go to <a href="https://github.com/mysz/ff/releases">GitHub releases</a>, download newest release, unpack and put somewhere in <code>PATH</code> (ie. <code>~/bin</code> or <code>/usr/local/bin</code>).</p>
+<p>To install, you can use <code>pip</code>:</p>
 
-<p>If You want to install newest unstable version, then just copy file to your PATH, for example:</p>
-
-<pre><code>curl https://raw.github.com/mysz/ff/master/ff.py &gt; /usr/local/bin/ff
-</code></pre>
-
-<p>or:</p>
-
-<pre><code>wget https://raw.github.com/mysz/ff/master/ff.py -O /usr/local/bin/ff
+<pre><code>pip install ff
 </code></pre>
 
 <p>Voila!</p>
 
 <h2>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<pre><code>usage: ff.py [-h] [-0] [-i] [-s SOURCE] [-p PATTERN] [-g] [-f] [-q] [-l] [-d]
-            [-B] [-E] [-v] [-m {all,files,dirs}] [-x COMMAND] [--prefix]
-            [--no-display] [--verbose-exec] [--interactive-exec]
-            [--shell-exec] [--vcs] [-c EXCLUDED_PATH] [-t TESTS]
-            [--plugins-path PLUGINS_PATH] [--version]
-            [--help-test-plugins [TEST_NAME]]
-            [pattern] [sources [sources ...]]
+<pre><code>usage: ff [-h] [--print0] [--ignorecase] [--source source] [--pattern PATTERN]
+          [--regexp] [--fuzzy] [--depth DEPTH] [--path-search]
+          [--regex-multiline] [--regex-dotall] [--begin] [--end]
+          [--invert-match] [--mode MODE] [--exec COMMAND] [--prefix]
+          [--prefix-dirs PREFIX_DIRS] [--prefix-files PREFIX_FILES]
+          [--no-display] [--no-colorize] [--verbose-exec] [--interactive-exec]
+          [--shell-exec] [--vcs] [--exclude-path EXCLUDED_PATH] [--test TESTS]
+          [--plugins-path PLUGINS_PATH] [--version]
+          [--help-test-plugins [TEST_NAME[,TEST2_NAME]]]
+          [--show-plugins-paths]
+          [pattern] [source [source ...]]
 
 Easily search and process files.
 
 positional arguments:
-pattern               pattern to search
-sources               optional source (if missing, use current directory)
+  pattern               pattern to search
+  source                optional source (if missing, use current directory)
 
 optional arguments:
--h, --help            show this help message and exit
--0, --print0          split results by binary zero instead of new line
-                      (useful to work with xargs)
--i, --ignorecase, --ignore-case
--s SOURCE, --source SOURCE
-                      optional, see: source above
--p PATTERN, --pattern PATTERN
-                      optional, see: pattern above
--g, --regexp          treat pattern as regular expression (uses Python
-                      regexp engine)
--f, --fuzzy           pattern defines only set and order of characters used
-                      in filename
--q, --path-search     search in full path, instead of bare name of item
--l, --regex-multiline
--d, --regex-dotall
--B, --begin           match pattern to begin of item name (ignored in regexp
-                      mode)
--E, --end             match pattern to end of item name (ignored in regexp
-                      mode)
--v, -r, --invert-match
--m {all,files,dirs}, --mode {all,files,dirs}
--x COMMAND, --exec COMMAND
-                      execute some command on every found item. In command,
-                      placeholders: {path}, {dirname}, {basename} are
-                      replaced with correct value
---prefix              add prefix "d: " (directory) or "f: " (file) to every
-                      found item
---no-display          don't display element (useful with --exec argument)
---verbose-exec        show command before execute it
---interactive-exec    ask before execute command on every item
---shell-exec          execute command from --exec argument in shell (with
-                      shell expansion etc)
---vcs                 do not skip VCS directories (.git, .svn etc)
--c EXCLUDED_PATH, --exclude-path EXCLUDED_PATH
-                      skip given paths from scanning
--t TESTS, --test TESTS
-                      additional tests, available by plugins (see
-                      annotations below or --help-test-plugins)
---plugins-path PLUGINS_PATH
-                      additional path where to search plugins (see
-                      annotations below)
---version             show program's version number and exit
---help-test-plugins [TEST_NAME]
-                      display help for installed test plugins
+  -h, --help            show this help message and exit
+  --print0, -0          split results by binary zero instead of new line
+                        (useful to work with xargs)
+  --ignorecase, -i, --ignore-case
+                        ignore case when match pattern to paths
+  --source source, -s source
+                        optional, see: source above
+  --pattern PATTERN, -p PATTERN
+                        optional, see: pattern above
+  --regexp, -g          treat pattern as regular expression (uses Python
+                        regexp engine)
+  --fuzzy, -f           pattern defines only set and order of characters used
+                        in filename
+  --depth DEPTH, -D DEPTH
+                        how deep we should search (default: -1, means
+                        infinite)
+  --path-search, -q     search in full path, instead of bare name of item
+  --regex-multiline, -l
+                        modify meta characters: "^" and "$" behaviour when
+                        pattern is regular expression. See:
+                        http://docs.python.org/2/library/re.html#re.MULTILINE
+  --regex-dotall, -d    modify meta character: "." behaviour when pattern is
+                        regular expression. See:
+                        http://docs.python.org/2/library/re.html#re.DOTALL
+  --begin, -B           match pattern to begin of item name (ignored in regexp
+                        mode)
+  --end, -E             match pattern to end of item name (ignored in regexp
+                        mode)
+  --invert-match, -v, -r
+                        find objects that do *not* match pattern
+  --mode MODE, -m MODE  allow to choose to search for "files" only, "dirs", or
+                        "all"
+  --exec COMMAND, -x COMMAND
+                        execute some command on every found item. In command,
+                        placeholders: {path}, {dirname}, {basename} are
+                        replaced with correct value
+  --prefix              add prefix "dr: " (directory) or "fl: " (file) to
+                        every found item
+  --prefix-dirs PREFIX_DIRS
+                        prefix for matched directories
+  --prefix-files PREFIX_FILES
+                        prefix for matched files
+  --no-display          don't display element (useful with --exec argument)
+  --no-colorize         Colorize output
+  --verbose-exec        show command before execute it
+  --interactive-exec    ask before execute command on every item
+  --shell-exec          execute command from --exec argument in shell (with
+                        shell expansion etc)
+  --vcs                 do not skip VCS directories (.git, .svn etc)
+  --exclude-path EXCLUDED_PATH, -c EXCLUDED_PATH
+                        skip given paths from scanning
+  --test TESTS, -t TESTS
+                        additional tests, available by plugins (see
+                        annotations below or --help-test-plugins)
+  --plugins-path PLUGINS_PATH
+                        additional path where to search plugins (see
+                        annotations below)
+  --version             show program's version number and exit
+  --help-test-plugins [TEST_NAME[,TEST2_NAME]]
+                        display help for installed test plugins
+  --show-plugins-paths  Show recognized plugins paths and exit
 
 Pattern, provided as positional argument (not with --pattern) can be provided
 in special form (called: magic pattern). It allows to more "nerdish"
@@ -285,7 +323,6 @@ where:
     pattern - any pattern, processed in a way specified with 'mode'
     modifier - one of: 'i' (--ignore-case), 'm' (--regex-multiline),
         's' (--regex-dotall), 'v' (not used currently), 'r' (--invert-match)
-        'q' (--path-search)
 
 There is also ability to extend capabilities of `ff` by plugins. Plugins are
 run with switch --test and then plugin name with optional plugin argument:
@@ -298,18 +335,23 @@ Authors:
     Marcin Sztolcman &lt;marcin@urzenia.net&gt; // http://urzenia.net
 
 HomePage:
-    https://github.com/mysz/ff/
+    http://mysz.github.io/ff/
 </code></pre>
 
 <h2>
-<a name="contact" class="anchor" href="#contact"><span class="octicon octicon-link"></span></a>Contact</h2>
+<a id="authors" class="anchor" href="#authors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors</h2>
+
+<p>Marcin Sztolcman <a href="mailto:marcin@urzenia.net">marcin@urzenia.net</a></p>
+
+<h2>
+<a id="contact" class="anchor" href="#contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contact</h2>
 
 <p>If you like or dislike this software, please do not hesitate to tell me about this me via email (<a href="mailto:marcin@urzenia.net">marcin@urzenia.net</a>).</p>
 
 <p>If you find bug or have an idea to enhance this tool, please use GitHub's <a href="https://github.com/mysz/ff/issues">issues</a>.</p>
 
 <h2>
-<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>The MIT License (MIT)</p>
 
@@ -333,20 +375,90 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 
 <h2>
-<a name="changelog" class="anchor" href="#changelog"><span class="octicon octicon-link"></span></a>ChangeLog</h2>
+<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span class="octicon octicon-link"></span></a>ChangeLog</h2>
 
 <h3>
-<a name="v05" class="anchor" href="#v05"><span class="octicon octicon-link"></span></a>v0.5</h3>
+<a id="v105" class="anchor" href="#v105" aria-hidden="true"><span class="octicon octicon-link"></span></a>v1.0.5</h3>
+
+<ul>
+<li>use README.rst for Pypi</li>
+</ul>
+
+<h3>
+<a id="v104" class="anchor" href="#v104" aria-hidden="true"><span class="octicon octicon-link"></span></a>v1.0.4</h3>
+
+<ul>
+<li>fixes for Pypi</li>
+</ul>
+
+<h3>
+<a id="v103" class="anchor" href="#v103" aria-hidden="true"><span class="octicon octicon-link"></span></a>v1.0.3</h3>
+
+<ul>
+<li>fixes for Pypi</li>
+</ul>
+
+<h3>
+<a id="v102" class="anchor" href="#v102" aria-hidden="true"><span class="octicon octicon-link"></span></a>v1.0.2</h3>
+
+<ul>
+<li>fixes for Pypi</li>
+</ul>
+
+<h3>
+<a id="v101" class="anchor" href="#v101" aria-hidden="true"><span class="octicon octicon-link"></span></a>v1.0.1</h3>
+
+<ul>
+<li>fixes for Pypi</li>
+</ul>
+
+<h3>
+<a id="v100" class="anchor" href="#v100" aria-hidden="true"><span class="octicon octicon-link"></span></a>v1.0.0</h3>
+
+<ul>
+<li>backward incompatible: magic pattern doesn't recognize 'q' flag for 'path-search' mode, flag --path-search must be passed explicitly</li>
+<li>new option: --depth - limit searching to this depth</li>
+<li>new option: --colorize</li>
+<li>new: parse and recognize configuration files</li>
+<li>new: added ability to install via pip</li>
+<li>changed versioning format: use <a href="http://semver.org/">SemVer</a>
+</li>
+<li>code cleanups and many refactorizations/rewrites</li>
+<li>paths are now normalized before comparisons of excluded paths</li>
+<li>parse regexps with UNICODE flag</li>
+<li>'?' and '+' are now valid delimiters in magic pattern</li>
+<li>ignore case of --mode option</li>
+<li>documentation improvements</li>
+<li>more tests</li>
+<li>improved fuzzy search</li>
+<li>better validation of arguments</li>
+<li>improved error messages</li>
+<li>improved help</li>
+<li>better interoperability: do not hardcode new line characters or path delimiters</li>
+<li>do not allow for duplicating modifiers</li>
+<li>FIX: do not crash on unknown characters, just replace them</li>
+<li>FIX: do not crash on printing unknown characters</li>
+<li>added simple Makefile</li>
+<li>improved config for pylint</li>
+<li>added config for <a href="http://mysz.github.io/versionner">versionner</a>
+</li>
+</ul>
+
+<h3>
+<a id="v05" class="anchor" href="#v05" aria-hidden="true"><span class="octicon octicon-link"></span></a>v0.5</h3>
 
 <ul>
 <li>ability to run plugins for tests (with first plugin: size)</li>
-<li>improved PEP8 compatibility (pylint)</li>
 <li>many improvements to proper handling UTF-8</li>
-<li>improvements for Python3 (in progress)</li>
-<li>removed expanding shell variables when execute external command if no --shell-exec is given</li>
+<li>many improvements for work in Python3</li>
+<li>improved PEP8 compatibility</li>
+<li>refactored code</li>
 <li>added --version switch</li>
-</ul><h3>
-<a name="v04" class="anchor" href="#v04"><span class="octicon octicon-link"></span></a>v.04</h3>
+<li>removed expanding shell variables when execute external command if no --shell-exec is given</li>
+</ul>
+
+<h3>
+<a id="v04" class="anchor" href="#v04" aria-hidden="true"><span class="octicon octicon-link"></span></a>v.0.4</h3>
 
 <ul>
 <li>added changelog</li>
@@ -356,15 +468,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <li>better handling unicode characters in paths</li>
 <li>handling CTRL-C</li>
 <li>added modifier: --path-search</li>
-</ul><h3>
-<a name="v03" class="anchor" href="#v03"><span class="octicon octicon-link"></span></a>v0.3</h3>
+</ul>
+
+<h3>
+<a id="v03" class="anchor" href="#v03" aria-hidden="true"><span class="octicon octicon-link"></span></a>v0.3</h3>
 
 <ul>
 <li>use argparse instead of getopt to parse options</li>
 <li>allow to exclude path from search</li>
 <li>improved help and documentation</li>
-</ul><h3>
-<a name="v02" class="anchor" href="#v02"><span class="octicon octicon-link"></span></a>v0.2</h3>
+</ul>
+
+<h3>
+<a id="v02" class="anchor" href="#v02" aria-hidden="true"><span class="octicon octicon-link"></span></a>v0.2</h3>
 
 <ul>
 <li>added option 'shell-exec' - allow to exec programs with shell expansion</li>
@@ -378,8 +494,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <li>added option 'invert-match' - like in grep</li>
 <li>improved help and documentation</li>
 <li>cleanups in code</li>
-</ul><h3>
-<a name="v01" class="anchor" href="#v01"><span class="octicon octicon-link"></span></a>v0.1</h3>
+</ul>
+
+<h3>
+<a id="v01" class="anchor" href="#v01" aria-hidden="true"><span class="octicon octicon-link"></span></a>v0.1</h3>
 
 <ul>
 <li>initial version</li>
