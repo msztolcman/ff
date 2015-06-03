@@ -391,6 +391,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ChangeLog
 ---------
 
+v1.0.5
+~~~~~~
+
+-  use README.rst for Pypi
+
 v1.0.4
 ~~~~~~
 
