@@ -14,7 +14,7 @@ with open(os.path.join(BASE_DIR, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='ff-find',
-    version='1.0.0',
+    version='1.0.1',
     description='Easily search and process files by names.',
     long_description=long_description,
     url='http://mysz.github.io/ff/',
