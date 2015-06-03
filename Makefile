@@ -12,7 +12,7 @@ build:
 	python setup.py sdist
 	python setup.py bdist_wheel
 
-#upload:
-#	twine upload dist/versionner*
+upload:
+	twine upload dist/ff_find* dist/ff-find*
 
 distro: clean build upload
