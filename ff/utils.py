@@ -7,6 +7,7 @@
 from __future__ import print_function, unicode_literals, division
 
 import functools
+import os
 import sys
 import unicodedata
 
@@ -108,3 +109,7 @@ def disp(*args, **kwargs):
 
 # pylint: disable=invalid-name
 normalize = functools.partial(unicodedata.normalize, NORMALIZE_FORM)
+if not IS_PY2:
+    getcwd = os.getcwd
+else:
+    getcwd = os.getcwdu

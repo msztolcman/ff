@@ -112,7 +112,7 @@ class Config(object):
         if not sources:
             sources = [
                 os.path.join(os.path.expanduser('~'), '.ff.rc'),
-                os.path.join(os.getcwdu(), '.ff.rc')
+                os.path.join(utils.getcwd(), '.ff.rc')
             ]
 
         self = cls()
