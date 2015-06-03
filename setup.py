@@ -36,8 +36,8 @@ setup(
         'Topic :: Utilities'
     ],
     keywords=['search', 'find', 'filesystem', 'files', 'directories'],
-    install_requires=['argparse'],
-    py_modules=['ff'],
+    install_requires=['argparse', 'tmcolors==0.1.1'],
+    packages=[str('ff'), str('ff_plugins')],
     entry_points={
         'console_scripts': [
             'ff=ff.__main__:main',

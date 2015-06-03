@@ -1,0 +1,1 @@
+recursive-include ff_plugins *.py
