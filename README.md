@@ -137,8 +137,8 @@ Name of file is built with three parts, connected with underscore:
 
 And as Python module, must and with `.py` extension :)
 
-Plugin must validate input data (`argument`), and raise `PluginError` exception with approbiate message on any error. Plugin shouldn't raise any other exceptions.
-There is one caveat with this: `PluginError` exception is declared *inside* `ff`! When given plugin is imported, it is _monkeypatched_ and `PluginError` exception is injected into it.
+Plugin must validate input data (`argument`), and raise `FFPluginError` exception with approbiate message on any error. Plugin shouldn't raise any other exceptions.
+There is one caveat with this: `FFPluginError` exception is declared *inside* `ff`! When given plugin is imported, it is _monkeypatched_ and `FFPluginError` exception is injected into it.
 
 There is an example plugin, which allow us to search for files in specified size. Is in [project repository](https://github.com/mysz/ff/tree/master/ff_plugins) in directory plugins. You can use it as a base for your own plugins :)
 
@@ -313,12 +313,13 @@ ChangeLog
 * backward incompatible: magic pattern doesn't recognize 'q' flag for 'path-search' mode, flag --path-search must be passed explicitly
 * new option: --depth - limit searching to this depth
 * new option: --colorize
-* parse and recognize configuration files
+* new: parse and recognize configuration files
+* new: added ability to install via pip
+* changed versioning format: use [SemVer](http://semver.org/)
 * code cleanups and many refactorizations/rewrites
-* documentation improvements
 * paths are now normalized before comparisons of excluded paths
+* documentation improvements
 * more tests
-* added ability to install via pip
 * improved fuzzy search
 * better validation of arguments
 * improved error messages
