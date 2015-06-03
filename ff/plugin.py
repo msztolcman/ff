@@ -172,6 +172,10 @@ class FFPlugins(list):
     _paths = set()
 
     @staticmethod
+    def get_paths():
+        return FFPlugins._paths
+
+    @staticmethod
     def _print_descr(item):
         """ Helper for FFPlugins.print_help/FFPlugins.print_list.
             Prints single plugin description

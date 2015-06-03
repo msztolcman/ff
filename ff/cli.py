@@ -128,6 +128,8 @@ def parse_input_args(args, cfg):
     p.add_argument('--version', action='version', version="%s %s\n%s" % (os.path.basename(sys.argv[0]), ff.__version__, args_description))
     p.add_argument('--help-test-plugins', metavar='TEST_NAME[,TEST2_NAME]', nargs=argparse.OPTIONAL, action='append', default=[],
        help='display help for installed test plugins')
+    p.add_argument('--show-plugins-paths', action='store_true',
+        help='Show recognized plugins paths and exit')
     p.add_argument('anon_pattern', metavar='pattern', type=str, nargs=argparse.OPTIONAL,
        help='pattern to search')
     p.add_argument('anon_sources', metavar='source', type=str, nargs=argparse.ZERO_OR_MORE,
@@ -137,7 +139,7 @@ def parse_input_args(args, cfg):
     del args_description, args_epilog
 
     # for displaying help we don't need to parse or validate nothing more
-    if args.help_test_plugins:
+    if args.help_test_plugins or args.show_plugins_paths:
         return args
 
     # depth
@@ -363,6 +365,10 @@ def main():
         detect_plugins_paths(args.plugins_path)
     except InvalidPluginsPath as ex:
         err('%s: %s' % (ex.path, str(ex)), sep='', exit_code=1)
+
+    if args.show_plugins_paths:
+        print("\n".join(FFPlugins.get_paths()))
+        sys.exit()
 
     try:
         # None means: show me the list of plugins
