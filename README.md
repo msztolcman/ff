@@ -318,14 +318,22 @@ ChangeLog
 * changed versioning format: use [SemVer](http://semver.org/)
 * code cleanups and many refactorizations/rewrites
 * paths are now normalized before comparisons of excluded paths
+* parse regexps with UNICODE flag
+* '?' and '+' are now valid delimiters in magic pattern
+* ignore case of --mode option
 * documentation improvements
 * more tests
 * improved fuzzy search
 * better validation of arguments
 * improved error messages
 * improved help
+* better interoperability: do not hardcode new line characters or path delimiters
+* do not allow for duplicating modifiers
 * FIX: do not crash on unknown characters, just replace them
 * FIX: do not crash on printing unknown characters
+* added simple Makefile
+* improved config for pylint
+* added config for [versionner](http://mysz.github.io/versionner)
 
 ### v0.5
 
