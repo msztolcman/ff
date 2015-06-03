@@ -11,7 +11,7 @@ this kind of task.
 Current stable version
 ----------------------
 
-1.0.4
+1.0.5
 
 Why ``ff`` and not ``find``?
 ----------------------------
