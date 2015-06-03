@@ -64,7 +64,9 @@ def validate(field, val):
 
 
 class TestConfig(unittest.TestCase):
-    def setUp(self):
+    def __init__(self, *a, **b):
+        super(TestConfig, self).__init__(*a, **b)
+
         self.properties = (
             'ignorecase', 'smartcase', 'print0', 'depth', 'mode',
             'regexp', 'fuzzy', 'path_search', 'prefix', 'prefix_dirs',
