@@ -13,7 +13,7 @@ with open(os.path.join(BASE_DIR, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='ff',
+    name='ff-find',
     version='1.0.0',
     description='Easily search and process files by names.',
     long_description=long_description,
