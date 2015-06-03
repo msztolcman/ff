@@ -8,7 +8,7 @@ If you need to search files by their contents, *or* search for their contents, p
 Current stable version
 ----------------------
 
-1.0.2
+1.0.3
 
 Why `ff` and not `find`?
 ------------------------
