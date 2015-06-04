@@ -47,6 +47,10 @@ And with ``ff``:
 
 it just works! :)
 
+Additionally, ``ff`` should work on any platform where
+`Python <http://python.org>`__ is available, it means Linux, MacOS X,
+Windows (not tested here) etc.
+
 Basic usage
 -----------
 
@@ -136,7 +140,7 @@ Configuration file
 Both can specify the same things and have identical syntax (ini files).
 User-wide one is located in ``$HOME/.ff.rc``, and project-wide is
 located in current directory (ie. projects root). Example file is
-located at (github)[https://github.com/mysz/ff/blob/master/ff.rc].
+located at `github <https://github.com/mysz/ff/blob/master/ff.rc>`__.
 
 Plugins
 -------
@@ -199,7 +203,7 @@ Plugin file also must have special name, and be placed in directory
 recognized by ``ff`` (see: [plugins][plugins]). Name of file is built
 with three parts, connected with underscore: \* ``ffplugin`` - fixed
 prefix \* ``test`` - type of plugin (currently only ``test`` plugins are
-recignized) \* ``NAME`` - name of plugin
+recognized) \* ``NAME`` - name of plugin
 
 And as Python module, must and with ``.py`` extension :)
 
@@ -218,17 +222,20 @@ directory plugins. You can use it as a base for your own plugins :)
 Installation
 ------------
 
-``ff`` should work on any platform where `Python <http://python.org>`__
-is available, it means Linux, Windows, MacOS X etc. There is no
-dependencies, plain Python power :)
+1. Via PIP
 
-To install, you can use ``pip``:
+   pip install ff-find
+
+Voila! :)
+
+2. From sources
+
+Download `sources <https://github.com/mysz/ff/zipball/master>`__, unzip,
+and run:
 
 ::
 
-    pip install ff
-
-Voila!
+    python setup.py install
 
 Usage
 -----
