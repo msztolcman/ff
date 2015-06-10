@@ -163,6 +163,7 @@ Download sources from [Github](https://github.com/mysz/ff/archive/1.0.5.zip):
     wget -O 1.0.5.zip https://github.com/mysz/ff/archive/1.0.5.zip
     
 or
+
     curl -o 1.0.5.zip https://github.com/mysz/ff/archive/1.0.5.zip
 
 Unpack:
