@@ -147,17 +147,34 @@ There is an example plugin, which allow us to search for files in specified size
 Installation
 ------------
 
-1. Via PIP
+1. Using PIP
+
+`ff` should work on any platform where [Python](http://python.org)
+is available, it means Linux, Windows, MacOS X etc. 
+
+Simplest way is to use Python's built-in package system:
 
     pip install ff-find
 
-Voila! :)
+2. Using sources
 
-2. From sources
+Download sources from [Github](https://github.com/mysz/ff/archive/1.0.5.zip):
 
-Download [sources](https://github.com/mysz/ff/zipball/master), unzip, and run:
+    wget -O 1.0.5.zip https://github.com/mysz/ff/archive/1.0.5.zip
+    
+or
+    curl -o 1.0.5.zip https://github.com/mysz/ff/archive/1.0.5.zip
 
+Unpack:
+
+    unzip 1.0.5.zip
+
+And install
+
+    cd ff-1.0.5
     python setup.py install
+
+Voila!
 
 Usage
 -----

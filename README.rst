@@ -222,20 +222,42 @@ directory plugins. You can use it as a base for your own plugins :)
 Installation
 ------------
 
-1. Via PIP
+1. Using PIP
 
-   pip install ff-find
+``ff`` should work on any platform where `Python <http://python.org>`__
+is available, it means Linux, Windows, MacOS X etc.
 
-Voila! :)
-
-2. From sources
-
-Download `sources <https://github.com/mysz/ff/zipball/master>`__, unzip,
-and run:
+Simplest way is to use Python's built-in package system:
 
 ::
 
+    pip install ff-find
+
+2. Using sources
+
+Download sources from
+`Github <https://github.com/mysz/ff/archive/1.0.5.zip>`__:
+
+::
+
+    wget -O 1.0.5.zip https://github.com/mysz/ff/archive/1.0.5.zip
+
+or curl -o 1.0.5.zip https://github.com/mysz/ff/archive/1.0.5.zip
+
+Unpack:
+
+::
+
+    unzip 1.0.5.zip
+
+And install
+
+::
+
+    cd ff-1.0.5
     python setup.py install
+
+Voila!
 
 Usage
 -----

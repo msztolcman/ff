@@ -31,3 +31,17 @@ replace = \nCurrent stable version
 
     %(version)s\n
 encoding = utf-8
+
+[file:2:README.md]
+enabled = true
+match = line
+search = \b\d+\.\d+\.\d+\.zip\b
+replace = %(version)s.zip
+encoding = utf-8
+
+[file:3:README.md]
+enabled = true
+match = line
+search = \bcd ff-\d+\.\d+\.\d+\b
+replace = cd ff-%(version)s
+encoding = utf-8
