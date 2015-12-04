@@ -4,3 +4,8 @@
 --ignore-dir=venv-33
 --ignore-dir=venv-34
 --ignore-dir=.idea
+--ignore-dir=.tox
+--ignore-dir=ff_find.egg-info
+--ignore-dir=ff.egg-info
+--ignore-dir=data
+--ignore-dir=build
