@@ -366,7 +366,7 @@ class TestParseInputArgs(unittest.TestCase):
             parse_input_args(iargs, cfg)
         stdout = sys.stdout.getvalue()
         sys.stdout = _org_stdout
-        self.assertRegexpMatches(stdout, r'(?ms)^usage: .+\bHomePage:\n\s+http://mysz\.github\.io/ff/$')
+        self.assertRegexpMatches(stdout, r'(?ms)^usage: .+\bHomePage:\n\s+http://msztolcman\.github\.io/ff/$')
 
     def test_help_test_plugins_get_list(self):
         cfg = InputArgsMock()

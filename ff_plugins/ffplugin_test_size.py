@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-""" Plugin script for `ff` (http://mysz.github.io/ff/).
+""" Plugin script for `ff` (http://msztolcman.github.io/ff/).
 """
 
 from __future__ import print_function, unicode_literals

@@ -17,7 +17,7 @@ setup(
     version='1.0.5',
     description='Easily search and process files by names.',
     long_description=long_description,
-    url='http://mysz.github.io/ff/',
+    url='http://msztolcman.github.io/ff/',
     author='Marcin Sztolcman',
     author_email='marcin@urzenia.net',
     license='MIT',

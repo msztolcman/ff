@@ -140,7 +140,7 @@ Configuration file
 Both can specify the same things and have identical syntax (ini files).
 User-wide one is located in ``$HOME/.ff.rc``, and project-wide is
 located in current directory (ie. projects root). Example file is
-located at `github <https://github.com/mysz/ff/blob/master/ff.rc>`__.
+located at `github <https://github.com/msztolcman/ff/blob/master/ff.rc>`__.
 
 Plugins
 -------
@@ -172,7 +172,7 @@ Above example will find every file with *pas* part in its name, and its
 size is *exactly* 5
 `kibibytes <http://en.wikipedia.org/wiki/Binary_prefix#IEC_standard_prefixes>`__.
 More about ``size`` plugin in `projects
-wiki <https://github.com/mysz/ff/wiki/>`__.
+wiki <https://github.com/msztolcman/ff/wiki/>`__.
 
 Writing plugins
 ---------------
@@ -216,7 +216,7 @@ exception is injected into it.
 
 There is an example plugin, which allow us to search for files in
 specified size. Is in `project
-repository <https://github.com/mysz/ff/tree/master/ff_plugins>`__ in
+repository <https://github.com/msztolcman/ff/tree/master/ff_plugins>`__ in
 directory plugins. You can use it as a base for your own plugins :)
 
 Installation
@@ -236,13 +236,13 @@ Simplest way is to use Python's built-in package system:
 2. Using sources
 
 Download sources from
-`Github <https://github.com/mysz/ff/archive/1.0.5.zip>`__:
+`Github <https://github.com/msztolcman/ff/archive/1.0.5.zip>`__:
 
 ::
 
-    wget -O 1.0.5.zip https://github.com/mysz/ff/archive/1.0.5.zip
+    wget -O 1.0.5.zip https://github.com/msztolcman/ff/archive/1.0.5.zip
 
-or curl -o 1.0.5.zip https://github.com/mysz/ff/archive/1.0.5.zip
+or curl -o 1.0.5.zip https://github.com/msztolcman/ff/archive/1.0.5.zip
 
 Unpack:
 
@@ -375,7 +375,7 @@ Usage
         Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
 
     HomePage:
-        http://mysz.github.io/ff/
+        http://msztolcman.github.io/ff/
 
 Authors
 -------
@@ -389,7 +389,7 @@ If you like or dislike this software, please do not hesitate to tell me
 about this me via email (marcin@urzenia.net).
 
 If you find bug or have an idea to enhance this tool, please use
-GitHub's `issues <https://github.com/mysz/ff/issues>`__.
+GitHub's `issues <https://github.com/msztolcman/ff/issues>`__.
 
 License
 -------
@@ -473,7 +473,7 @@ v1.0.0
 -  FIX: do not crash on printing unknown characters
 -  added simple Makefile
 -  improved config for pylint
--  added config for `versionner <http://mysz.github.io/versionner>`__
+-  added config for `versionner <http://msztolcman.github.io/versionner>`__
 
 v0.5
 ~~~~
