@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>ff by mysz</title>
+    <title>ff by msztolcman</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-light.css">
@@ -20,12 +20,12 @@
         <p class="header">Easily search and process files.</p>
 
         <ul>
-          <li class="download"><a class="buttons" href="https://github.com/mysz/ff/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/mysz/ff/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/mysz/ff">View On GitHub</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/msztolcman/ff/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/msztolcman/ff/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/msztolcman/ff">View On GitHub</a></li>
         </ul>
 
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/mysz">mysz</a></p>
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/msztolcman">msztolcman</a></p>
 
 
       </header>
@@ -141,7 +141,7 @@ described in Usage section.</p>
 <a id="configuration-file" class="anchor" href="#configuration-file" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration file</h2>
 
 <p><code>ff</code> recognizes 2 configuration files: user-wide and project-wide. Both can specify the same things and have identical syntax (ini files). User-wide one is located in <code>$HOME/.ff.rc</code>, and project-wide is located in current directory (ie. projects root).
-Example file is located at <a href="https://github.com/mysz/ff/blob/master/ff.rc">github</a>.</p>
+Example file is located at <a href="https://github.com/msztolcman/ff/blob/master/ff.rc">github</a>.</p>
 
 <h2>
 <a id="plugins" class="anchor" href="#plugins" aria-hidden="true"><span class="octicon octicon-link"></span></a>Plugins</h2>
@@ -162,7 +162,7 @@ By default, <code>ff</code> search for plugins in:</p>
 <pre><code>`ff pas --test size:=5k`
 </code></pre>
 
-<p>Above example will find every file with <em>pas</em> part in its name, and its size is <em>exactly</em> 5 <a href="http://en.wikipedia.org/wiki/Binary_prefix#IEC_standard_prefixes">kibibytes</a>. More about <code>size</code> plugin in <a href="https://github.com/mysz/ff/wiki/">projects wiki</a>.</p>
+<p>Above example will find every file with <em>pas</em> part in its name, and its size is <em>exactly</em> 5 <a href="http://en.wikipedia.org/wiki/Binary_prefix#IEC_standard_prefixes">kibibytes</a>. More about <code>size</code> plugin in <a href="https://github.com/msztolcman/ff/wiki/">projects wiki</a>.</p>
 
 <h2>
 <a id="writing-plugins" class="anchor" href="#writing-plugins" aria-hidden="true"><span class="octicon octicon-link"></span></a>Writing plugins</h2>
@@ -209,7 +209,7 @@ Name of file is built with three parts, connected with underscore:</p>
 <p>Plugin must validate input data (<code>argument</code>), and raise <code>FFPluginError</code> exception with approbiate message on any error. Plugin shouldn't raise any other exceptions.
 There is one caveat with this: <code>FFPluginError</code> exception is declared <em>inside</em> <code>ff</code>! When given plugin is imported, it is <em>monkeypatched</em> and <code>FFPluginError</code> exception is injected into it.</p>
 
-<p>There is an example plugin, which allow us to search for files in specified size. Is in <a href="https://github.com/mysz/ff/tree/master/ff_plugins">project repository</a> in directory plugins. You can use it as a base for your own plugins :)</p>
+<p>There is an example plugin, which allow us to search for files in specified size. Is in <a href="https://github.com/msztolcman/ff/tree/master/ff_plugins">project repository</a> in directory plugins. You can use it as a base for your own plugins :)</p>
 
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
@@ -230,14 +230,14 @@ is available, it means Linux, Windows, MacOS X etc. </p>
 <li>Using sources</li>
 </ol>
 
-<p>Download sources from <a href="https://github.com/mysz/ff/archive/1.0.5.zip">Github</a>:</p>
+<p>Download sources from <a href="https://github.com/msztolcman/ff/archive/1.0.5.zip">Github</a>:</p>
 
-<pre><code>wget -O 1.0.5.zip https://github.com/mysz/ff/archive/1.0.5.zip
+<pre><code>wget -O 1.0.5.zip https://github.com/msztolcman/ff/archive/1.0.5.zip
 </code></pre>
 
 <p>or</p>
 
-<pre><code>curl -o 1.0.5.zip https://github.com/mysz/ff/archive/1.0.5.zip
+<pre><code>curl -o 1.0.5.zip https://github.com/msztolcman/ff/archive/1.0.5.zip
 </code></pre>
 
 <p>Unpack:</p>
@@ -367,7 +367,7 @@ Authors:
     Marcin Sztolcman &lt;marcin@urzenia.net&gt; // http://urzenia.net
 
 HomePage:
-    http://mysz.github.io/ff/
+    http://msztolcman.github.io/ff/
 </code></pre>
 
 <h2>
@@ -380,7 +380,7 @@ HomePage:
 
 <p>If you like or dislike this software, please do not hesitate to tell me about this me via email (<a href="mailto:marcin@urzenia.net">marcin@urzenia.net</a>).</p>
 
-<p>If you find bug or have an idea to enhance this tool, please use GitHub's <a href="https://github.com/mysz/ff/issues">issues</a>.</p>
+<p>If you find bug or have an idea to enhance this tool, please use GitHub's <a href="https://github.com/msztolcman/ff/issues">issues</a>.</p>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
@@ -472,7 +472,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <li>FIX: do not crash on printing unknown characters</li>
 <li>added simple Makefile</li>
 <li>improved config for pylint</li>
-<li>added config for <a href="http://mysz.github.io/versionner">versionner</a>
+<li>added config for <a href="http://msztolcman.github.io/versionner">versionner</a>
 </li>
 </ul>
 
