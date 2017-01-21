@@ -8,6 +8,9 @@ contents, please look at `ack <https://github.com/petdance/ack2>`__ or
 `pss <https://github.com/eliben/pss>`__. These are better suited for
 this kind of task.
 
+If you like this tool, just `say
+thanks <https://saythanks.io/to/msztolcman>`__.
+
 Current stable version
 ----------------------
 
@@ -140,7 +143,8 @@ Configuration file
 Both can specify the same things and have identical syntax (ini files).
 User-wide one is located in ``$HOME/.ff.rc``, and project-wide is
 located in current directory (ie. projects root). Example file is
-located at `github <https://github.com/msztolcman/ff/blob/master/ff.rc>`__.
+located at
+`github <https://github.com/msztolcman/ff/blob/master/ff.rc>`__.
 
 Plugins
 -------
@@ -200,10 +204,10 @@ should be returned.
    ``--help-test-plugins TEST_NAME``
 
 Plugin file also must have special name, and be placed in directory
-recognized by ``ff`` (see: [plugins][plugins]). Name of file is built
-with three parts, connected with underscore: \* ``ffplugin`` - fixed
-prefix \* ``test`` - type of plugin (currently only ``test`` plugins are
-recognized) \* ``NAME`` - name of plugin
+recognized by ``ff`` (see: `plugins <#plugins>`__). Name of file is
+built with three parts, connected with underscore: \* ``ffplugin`` -
+fixed prefix \* ``test`` - type of plugin (currently only ``test``
+plugins are recognized) \* ``NAME`` - name of plugin
 
 And as Python module, must and with ``.py`` extension :)
 
@@ -216,8 +220,8 @@ exception is injected into it.
 
 There is an example plugin, which allow us to search for files in
 specified size. Is in `project
-repository <https://github.com/msztolcman/ff/tree/master/ff_plugins>`__ in
-directory plugins. You can use it as a base for your own plugins :)
+repository <https://github.com/msztolcman/ff/tree/master/ff_plugins>`__
+in directory plugins. You can use it as a base for your own plugins :)
 
 Installation
 ------------
@@ -242,7 +246,11 @@ Download sources from
 
     wget -O 1.0.5.zip https://github.com/msztolcman/ff/archive/1.0.5.zip
 
-or curl -o 1.0.5.zip https://github.com/msztolcman/ff/archive/1.0.5.zip
+or
+
+::
+
+    curl -o 1.0.5.zip https://github.com/msztolcman/ff/archive/1.0.5.zip
 
 Unpack:
 
@@ -473,7 +481,8 @@ v1.0.0
 -  FIX: do not crash on printing unknown characters
 -  added simple Makefile
 -  improved config for pylint
--  added config for `versionner <http://msztolcman.github.io/versionner>`__
+-  added config for
+   `versionner <http://msztolcman.github.io/versionner>`__
 
 v0.5
 ~~~~
