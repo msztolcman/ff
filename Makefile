@@ -1,18 +1,26 @@
+distro: register clean build upload
+
+init:
+	pip install -r requirements.txt
+
+init-dev:
+	pip install -r requirements-dev.txt
+
 doc:
 	pandoc --from=markdown --to=rst --output="README.rst" "README.md"
 
 clean:
-	rm dist/* || true
-	rm -fr __pycache__ || true
-	rm -fr ff/__pycache__ || true
-	rm -fr build || true
-	find . -iname '*.pyc' -delete || true
+	-rm -fr dist
+	-rm -fr __pycache__
+	-rm -fr build
+	-find . -iname '*.pyc' -delete
 
 build:
-	python setup.py sdist
-	python setup.py bdist_wheel
+	python3 setup.py sdist
+	python3 setup.py bdist_wheel
 
 upload:
 	twine upload dist/ff_find* dist/ff-find*
 
-distro: clean build upload
+register:
+	python setup.py register
